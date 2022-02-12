@@ -3,19 +3,39 @@ import 'package:equatable/equatable.dart';
 
 class Device extends Equatable {
   final DeviceProductVendor deviceProductVendor;
+  final String vendorId;
+  final String productId;
 
-  const Device({required this.deviceProductVendor});
+  const Device({
+    required this.deviceProductVendor,
+    required this.vendorId,
+    required this.productId,
+  });
 
   factory Device.empty() {
-    return const Device(deviceProductVendor: DeviceProductVendor.unknown);
+    return const Device(
+      deviceProductVendor: DeviceProductVendor.unknown,
+      vendorId: '',
+      productId: '',
+    );
   }
 
-  factory Device.create({required DeviceProductVendor deviceProductVendor}) {
-    return Device(deviceProductVendor: deviceProductVendor);
+  factory Device.create({
+    required DeviceProductVendor deviceProductVendor,
+    required String vendorId,
+    required String productId,
+  }) {
+    return Device(
+      deviceProductVendor: deviceProductVendor,
+      vendorId: vendorId,
+      productId: productId,
+    );
   }
 
   @override
   List<Object?> get props => <Object?>[
         deviceProductVendor,
+        vendorId,
+        productId,
       ];
 }

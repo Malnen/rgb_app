@@ -4,9 +4,9 @@ import 'package:ffi/ffi.dart' show calloc;
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
+import 'package:rgb_app/extensions/libusb_extension.dart';
+import 'package:rgb_app/extensions/libusb_in_line_extension.dart';
 import 'package:rgb_app/libusb_loader/libusb_loader.dart';
-import 'package:rgb_app/quick_usb/extensions/libusb_extension.dart';
-import 'package:rgb_app/quick_usb/extensions/libusb_in_line_extension.dart';
 
 class QuickUsb {
   final Libusb _libusb = LibusbLoader.getInstance;
@@ -59,12 +59,17 @@ class QuickUsb {
 
     for (var i = 0; deviceList[i] != nullptr; i++) {
       var deviceProduct = _getDeviceProduct(
-          deviceList[i], descPtr, devHandlePtr, strDescPtr, strDescLength);
-      if (deviceProduct != null) yield deviceProduct;
+        deviceList[i],
+        descPtr,
+        devHandlePtr,
+        strDescPtr,
+        strDescLength,
+      );
+      yield deviceProduct;
     }
 
     calloc.free(descPtr);
-    calloc.free(devHandlePtr);
+    // calloc.free(devHandlePtr);
     calloc.free(strDescPtr);
   }
 
@@ -94,7 +99,7 @@ class QuickUsb {
       print('$idDevice open error: ${_libusb.describeError(open)}');
       return Device.empty();
     }
-    var devHandle = devHandlePtr.value;
+    final Pointer<libusb_device_handle> devHandle = devHandlePtr.value;
 
     try {
       var langDesc = _libusb.inline_libusb_get_string_descriptor(
@@ -105,7 +110,11 @@ class QuickUsb {
       }
       final DeviceProductVendor deviceType =
           DeviceProductVendorExtension.getType(idDevice);
-      return Device.create(deviceProductVendor: deviceType);
+      return Device.create(
+        deviceProductVendor: deviceType,
+        productId: idProduct,
+        vendorId: idVendor,
+      );
     } finally {
       _libusb.libusb_close(devHandle);
     }
