@@ -11,16 +11,31 @@ import 'device.dart';
 class SteelSeriesRival100 implements DeviceInterface {
   final Device device;
 
+  late Pointer<libusb_device_handle> devHandle;
+
   SteelSeriesRival100({required this.device});
 
+  Libusb get libusb => LibusbLoader.getInstance;
+
   void init() {
-    final Libusb libusb = LibusbLoader.getInstance;
+    libusb.libusb_init(nullptr);
+    devHandle = libusb.libusb_open_device_with_vid_pid(
+      nullptr,
+      int.parse('0x${device.vendorId}'),
+      int.parse('0x${device.productId}'),
+    );
+
+    libusb.libusb_claim_interface(devHandle, 0);
+    libusb.libusb_set_configuration(devHandle, 1);
+  }
+
+  void sendData() {
     final Uint8List data = Uint8List.fromList([
       0x05,
       0x00,
       0xFF,
       0xFF,
-      0xFF,
+      0x00,
       0x00,
       0x00,
       0x00,
@@ -49,16 +64,6 @@ class SteelSeriesRival100 implements DeviceInterface {
       0x00,
       0x00
     ]);
-    libusb.libusb_init(nullptr);
-    final Pointer<libusb_device_handle> devHandle =
-        libusb.libusb_open_device_with_vid_pid(
-      nullptr,
-      int.parse('0x${device.vendorId}'),
-      int.parse('0x${device.productId}'),
-    );
-
-    libusb.libusb_claim_interface(devHandle, 0);
-    libusb.libusb_set_configuration(devHandle, 1);
     libusb.libusb_control_transfer(
       devHandle,
       0x21,
