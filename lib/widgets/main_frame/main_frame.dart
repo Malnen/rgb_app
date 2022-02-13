@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rgb_app/blocs/device_bloc/device_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/devices/device_interface.dart';
@@ -29,6 +28,7 @@ class _MainFrameState extends State<MainFrame> {
 
   @override
   void initState() {
+    super.initState();
     LibusbLoader.initLibusb();
     deviceProductInfo = QuickUsb().getDeviceProductInfo();
     _devicesBloc = DevicesBloc();

@@ -27,6 +27,7 @@ class CorsairK70 extends DeviceInterface {
     libusb.libusb_set_configuration(devHandle, 1);
   }
 
+  @override
   void sendData() {
     final Uint8List dataPkt1 = Uint8List.fromList([
       0x07,

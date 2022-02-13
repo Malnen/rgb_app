@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:libusb/libusb64.dart';
 
 extension LibusbInline on Libusb {
-  int inline_libusb_get_string_descriptor(
+  int inlineLibusbGetStringDescriptor(
       Pointer<libusb_device_handle> devHandle,
       int descIndex,
       int langid,

@@ -102,7 +102,7 @@ class QuickUsb {
     final Pointer<libusb_device_handle> devHandle = devHandlePtr.value;
 
     try {
-      var langDesc = _libusb.inline_libusb_get_string_descriptor(
+      var langDesc = _libusb.inlineLibusbGetStringDescriptor(
           devHandle, 0, 0, strDescPtr, strDescLength);
       if (langDesc < 0) {
         print('$idDevice langDesc error: ${_libusb.describeError(langDesc)}');
