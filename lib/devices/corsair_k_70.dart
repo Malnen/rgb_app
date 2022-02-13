@@ -9,15 +9,12 @@ import '../libusb_loader/libusb_loader.dart';
 import 'package:ffi/ffi.dart' show calloc;
 import 'device.dart';
 
-class CorsairK70 implements DeviceInterface {
-  final Device device;
-
-  late Pointer<libusb_device_handle> devHandle;
-
-  CorsairK70({required this.device});
+class CorsairK70 extends DeviceInterface {
+  CorsairK70({required Device device}) : super(device: device);
 
   Libusb get libusb => LibusbLoader.getInstance;
 
+  @override
   void init() {
     libusb.libusb_init(nullptr);
     devHandle = libusb.libusb_open_device_with_vid_pid(
@@ -932,5 +929,10 @@ class CorsairK70 implements DeviceInterface {
       calloc<Int32>(),
       1000,
     );
+  }
+
+  @override
+  void dispose() {
+    libusb.libusb_close(devHandle);
   }
 }

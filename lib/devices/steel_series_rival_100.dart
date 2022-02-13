@@ -1,6 +1,8 @@
 import 'dart:ffi';
 import 'dart:typed_data';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
@@ -8,15 +10,14 @@ import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 import '../libusb_loader/libusb_loader.dart';
 import 'device.dart';
 
-class SteelSeriesRival100 implements DeviceInterface {
-  final Device device;
+class SteelSeriesRival100 extends DeviceInterface {
+  Color color = Color.fromARGB(1, 0, 0, 0);
 
-  late Pointer<libusb_device_handle> devHandle;
-
-  SteelSeriesRival100({required this.device});
+  SteelSeriesRival100({required Device device}) : super(device: device);
 
   Libusb get libusb => LibusbLoader.getInstance;
 
+  @override
   void init() {
     libusb.libusb_init(nullptr);
     devHandle = libusb.libusb_open_device_with_vid_pid(
@@ -29,13 +30,14 @@ class SteelSeriesRival100 implements DeviceInterface {
     libusb.libusb_set_configuration(devHandle, 1);
   }
 
+  @override
   void sendData() {
     final Uint8List data = Uint8List.fromList([
       0x05,
       0x00,
-      0xFF,
-      0xFF,
-      0x00,
+      color.red,
+      color.green,
+      color.blue,
       0x00,
       0x00,
       0x00,
@@ -74,5 +76,10 @@ class SteelSeriesRival100 implements DeviceInterface {
       32,
       10,
     );
+  }
+
+  @override
+  void dispose() {
+    libusb.libusb_close(devHandle);
   }
 }
