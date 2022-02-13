@@ -58,15 +58,15 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
         List.from(currentState.deviceInstances);
     if (devices.contains(event.device)) {
       final DeviceInterface deviceInterface =
-      DeviceInterface.fromDevice(event.device);
+          DeviceInterface.fromDevice(event.device);
       devices.remove(event.device);
       deviceInterface.dispose();
       deviceInstances.remove(deviceInterface);
     }
-    if (!devices.contains(event.device)) {
-      devices.add(event.device);
-    }
 
-    return currentState.copyWith(devices: devices);
+    return currentState.copyWith(
+      devices: devices,
+      deviceInstances: deviceInstances,
+    );
   }
 }
