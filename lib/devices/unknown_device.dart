@@ -12,4 +12,7 @@ class UnknownDevice extends DeviceInterface {
 
   @override
   void dispose() {}
+
+  @override
+  void test() {}
 }

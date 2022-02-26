@@ -7,7 +7,7 @@ import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 
-import '../libusb_loader/libusb_loader.dart';
+import '../utils/libusb_loader.dart';
 import 'device.dart';
 
 class SteelSeriesRival100 extends DeviceInterface {
@@ -82,4 +82,7 @@ class SteelSeriesRival100 extends DeviceInterface {
   void dispose() {
     libusb.libusb_close(devHandle);
   }
+
+  @override
+  void test() {}
 }

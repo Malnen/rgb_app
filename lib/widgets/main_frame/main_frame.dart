@@ -1,18 +1,14 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
-import 'package:rgb_app/devices/device_interface.dart';
-import 'package:rgb_app/devices/steel_series_rival_100.dart';
+import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 
 import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../devices/device.dart';
-import '../../libusb_loader/libusb_loader.dart';
 import '../../quick_usb/quick_usb.dart';
+import '../../utils/libusb_loader.dart';
 
 class MainFrame extends StatefulWidget {
   const MainFrame({Key? key}) : super(key: key);
@@ -25,6 +21,7 @@ class _MainFrameState extends State<MainFrame> {
   List<Device> deviceProductInfo = [];
 
   late DevicesBloc _devicesBloc;
+  late KeyBloc _keyBloc;
 
   @override
   void initState() {
@@ -32,6 +29,12 @@ class _MainFrameState extends State<MainFrame> {
     LibusbLoader.initLibusb();
     deviceProductInfo = QuickUsb().getDeviceProductInfo();
     _devicesBloc = DevicesBloc();
+    _keyBloc = KeyBloc();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -46,7 +49,7 @@ class _MainFrameState extends State<MainFrame> {
             child: _child(),
             bloc: _devicesBloc,
             listener: (BuildContext context, DevicesState state) {
-              Timer.periodic(
+              /*Timer.periodic(
                 const Duration(milliseconds: 100),
                 (Timer t) {
                   final SteelSeriesRival100 steelSeriesRival100 =
@@ -64,7 +67,7 @@ class _MainFrameState extends State<MainFrame> {
                   );
                   steelSeriesRival100.sendData();
                 },
-              );
+              );*/
             }),
       ),
     );

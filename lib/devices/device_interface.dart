@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:libusb/libusb64.dart';
-import 'package:rgb_app/devices/corsair_k_70.dart';
+import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
 import 'package:rgb_app/devices/steel_series_rival_100.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
@@ -13,7 +13,9 @@ abstract class DeviceInterface {
 
   late Pointer<libusb_device_handle> devHandle;
 
-  DeviceInterface({required this.device});
+  DeviceInterface({
+    required this.device,
+  });
 
   static DeviceInterface fromDevice(Device device) {
     switch (device.deviceProductVendor) {
@@ -31,4 +33,6 @@ abstract class DeviceInterface {
   void sendData();
 
   void dispose();
+
+  void test();
 }

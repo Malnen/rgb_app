@@ -1,13 +1,13 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 
+import 'package:ffi/ffi.dart' show calloc;
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 
-import '../libusb_loader/libusb_loader.dart';
-import 'package:ffi/ffi.dart' show calloc;
-import 'device.dart';
+import '../../utils/libusb_loader.dart';
+import '../device.dart';
 
 class CorsairK70 extends DeviceInterface {
   CorsairK70({required Device device}) : super(device: device);
@@ -936,4 +936,7 @@ class CorsairK70 extends DeviceInterface {
   void dispose() {
     libusb.libusb_close(devHandle);
   }
+
+  @override
+  void test() {}
 }

@@ -6,7 +6,7 @@ import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/extensions/libusb_extension.dart';
 import 'package:rgb_app/extensions/libusb_in_line_extension.dart';
-import 'package:rgb_app/libusb_loader/libusb_loader.dart';
+import 'package:rgb_app/utils/libusb_loader.dart';
 
 class QuickUsb {
   final Libusb _libusb = LibusbLoader.getInstance;

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:libusb/libusb64.dart';
-import 'package:rgb_app/libusb_loader/libusb_loader.dart';
+import 'package:rgb_app/utils/libusb_loader.dart';
 
 extension LibusbExtension on Libusb {
   static const int _kMaxSmi64 = (1 << 62) - 1;
