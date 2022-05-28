@@ -39,8 +39,10 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
         List.from(currentState.deviceInstances);
     if (!devices.contains(event.device)) {
       devices.add(event.device);
-      final DeviceInterface deviceInterface =
-          DeviceInterface.fromDevice(event.device);
+      final DeviceInterface deviceInterface = DeviceInterface.fromDevice(
+        device: event.device,
+        keyBloc: event.keyBloc,
+      );
       deviceInterface.init();
       deviceInstances.add(deviceInterface);
     }
@@ -58,7 +60,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
         List.from(currentState.deviceInstances);
     if (devices.contains(event.device)) {
       final DeviceInterface deviceInterface =
-          DeviceInterface.fromDevice(event.device);
+          DeviceInterface.fromDevice(device: event.device);
       devices.remove(event.device);
       deviceInterface.dispose();
       deviceInstances.remove(deviceInterface);

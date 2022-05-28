@@ -66,7 +66,7 @@ enum KeyCode {
   f13,
   f14,
   f15,
-  backspace,
+  backSpace,
   tab,
   shift,
   control,
@@ -84,7 +84,7 @@ enum KeyCode {
   insert,
   delete,
   numLock,
-  scrLk,
+  scrollLock,
   pause_Break,
   semicolon,
   equal,
@@ -113,6 +113,10 @@ enum KeyCode {
   resumeStop,
   next,
   previous,
+  leftBackSlash,
+  mute,
+  corsairStar,
+  unknown,
 }
 
 extension KeyCodeExtension on KeyCode {
@@ -252,7 +256,7 @@ extension KeyCodeExtension on KeyCode {
         return 125;
       case KeyCode.f15:
         return 126;
-      case KeyCode.backspace:
+      case KeyCode.backSpace:
         return 8;
       case KeyCode.tab:
         return 9;
@@ -288,7 +292,7 @@ extension KeyCodeExtension on KeyCode {
         return 46;
       case KeyCode.numLock:
         return 144;
-      case KeyCode.scrLk:
+      case KeyCode.scrollLock:
         return 145;
       case KeyCode.pause_Break:
         return 19;
@@ -346,6 +350,14 @@ extension KeyCodeExtension on KeyCode {
         return 176;
       case KeyCode.previous:
         return 177;
+      case KeyCode.leftBackSlash:
+        return 226;
+      case KeyCode.mute:
+        return 173;
+      case KeyCode.corsairStar:
+        return -100;
+      default:
+        return -1;
     }
   }
 
@@ -579,6 +591,12 @@ extension KeyCodeExtension on KeyCode {
         return 'Next';
       case 177:
         return 'Previous';
+      case 226:
+        return 'Left Back Slash';
+      case 173:
+        return 'Mute';
+      case -100:
+        return 'Corsair Star';
       default:
         return 'Unknown';
     }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
-import 'package:rgb_app/enums/device_product_vendor.dart';
+import 'package:rgb_app/widgets/left_panel/left_panel.dart';
 
 import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../devices/device.dart';
@@ -27,7 +26,8 @@ class _MainFrameState extends State<MainFrame> {
   void initState() {
     super.initState();
     LibusbLoader.initLibusb();
-    deviceProductInfo = QuickUsb().getDeviceProductInfo();
+    final quickUsb = QuickUsb();
+    deviceProductInfo = quickUsb.getDeviceProductInfo();
     _devicesBloc = DevicesBloc();
     _keyBloc = KeyBloc();
   }
@@ -42,6 +42,7 @@ class _MainFrameState extends State<MainFrame> {
     return MaterialApp(
       title: 'RGB App',
       home: Scaffold(
+        backgroundColor: Color.fromARGB(255, 30, 30, 30),
         appBar: AppBar(
           title: const Text('¯\\_(ツ)_/¯r'),
         ),
@@ -73,8 +74,9 @@ class _MainFrameState extends State<MainFrame> {
     );
   }
 
-  Column _child() {
-    return Column(
+  Widget _child() {
+    return LeftPanel();
+    /*return Column(
       children: [
         InkWell(
           child: const Text('Add Corsair K70'),
@@ -84,6 +86,7 @@ class _MainFrameState extends State<MainFrame> {
                 device: deviceProductInfo.firstWhere((Device device) =>
                     device.deviceProductVendor ==
                     DeviceProductVendor.corsairK70),
+                keyBloc: _keyBloc,
               ),
             );
           },
@@ -101,6 +104,6 @@ class _MainFrameState extends State<MainFrame> {
           },
         )
       ],
-    );
+    );*/
   }
 }

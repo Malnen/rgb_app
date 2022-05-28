@@ -4,7 +4,6 @@ import 'package:rgb_app/enums/key_code.dart';
 import 'key_event.dart';
 import 'key_state.dart';
 import 'package:keyboard_event/keyboard_event.dart' as ke;
-import 'package:rgb_app/enums/key_code.dart';
 
 class KeyBloc extends Bloc<KeyEvent, KeyState> {
   late ke.KeyboardEvent keyboardEvent;
@@ -39,7 +38,6 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
       keyName: event.keyName,
     );
     emit(state);
-    print('down ${state.keyCode}- ${state.keyName}');
   }
 
   Future<void> _onKeyReleasedEvent(
@@ -49,6 +47,5 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
       keyName: event.keyName,
     );
     emit(state);
-    print('up ${state.keyCode} - ${state.keyName}');
   }
 }

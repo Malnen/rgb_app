@@ -1,20 +1,21 @@
 import 'package:equatable/equatable.dart';
+import 'package:rgb_app/enums/key_code.dart';
 
 class CorsairK70Key extends Equatable {
   final int packetIndex;
   final int index;
-  final String keyName;
+  final KeyCode keyCode;
 
-  CorsairK70Key({
+  const CorsairK70Key({
     required this.packetIndex,
     required this.index,
-    required this.keyName,
+    required this.keyCode,
   });
 
   @override
   List<Object> get props => <Object>[
         packetIndex,
         index,
-        keyName,
+        keyCode,
       ];
 }

@@ -1,3 +1,5 @@
+import '../devices/device.dart';
+
 enum DeviceProductVendor {
   corsairK70,
   steelSeriesRival100,
@@ -38,5 +40,12 @@ extension DeviceProductVendorExtension on DeviceProductVendor {
       default:
         return DeviceProductVendor.unknown;
     }
+  }
+
+  static List<DeviceProductVendor> getAllAvailableDevices() {
+    return <DeviceProductVendor>[
+      DeviceProductVendor.corsairK70,
+      DeviceProductVendor.steelSeriesRival100,
+    ];
   }
 }
