@@ -28,7 +28,7 @@ class _MainFrameState extends State<MainFrame> {
     LibusbLoader.initLibusb();
     final quickUsb = QuickUsb();
     deviceProductInfo = quickUsb.getDeviceProductInfo();
-    _devicesBloc = DevicesBloc();
+    _devicesBloc = DevicesBloc(availableDevices: deviceProductInfo);
     _keyBloc = KeyBloc();
   }
 
@@ -46,30 +46,10 @@ class _MainFrameState extends State<MainFrame> {
         appBar: AppBar(
           title: const Text('¯\\_(ツ)_/¯r'),
         ),
-        body: BlocListener(
-            child: _child(),
-            bloc: _devicesBloc,
-            listener: (BuildContext context, DevicesState state) {
-              /*Timer.periodic(
-                const Duration(milliseconds: 100),
-                (Timer t) {
-                  final SteelSeriesRival100 steelSeriesRival100 =
-                      ((state as DevicesInitialState)
-                              .deviceInstances
-                              .firstWhere((DeviceInterface device) =>
-                                  device.device.deviceProductVendor ==
-                                  DeviceProductVendor.steelSeriesRival100)
-                          as SteelSeriesRival100);
-                  steelSeriesRival100.color = Color.fromARGB(
-                    1,
-                    Random().nextInt(255),
-                    Random().nextInt(255),
-                    Random().nextInt(255),
-                  );
-                  steelSeriesRival100.sendData();
-                },
-              );*/
-            }),
+        body: BlocProvider(
+          create: (BuildContext context) => _devicesBloc,
+          child: _child(),
+        ),
       ),
     );
   }

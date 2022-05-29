@@ -7,9 +7,10 @@ import 'package:rgb_app/devices/device_interface.dart';
 import '../../devices/device.dart';
 
 class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
-  DevicesBloc()
+  DevicesBloc({required List<Device> availableDevices})
       : super(DevicesInitialState(
           devices: [],
+          availableDevices: availableDevices,
           deviceInstances: [],
         )) {
     on<AddDeviceEvent>(_onAddDeviceEvent);

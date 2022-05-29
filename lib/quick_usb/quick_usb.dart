@@ -109,7 +109,7 @@ class QuickUsb {
         return Device.empty();
       }
       final DeviceProductVendor deviceType =
-          DeviceProductVendorExtension.getType(idDevice);
+          DeviceProductVendor.getType(idDevice);
       return Device.create(
         deviceProductVendor: deviceType,
         productId: idProduct,

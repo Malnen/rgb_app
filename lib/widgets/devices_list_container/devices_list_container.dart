@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/widgets/add_device_button/add_device_button.dart';
 
-import '../dialogs/dialogs.dart';
-
 class DevicesListContainer extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DevicesListContainer();

@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
+import 'package:rgb_app/enums/device_product_vendor.dart';
 
+import '../../blocs/devices_bloc/devices_state.dart';
+import '../../devices/device.dart';
 import '../dialogs/dialogs.dart';
 
-class AddDeviceButton extends StatelessWidget {
+class AddDeviceButton extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return _addButton(context);
+  State<AddDeviceButton> createState() => _AddDeviceButtonState();
+}
+
+class _AddDeviceButtonState extends State<AddDeviceButton> {
+  late DevicesBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.read();
   }
 
-  InkWell _addButton(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       child: Container(
         height: 36,
@@ -24,19 +38,23 @@ class AddDeviceButton extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      onTap: () {
-        Navigator.of(context).restorablePush(_dialogBuilder);
-      },
+      onTap: _onTap,
     );
   }
 
-  static Route<Object?> _dialogBuilder(
-    BuildContext context,
-    Object? arguments,
-  ) {
-    return Dialogs.showAddDeviceDialog(
-      context,
-      () {},
+  void _onTap() {
+    final DevicesInitialState initialState = bloc.state as DevicesInitialState;
+    List<Device> availableDevices = initialState.availableDevices;
+    availableDevices = availableDevices
+        .where((Device device) =>
+            device.deviceProductVendor != DeviceProductVendor.unknown)
+        .toList();
+    Navigator.of(context).push(
+      Dialogs.showAddDeviceDialog(
+        context,
+        () {},
+        availableDevices,
+      ),
     );
   }
 }

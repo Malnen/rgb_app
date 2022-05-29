@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/enums/device_product_vendor.dart';
 
+import '../../devices/device.dart';
 import '../device_tile/device_tile.dart';
 
 class Dialogs {
   static DialogRoute<void> showAddDeviceDialog(
-      BuildContext context, Function() onTap) {
-    List<Widget> deviceTiles =
-        DeviceProductVendorExtension.getAllAvailableDevices()
-            .map((DeviceProductVendor device) => DeviceTile(
-                  device: device,
-                  onTap: onTap,
-                ))
-            .toList();
+    BuildContext context,
+    Function() onTap,
+    List<Device> availableDevices,
+  ) {
+    List<Widget> deviceTiles = availableDevices
+        .map((Device device) => DeviceTile(
+              device: device,
+              onTap: onTap,
+            ))
+        .toList();
     final Widget child = Column(children: deviceTiles);
     return _showDialog(context, child, 'Choose device');
   }

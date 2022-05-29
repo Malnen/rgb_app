@@ -1,37 +1,35 @@
-import '../devices/device.dart';
+import 'package:flutter/material.dart';
+import 'package:rgb_app/devices/device.dart';
 
 enum DeviceProductVendor {
-  corsairK70,
-  steelSeriesRival100,
-  unknown,
-}
+  corsairK70(
+    name:'Corsair k70',
+    productVendor:'1b1c:1b33',
+    icon: Icons.keyboard
+  ),
+  steelSeriesRival100(
+    name:'SteelSeries Rival 100',
+    productVendor:'1038:1702',
+    icon: Icons.mouse
+  ),
+  unknown(
+    name:'Unknown',
+    productVendor:'',
+    icon: Icons.devices
+  );
 
-extension DeviceProductVendorExtension on DeviceProductVendor {
-  String get name {
-    switch (this) {
-      case DeviceProductVendor.corsairK70:
-        return 'Corsair k70';
-      case DeviceProductVendor.steelSeriesRival100:
-        return 'SteelSeries Rival 100';
-      default:
-        return 'Unknown';
-    }
-  }
+ const DeviceProductVendor({
+    required this.name,
+    required this.productVendor,
+    required this.icon,
+  });
 
-  String get productVendor {
-    switch (this) {
-      case DeviceProductVendor.corsairK70:
-        return '1b1c:1b33';
-      case DeviceProductVendor.steelSeriesRival100:
-        return '1038:1702';
-      default:
-        return 'unknown';
-    }
-  }
+  final String name;
+  final String productVendor;
+  final IconData icon;
 
   static DeviceProductVendor getType(String deviceId) {
     deviceId = deviceId.toLowerCase();
-
     switch (deviceId) {
       case '1b1c:1b33':
         return DeviceProductVendor.corsairK70;
@@ -40,12 +38,5 @@ extension DeviceProductVendorExtension on DeviceProductVendor {
       default:
         return DeviceProductVendor.unknown;
     }
-  }
-
-  static List<DeviceProductVendor> getAllAvailableDevices() {
-    return <DeviceProductVendor>[
-      DeviceProductVendor.corsairK70,
-      DeviceProductVendor.steelSeriesRival100,
-    ];
   }
 }
