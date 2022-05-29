@@ -42,48 +42,21 @@ class _MainFrameState extends State<MainFrame> {
     return MaterialApp(
       title: 'RGB App',
       home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 30, 30, 30),
-        appBar: AppBar(
-          title: const Text('¯\\_(ツ)_/¯r'),
-        ),
-        body: BlocProvider(
-          create: (BuildContext context) => _devicesBloc,
-          child: _child(),
-        ),
-      ),
+          backgroundColor: Color.fromARGB(255, 30, 30, 30),
+          appBar: AppBar(
+            title: const Text('¯\\_(ツ)_/¯r'),
+          ),
+          body: MultiBlocProvider(
+            child: LeftPanel(),
+            providers: [
+              BlocProvider<DevicesBloc>(
+                create: (BuildContext context) => _devicesBloc,
+              ),
+              BlocProvider<KeyBloc>(
+                create: (BuildContext context) => _keyBloc,
+              ),
+            ],
+          )),
     );
-  }
-
-  Widget _child() {
-    return LeftPanel();
-    /*return Column(
-      children: [
-        InkWell(
-          child: const Text('Add Corsair K70'),
-          onTap: () {
-            _devicesBloc.add(
-              AddDeviceEvent(
-                device: deviceProductInfo.firstWhere((Device device) =>
-                    device.deviceProductVendor ==
-                    DeviceProductVendor.corsairK70),
-                keyBloc: _keyBloc,
-              ),
-            );
-          },
-        ),
-        InkWell(
-          child: const Text('Add SteelSeries Rival 100'),
-          onTap: () {
-            _devicesBloc.add(
-              AddDeviceEvent(
-                device: deviceProductInfo.firstWhere((Device device) =>
-                    device.deviceProductVendor ==
-                    DeviceProductVendor.steelSeriesRival100),
-              ),
-            );
-          },
-        )
-      ],
-    );*/
   }
 }

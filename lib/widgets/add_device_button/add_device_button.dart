@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 
 import '../../blocs/devices_bloc/devices_state.dart';
@@ -52,9 +53,18 @@ class _AddDeviceButtonState extends State<AddDeviceButton> {
     Navigator.of(context).push(
       Dialogs.showAddDeviceDialog(
         context,
-        () {},
+        _addDeviceEvent,
         availableDevices,
       ),
     );
+  }
+
+  void _addDeviceEvent(Device device) {
+    AddDeviceEvent event = AddDeviceEvent(
+      device: device,
+      keyBloc: context.read(),
+    );
+    bloc.add(event);
+    Navigator.of(context).pop();
   }
 }

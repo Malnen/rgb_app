@@ -5,7 +5,7 @@ import '../../devices/device.dart';
 
 class DeviceTile extends StatelessWidget {
   final Device device;
-  final void Function() onTap;
+  final void Function(Device device) onTap;
 
   const DeviceTile({
     required this.device,
@@ -44,7 +44,7 @@ class DeviceTile extends StatelessWidget {
   }
 
   void _onTap(BuildContext context) {
-    Navigator.of(context).pop();
+    onTap(device);
   }
 
   Widget _icon() {

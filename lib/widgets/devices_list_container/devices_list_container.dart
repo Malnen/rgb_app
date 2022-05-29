@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/widgets/add_device_button/add_device_button.dart';
+import 'package:rgb_app/widgets/device_tile/device_tile.dart';
+
+import '../../blocs/devices_bloc/devices_bloc.dart';
+import '../../devices/device.dart';
 
 class DevicesListContainer extends StatefulWidget {
   @override
@@ -7,18 +13,41 @@ class DevicesListContainer extends StatefulWidget {
 }
 
 class _DevicesListContainer extends State<DevicesListContainer> {
+  List<Device> devices = [];
+
+  late DevicesBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.read();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: child(),
-      color: Color.fromARGB(255, 26, 26, 26),
+    return BlocListener(
+      listener: listener,
+      bloc: bloc,
+      child: Container(
+        child: child(),
+        color: Color.fromARGB(255, 26, 26, 26),
+      ),
     );
+  }
+
+  void listener(BuildContext context, DevicesState state) {
+    if (state is DevicesInitialState) {
+      devices = state.devices;
+    }
+
+    setState(() {});
   }
 
   Column child() {
     return Column(
       children: <Widget>[
         top(),
+        ...getDevices(),
       ],
     );
   }
@@ -49,5 +78,16 @@ class _DevicesListContainer extends State<DevicesListContainer> {
         color: Colors.white,
       ),
     );
+  }
+
+  List<Widget> getDevices() {
+    return devices
+        .map(
+          (Device device) => DeviceTile(
+            device: device,
+            onTap: (_) {},
+          ),
+        )
+        .toList();
   }
 }

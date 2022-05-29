@@ -6,7 +6,7 @@ import '../device_tile/device_tile.dart';
 class Dialogs {
   static DialogRoute<void> showAddDeviceDialog(
     BuildContext context,
-    Function() onTap,
+    Function(Device device) onTap,
     List<Device> availableDevices,
   ) {
     List<Widget> deviceTiles = availableDevices

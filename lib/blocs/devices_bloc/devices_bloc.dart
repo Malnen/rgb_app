@@ -35,9 +35,8 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   Future<DevicesState> _addDeviceIfNew(AddDeviceEvent event) async {
     final DevicesInitialState currentState = state as DevicesInitialState;
-    final List<Device> devices = List.from(currentState.devices);
-    final List<DeviceInterface> deviceInstances =
-        List.from(currentState.deviceInstances);
+    final List<Device> devices = currentState.devices;
+    final List<DeviceInterface> deviceInstances = currentState.deviceInstances;
     if (!devices.contains(event.device)) {
       devices.add(event.device);
       final DeviceInterface deviceInterface = DeviceInterface.fromDevice(
@@ -56,9 +55,8 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   Future<DevicesState> _removeDeviceIfExist(RemoveDeviceEvent event) async {
     final DevicesInitialState currentState = state as DevicesInitialState;
-    final List<Device> devices = List.from(currentState.devices);
-    final List<DeviceInterface> deviceInstances =
-        List.from(currentState.deviceInstances);
+    final List<Device> devices = currentState.devices;
+    final List<DeviceInterface> deviceInstances = currentState.deviceInstances;
     if (devices.contains(event.device)) {
       final DeviceInterface deviceInterface =
           DeviceInterface.fromDevice(device: event.device);

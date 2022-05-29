@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 
 import '../../devices/device.dart';
@@ -9,11 +10,13 @@ class DevicesInitialState extends DevicesState {
   final List<Device> devices;
   final List<Device> availableDevices;
   final List<DeviceInterface> deviceInstances;
+  final Key key;
 
-  DevicesInitialState(
-      {required this.devices,
-      required this.deviceInstances,
-      required this.availableDevices});
+  DevicesInitialState({
+    required this.devices,
+    required this.deviceInstances,
+    required this.availableDevices,
+  }) : key = UniqueKey();
 
   DevicesInitialState copyWith({
     List<Device>? devices,
@@ -32,5 +35,6 @@ class DevicesInitialState extends DevicesState {
         devices,
         availableDevices,
         deviceInstances,
+        key,
       ];
 }
