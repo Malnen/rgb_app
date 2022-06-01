@@ -170,7 +170,7 @@ class CorsairK70KeyDictionary {
   static const CorsairK70Key pauseBreak = CorsairK70Key(
     packetIndex: 0,
     index: 46,
-    keyCode: KeyCode.pause_Break,
+    keyCode: KeyCode.pauseBreak,
   );
   static const CorsairK70Key delete = CorsairK70Key(
     packetIndex: 0,

@@ -29,3 +29,8 @@ class RemoveDeviceEvent extends DevicesEvent {
   @override
   List<Object> get props => <Object>[device];
 }
+
+class RestoreDevicesEvent extends DevicesEvent {
+  @override
+  List<Object?> get props => [];
+}

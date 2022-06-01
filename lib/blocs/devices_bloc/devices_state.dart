@@ -4,26 +4,24 @@ import 'package:rgb_app/devices/device_interface.dart';
 
 import '../../devices/device.dart';
 
-abstract class DevicesState extends Equatable {}
-
-class DevicesInitialState extends DevicesState {
+class DevicesState extends Equatable {
   final List<Device> devices;
   final List<Device> availableDevices;
   final List<DeviceInterface> deviceInstances;
   final Key key;
 
-  DevicesInitialState({
+  DevicesState({
     required this.devices,
     required this.deviceInstances,
     required this.availableDevices,
   }) : key = UniqueKey();
 
-  DevicesInitialState copyWith({
+  DevicesState copyWith({
     List<Device>? devices,
     List<Device>? availableDevices,
     List<DeviceInterface>? deviceInstances,
   }) {
-    return DevicesInitialState(
+    return DevicesState(
       devices: devices ?? this.devices,
       availableDevices: availableDevices ?? this.availableDevices,
       deviceInstances: deviceInstances ?? this.deviceInstances,

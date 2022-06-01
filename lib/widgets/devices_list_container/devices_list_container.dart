@@ -36,10 +36,7 @@ class _DevicesListContainer extends State<DevicesListContainer> {
   }
 
   void listener(BuildContext context, DevicesState state) {
-    if (state is DevicesInitialState) {
-      devices = state.devices;
-    }
-
+    devices = state.devices;
     setState(() {});
   }
 

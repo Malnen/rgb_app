@@ -1,24 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/devices/device.dart';
 
-enum DeviceProductVendor {
-  corsairK70(
-    name:'Corsair k70',
-    productVendor:'1b1c:1b33',
-    icon: Icons.keyboard
-  ),
-  steelSeriesRival100(
-    name:'SteelSeries Rival 100',
-    productVendor:'1038:1702',
-    icon: Icons.mouse
-  ),
-  unknown(
-    name:'Unknown',
-    productVendor:'',
-    icon: Icons.devices
-  );
+abstract class DeviceProductVendor {
+  static const String corsairK70 = '1b1c:1b33';
+  static const String steelSeriesRival100 = '1038:1702';
+  static const String unknown = '';
 
- const DeviceProductVendor({
+  const DeviceProductVendor({
     required this.name,
     required this.productVendor,
     required this.icon,
@@ -31,12 +18,45 @@ enum DeviceProductVendor {
   static DeviceProductVendor getType(String deviceId) {
     deviceId = deviceId.toLowerCase();
     switch (deviceId) {
-      case '1b1c:1b33':
-        return DeviceProductVendor.corsairK70;
-      case '1038:1702':
-        return DeviceProductVendor.steelSeriesRival100;
+      case corsairK70:
+        return CorsairK70ProductVendor();
+      case steelSeriesRival100:
+        return SteelSeriesRival100ProductVendor();
       default:
-        return DeviceProductVendor.unknown;
+        return UnknownProductVendor();
     }
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'productVendor': productVendor,
+    };
+  }
+}
+
+class CorsairK70ProductVendor extends DeviceProductVendor {
+  CorsairK70ProductVendor()
+      : super(
+          name: 'Corsair k70',
+          productVendor: DeviceProductVendor.corsairK70,
+          icon: Icons.keyboard,
+        );
+}
+
+class SteelSeriesRival100ProductVendor extends DeviceProductVendor {
+  SteelSeriesRival100ProductVendor()
+      : super(
+          name: 'SteelSeries Rival 100',
+          productVendor: DeviceProductVendor.steelSeriesRival100,
+          icon: Icons.mouse,
+        );
+}
+
+class UnknownProductVendor extends DeviceProductVendor {
+  UnknownProductVendor()
+      : super(
+          name: 'Unknown',
+          productVendor: DeviceProductVendor.unknown,
+          icon: Icons.devices,
+        );
 }

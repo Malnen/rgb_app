@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/widgets/left_panel/left_panel.dart';
 
@@ -30,6 +30,7 @@ class _MainFrameState extends State<MainFrame> {
     deviceProductInfo = quickUsb.getDeviceProductInfo();
     _devicesBloc = DevicesBloc(availableDevices: deviceProductInfo);
     _keyBloc = KeyBloc();
+    _devicesBloc.add(RestoreDevicesEvent());
   }
 
   @override

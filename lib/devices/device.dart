@@ -13,8 +13,8 @@ class Device extends Equatable {
   });
 
   factory Device.empty() {
-    return const Device(
-      deviceProductVendor: DeviceProductVendor.unknown,
+    return Device(
+      deviceProductVendor: UnknownProductVendor(),
       vendorId: '',
       productId: '',
     );

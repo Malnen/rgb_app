@@ -44,11 +44,11 @@ class _AddDeviceButtonState extends State<AddDeviceButton> {
   }
 
   void _onTap() {
-    final DevicesInitialState initialState = bloc.state as DevicesInitialState;
-    List<Device> availableDevices = initialState.availableDevices;
+    final DevicesState state = bloc.state;
+    List<Device> availableDevices = state.availableDevices;
     availableDevices = availableDevices
         .where((Device device) =>
-            device.deviceProductVendor != DeviceProductVendor.unknown)
+            device.deviceProductVendor.productVendor != DeviceProductVendor.unknown)
         .toList();
     Navigator.of(context).push(
       Dialogs.showAddDeviceDialog(

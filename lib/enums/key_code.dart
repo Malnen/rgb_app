@@ -85,7 +85,7 @@ enum KeyCode {
   delete,
   numLock,
   scrollLock,
-  pause_Break,
+  pauseBreak,
   semicolon,
   equal,
   minus,
@@ -294,7 +294,7 @@ extension KeyCodeExtension on KeyCode {
         return 144;
       case KeyCode.scrollLock:
         return 145;
-      case KeyCode.pause_Break:
+      case KeyCode.pauseBreak:
         return 19;
       case KeyCode.semicolon:
         return 186;
