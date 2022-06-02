@@ -5,7 +5,7 @@ class LeftPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 300,
+      width: 380,
       height: double.infinity,
       child: Container(
         decoration: _getBoxDecoration(),

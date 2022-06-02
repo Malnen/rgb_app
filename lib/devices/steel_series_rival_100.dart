@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/steel_series_rival_100_tester/steel_series_rival_100_tester.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 
 import '../utils/libusb_loader.dart';
@@ -13,8 +14,6 @@ class SteelSeriesRival100 extends DeviceInterface {
   Color color = Color.fromARGB(1, 0, 0, 0);
 
   SteelSeriesRival100({required Device device}) : super(device: device);
-
-  Libusb get libusb => LibusbLoader.getInstance;
 
   @override
   void init() {
@@ -27,6 +26,8 @@ class SteelSeriesRival100 extends DeviceInterface {
 
     libusb.libusb_claim_interface(devHandle, 0);
     libusb.libusb_set_configuration(devHandle, 1);
+    //test();
+    blink();
   }
 
   @override
@@ -78,10 +79,16 @@ class SteelSeriesRival100 extends DeviceInterface {
   }
 
   @override
-  void dispose() {
-    libusb.libusb_close(devHandle);
+  void test() {
+    final SteelSeriesRival100Tester tester =
+        SteelSeriesRival100Tester(steelSeriesRival100: this);
+    tester.test();
   }
 
   @override
-  void test() {}
+  void blink() {
+    final SteelSeriesRival100Tester tester =
+        SteelSeriesRival100Tester(steelSeriesRival100: this);
+    tester.blink();
+  }
 }

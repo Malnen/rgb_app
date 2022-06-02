@@ -93,13 +93,15 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     List<Device> devices,
     List<DeviceInterface> deviceInstances,
   ) {
-    final DeviceInterface deviceInterface =
-        DeviceInterface.fromDevice(device: device);
+    final DeviceInterface deviceInterface = state.deviceInstances.firstWhere(
+        (DeviceInterface deviceInterface) =>
+            deviceInterface.device.deviceProductVendor ==
+            device.deviceProductVendor);
     final DeviceData deviceData = DeviceData(
       deviceProductVendor: device.deviceProductVendor,
     );
-    devices.remove(device);
     deviceInterface.dispose();
+    devices.remove(device);
     deviceInstances.remove(deviceInterface);
     _devicesCubit.removeDeviceData(deviceData);
   }
@@ -122,9 +124,11 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
   void _addDeviceToRestore(Device device, List<Device> devices) {
     final DeviceProductVendor deviceProductVendor = device.deviceProductVendor;
     final bool hasAny = _devicesCubit.state.any((DeviceData deviceData) =>
-        deviceData.deviceProductVendor.productVendor == deviceProductVendor.productVendor);
+        deviceData.deviceProductVendor.productVendor ==
+        deviceProductVendor.productVendor);
     if (hasAny) {
-      devices.add(device);
+      final AddDeviceEvent event = AddDeviceEvent(device: device);
+      add(event);
     }
   }
 }

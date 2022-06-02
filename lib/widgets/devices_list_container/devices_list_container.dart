@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/widgets/add_device_button/add_device_button.dart';
 import 'package:rgb_app/widgets/device_tile/device_tile.dart';
+import 'package:rgb_app/widgets/remove_device_button/add_device_button.dart';
 
 import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../devices/device.dart';
@@ -44,7 +45,16 @@ class _DevicesListContainer extends State<DevicesListContainer> {
     return Column(
       children: <Widget>[
         top(),
-        ...getDevices(),
+        Container(
+          width: double.infinity,
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(left: 10, right: 20),
+          child: Column(
+            children: [
+              ...getDevices(),
+            ],
+          ),
+        )
       ],
     );
   }
@@ -79,12 +89,21 @@ class _DevicesListContainer extends State<DevicesListContainer> {
 
   List<Widget> getDevices() {
     return devices
-        .map(
-          (Device device) => DeviceTile(
-            device: device,
-            onTap: (_) {},
-          ),
-        )
+        .map((Device device) => Row(
+              children: [
+                DeviceTile(
+                  device: device,
+                  onTap: (_) {},
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 6),
+                  child: RemoveDeviceButton(device: device),
+                )
+              ],
+            ))
         .toList();
   }
 }

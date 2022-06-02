@@ -6,6 +6,7 @@ import 'package:rgb_app/devices/steel_series_rival_100.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 
+import '../utils/libusb_loader.dart';
 import 'corsair_k_70/corsair_k_70.dart';
 import 'device.dart';
 
@@ -17,6 +18,8 @@ abstract class DeviceInterface {
   DeviceInterface({
     required this.device,
   });
+
+  Libusb get libusb => LibusbLoader.getInstance;
 
   static DeviceInterface fromDevice({
     required Device device,
@@ -39,7 +42,13 @@ abstract class DeviceInterface {
 
   void sendData();
 
-  void dispose();
+  void dispose() {
+    try {
+      libusb.libusb_close(devHandle);
+    } finally {}
+  }
 
   void test();
+
+  void blink();
 }

@@ -8,7 +8,6 @@ class DevicesCubit extends HydratedCubit<List<DeviceData>> {
 
   @override
   List<DeviceData> fromJson(Map<String, dynamic> json) {
-    print(json);
     final List<dynamic> devicesData =
         json['devicesData'] as List<dynamic>;
     return devicesData.map(_map).toList();
@@ -16,7 +15,6 @@ class DevicesCubit extends HydratedCubit<List<DeviceData>> {
 
   @override
   Map<String, List<DeviceData>> toJson(List<DeviceData> state) {
-    print(state);
     return {'devicesData': state};
   }
 

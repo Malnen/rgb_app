@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
+import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_key.dart';
+import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_key_dictionary.dart';
+import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
 import 'package:rgb_app/enums/key_code.dart';
 
 class CorsairK70Tester {
@@ -33,6 +37,39 @@ class CorsairK70Tester {
       }
     });
     _sendData();
+  }
+
+  Future<void> blink() async {
+    final Iterable<MapEntry<String, CorsairK70Key>> entries =
+        CorsairK70KeyDictionary.keys.entries;
+    _updateColor(Duration(milliseconds: 4), 2);
+    Timer.periodic(
+      Duration(milliseconds: 100),
+          (Timer timer) {
+        _blink(entries);
+        corsairK70.sendData();
+      },
+    );
+  }
+
+  void _blink(Iterable<MapEntry<String, CorsairK70Key>> entries) {
+    for (MapEntry<String, CorsairK70Key> entry in entries) {
+      final CorsairK70Key key = entry.value;
+      final int packetIndex = key.packetIndex;
+      if (packetIndex < 0) continue;
+      _setBlinkColor(packetIndex, key);
+    }
+    corsairK70.sendData();
+  }
+
+  void _setBlinkColor(int packetIndex, CorsairK70Key key) {
+    final CorsairK70Packets packets = corsairK70.getPacket(packetIndex);
+    final Uint8List rPkt = packets.rPkt;
+    final Uint8List gPkt = packets.gPkt;
+    final Uint8List bPkt = packets.bPkt;
+    rPkt[key.index] = value;
+    gPkt[key.index] = value;
+    bPkt[key.index] = value;
   }
 
   void _rememberValues() {
@@ -82,7 +119,7 @@ class CorsairK70Tester {
     _updateColor();
     Timer.periodic(
       Duration(milliseconds: 100),
-      (Timer timer) {
+          (Timer timer) {
         _setCurrentIndexValue(
           valueR: value,
           valueG: 0,
@@ -93,22 +130,24 @@ class CorsairK70Tester {
     );
   }
 
-  void _updateColor() {
-    final int speed = 5;
+  void _updateColor([Duration? duration, int? speed]) {
+    final int updateSpeed = speed ?? 5;
     Timer.periodic(
-      Duration(microseconds: 2000),
-      (Timer timer) {
+      duration ?? Duration(microseconds: 2000),
+          (Timer timer) {
         if (inc) {
-          value += speed;
+          value += updateSpeed;
         } else {
-          value -= speed;
+          value -= updateSpeed;
         }
 
         if (value >= 255) {
           inc = false;
+          value = 255;
         }
         if (value <= 0) {
           inc = true;
+          value = 0;
         }
       },
     );

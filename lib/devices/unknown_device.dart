@@ -11,8 +11,8 @@ class UnknownDevice extends DeviceInterface {
   void sendData() {}
 
   @override
-  void dispose() {}
+  void test() {}
 
   @override
-  void test() {}
+  void blink() {}
 }
