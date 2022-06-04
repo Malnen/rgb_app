@@ -10,6 +10,8 @@ import '../device.dart';
 import 'corsair_k_70_packets.dart';
 
 class CorsairK70 extends DeviceInterface {
+  late CorsairK70Tester tester;
+
   final KeyBloc? keyBloc;
 
   CorsairK70({
@@ -35,6 +37,10 @@ class CorsairK70 extends DeviceInterface {
 
   @override
   void init() {
+    tester = CorsairK70Tester(
+      corsairK70: this,
+      keyBloc: keyBloc,
+    );
     libusb.libusb_init(nullptr);
     devHandle = libusb.libusb_open_device_with_vid_pid(
       nullptr,
@@ -57,20 +63,18 @@ class CorsairK70 extends DeviceInterface {
 
   @override
   void test() {
-    CorsairK70Tester tester = CorsairK70Tester(
-      corsairK70: this,
-      keyBloc: keyBloc,
-    );
     tester.test();
   }
 
   @override
   void blink() {
-    CorsairK70Tester tester = CorsairK70Tester(
-      corsairK70: this,
-      keyBloc: keyBloc,
-    );
     tester.blink();
+  }
+
+  @override
+  void dispose() {
+    tester.dispose();
+    super.dispose();
   }
 
   CorsairK70Packets getPacket(int index) {

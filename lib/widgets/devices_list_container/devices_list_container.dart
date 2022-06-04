@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/widgets/add_device_button/add_device_button.dart';
 import 'package:rgb_app/widgets/device_tile/device_tile.dart';
-import 'package:rgb_app/widgets/remove_device_button/add_device_button.dart';
+import 'package:rgb_app/widgets/remove_device_button/remove_device_button.dart';
 
 import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../devices/device.dart';
@@ -22,6 +22,7 @@ class _DevicesListContainer extends State<DevicesListContainer> {
   void initState() {
     super.initState();
     bloc = context.read();
+    devices = bloc.state.devices;
   }
 
   @override

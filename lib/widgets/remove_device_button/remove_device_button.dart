@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
-import 'package:rgb_app/enums/device_product_vendor.dart';
 
-import '../../blocs/devices_bloc/devices_state.dart';
 import '../../devices/device.dart';
-import '../dialogs/dialogs.dart';
 
 class RemoveDeviceButton extends StatefulWidget {
   final Device device;

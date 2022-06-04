@@ -123,7 +123,8 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   void _addDeviceToRestore(Device device, List<Device> devices) {
     final DeviceProductVendor deviceProductVendor = device.deviceProductVendor;
-    final bool hasAny = _devicesCubit.state.any((DeviceData deviceData) =>
+    final List<DeviceData> devicesData = _devicesCubit.state.devicesData;
+    final bool hasAny = devicesData.any((DeviceData deviceData) =>
         deviceData.deviceProductVendor.productVendor ==
         deviceProductVendor.productVendor);
     if (hasAny) {

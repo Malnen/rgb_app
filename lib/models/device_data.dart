@@ -12,8 +12,8 @@ class DeviceData extends Equatable {
       ];
 
   DeviceData.fromJson(Map<String, dynamic> json)
-      : deviceProductVendor =
-            json['deviceProductVendor'] as DeviceProductVendor;
+      : deviceProductVendor = DeviceProductVendor.fromJson(
+            json['deviceProductVendor'] as Map<String, dynamic>);
 
   Map<String, dynamic> toJson() {
     return {

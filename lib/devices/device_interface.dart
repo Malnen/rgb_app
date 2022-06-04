@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
-import 'package:rgb_app/devices/steel_series_rival_100.dart';
+import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 
@@ -43,9 +43,7 @@ abstract class DeviceInterface {
   void sendData();
 
   void dispose() {
-    try {
-      libusb.libusb_close(devHandle);
-    } finally {}
+    libusb.libusb_close(devHandle);
   }
 
   void test();

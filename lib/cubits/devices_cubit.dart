@@ -1,36 +1,60 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 
 import '../models/device_data.dart';
+import 'device_data_state.dart';
 
-class DevicesCubit extends HydratedCubit<List<DeviceData>> {
-  DevicesCubit() : super([]);
+class DevicesCubit extends HydratedCubit<DevicesDataState> {
+  DevicesCubit()
+      : super(
+          DevicesDataState(
+            devicesData: [],
+          ),
+        );
 
   @override
-  List<DeviceData> fromJson(Map<String, dynamic> json) {
-    final List<dynamic> devicesData =
-        json['devicesData'] as List<dynamic>;
-    return devicesData.map(_map).toList();
+  DevicesDataState fromJson(Map<String, dynamic> json) {
+    final DevicesDataState state = DevicesDataState.fromJson(
+      json['devicesDataState'] as Map<String, dynamic>,
+    );
+    final List<DeviceData> devicesData = state.devicesData;
+    return DevicesDataState(
+      devicesData: devicesData,
+    );
   }
 
   @override
-  Map<String, List<DeviceData>> toJson(List<DeviceData> state) {
-    return {'devicesData': state};
+  Map<String, DevicesDataState> toJson(DevicesDataState state) {
+    return {'devicesDataState': state};
   }
 
   void addDeviceData(DeviceData deviceData) {
-    state.add(deviceData);
-    emit(state);
+    final List<DeviceData> devicesData = state.devicesData;
+    final DeviceProductVendor deviceProductVendor =
+        deviceData.deviceProductVendor;
+    final String productVendor = deviceProductVendor.productVendor;
+    final bool hasDevice = devicesData.any((DeviceData element) =>
+        element.deviceProductVendor.productVendor == productVendor);
+    if (!hasDevice) {
+      devicesData.add(deviceData);
+      final DevicesDataState newState = DevicesDataState(
+        devicesData: state.devicesData,
+      );
+      emit(newState);
+    }
   }
 
   void removeDeviceData(DeviceData deviceData) {
-    state.remove(deviceData);
-    emit(state);
-  }
-
-  DeviceData _map(dynamic entry) {
     final DeviceProductVendor deviceProductVendor =
-        DeviceProductVendor.getType(entry['deviceProductVendor']['productVendor'] as String);
-    return DeviceData(deviceProductVendor: deviceProductVendor);
+        deviceData.deviceProductVendor;
+    final String productVendor = deviceProductVendor.productVendor;
+    final List<DeviceData> devicesData = state.devicesData;
+    devicesData.removeWhere((DeviceData element) =>
+        element.deviceProductVendor.productVendor == productVendor);
+    final DevicesDataState newState = DevicesDataState(
+      devicesData: state.devicesData,
+    );
+    emit(newState);
   }
 }

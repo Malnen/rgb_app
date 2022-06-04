@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
+import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/widgets/left_panel/left_panel.dart';
+import 'package:rgb_app/widgets/right_panel/right_panel.dart';
 
 import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../devices/device.dart';
@@ -21,6 +23,7 @@ class _MainFrameState extends State<MainFrame> {
 
   late DevicesBloc _devicesBloc;
   late KeyBloc _keyBloc;
+  late EffectBloc _effectBloc;
 
   @override
   void initState() {
@@ -30,6 +33,7 @@ class _MainFrameState extends State<MainFrame> {
     deviceProductInfo = quickUsb.getDeviceProductInfo();
     _devicesBloc = DevicesBloc(availableDevices: deviceProductInfo);
     _keyBloc = KeyBloc();
+    _effectBloc = EffectBloc();
     _devicesBloc.add(RestoreDevicesEvent());
   }
 
@@ -48,13 +52,26 @@ class _MainFrameState extends State<MainFrame> {
             title: const Text('¯\\_(ツ)_/¯r'),
           ),
           body: MultiBlocProvider(
-            child: LeftPanel(),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      LeftPanel(),
+                      RightPanel(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             providers: [
               BlocProvider<DevicesBloc>(
                 create: (BuildContext context) => _devicesBloc,
               ),
               BlocProvider<KeyBloc>(
                 create: (BuildContext context) => _keyBloc,
+              ), BlocProvider<EffectBloc>(
+                create: (BuildContext context) => _effectBloc,
               ),
             ],
           )),

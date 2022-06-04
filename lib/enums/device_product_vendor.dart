@@ -27,6 +27,10 @@ abstract class DeviceProductVendor {
     }
   }
 
+  static DeviceProductVendor fromJson(Map<String, dynamic> json) {
+    return getType(json['productVendor'] as String);
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'productVendor': productVendor,

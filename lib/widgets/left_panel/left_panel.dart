@@ -4,19 +4,24 @@ import 'package:rgb_app/widgets/devices_list_container/devices_list_container.da
 class LeftPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 380,
-      height: double.infinity,
-      child: Container(
-        decoration: _getBoxDecoration(),
-        child: DevicesListContainer(),
+      decoration: _getBoxDecoration(),
+      child: ListView(
+        controller: ScrollController(),
+        children: [
+          Column(
+            children: <Widget>[
+              DevicesListContainer(),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   BoxDecoration _getBoxDecoration() {
     return BoxDecoration(
-      color: Colors.white,
       boxShadow: [
         BoxShadow(
           color: Colors.black12,

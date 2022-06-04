@@ -10,12 +10,13 @@ import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
 import 'package:rgb_app/enums/key_code.dart';
 
 class CorsairK70Tester {
+  final List<Timer> timers = [];
   final CorsairK70 corsairK70;
   final KeyBloc? keyBloc;
 
   int currentPacketIndex = 0;
   int currentIndex = 0;
-  int value = 0;
+  double value = 0;
   bool inc = true;
 
   late int lastValueR;
@@ -42,14 +43,21 @@ class CorsairK70Tester {
   Future<void> blink() async {
     final Iterable<MapEntry<String, CorsairK70Key>> entries =
         CorsairK70KeyDictionary.keys.entries;
-    _updateColor(Duration(milliseconds: 4), 2);
-    Timer.periodic(
+    _updateColor(Duration(milliseconds: 4), 0.75);
+    final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-          (Timer timer) {
+      (Timer timer) {
         _blink(entries);
         corsairK70.sendData();
       },
     );
+    timers.add(timer);
+  }
+
+  void dispose() {
+    for (Timer timer in timers) {
+      timer.cancel();
+    }
   }
 
   void _blink(Iterable<MapEntry<String, CorsairK70Key>> entries) {
@@ -67,9 +75,9 @@ class CorsairK70Tester {
     final Uint8List rPkt = packets.rPkt;
     final Uint8List gPkt = packets.gPkt;
     final Uint8List bPkt = packets.bPkt;
-    rPkt[key.index] = value;
-    gPkt[key.index] = value;
-    bPkt[key.index] = value;
+    rPkt[key.index] = value.toInt();
+    gPkt[key.index] = value.toInt();
+    bPkt[key.index] = value.toInt();
   }
 
   void _rememberValues() {
@@ -117,24 +125,25 @@ class CorsairK70Tester {
 
   Future<void> _sendData() async {
     _updateColor();
-    Timer.periodic(
+    final Timer timer =Timer.periodic(
       Duration(milliseconds: 100),
-          (Timer timer) {
+      (Timer timer) {
         _setCurrentIndexValue(
-          valueR: value,
+          valueR: value.toInt(),
           valueG: 0,
           valueB: 0,
         );
         corsairK70.sendData();
       },
     );
+    timers.add(timer);
   }
 
-  void _updateColor([Duration? duration, int? speed]) {
-    final int updateSpeed = speed ?? 5;
-    Timer.periodic(
+  void _updateColor([Duration? duration, double? speed]) {
+    final double updateSpeed = speed ?? 5;
+    final Timer timer =Timer.periodic(
       duration ?? Duration(microseconds: 2000),
-          (Timer timer) {
+      (Timer timer) {
         if (inc) {
           value += updateSpeed;
         } else {
@@ -151,6 +160,7 @@ class CorsairK70Tester {
         }
       },
     );
+    timers.add(timer);
   }
 
   void _setCurrentIndexValue({
