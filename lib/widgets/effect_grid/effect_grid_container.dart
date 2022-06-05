@@ -1,7 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
+import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/effects/rainbow_wave_effect.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
+import 'package:rgb_app/widgets/effect_grid/effect_grid_cell.dart';
 
+import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../blocs/effects_bloc/effect_bloc.dart';
 import '../../blocs/effects_bloc/effect_state.dart';
 
@@ -11,23 +18,35 @@ class EffectGridContainer extends StatefulWidget {
 }
 
 class _EffectGridContainerState extends State<EffectGridContainer> {
-  late EffectBloc bloc;
+  late EffectBloc effectBloc;
+  late DevicesBloc devicesBloc;
   late EffectGridData effectGridData;
-
-  bool shouldSetState = false;
+  late List<List<Color>> colors;
 
   @override
   void initState() {
     super.initState();
-    bloc = context.read();
-    effectGridData = bloc.state.effectGridData;
+    effectBloc = context.read();
+    devicesBloc = context.read();
+    effectGridData = effectBloc.state.effectGridData;
+    final RainbowWaveEffect effect = RainbowWaveEffect(effectBloc: effectBloc);
+
+    Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
+      final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);
+      effectBloc.add(event);
+      effect.update();
+      for (DeviceInterface device in devicesBloc.deviceInstances) {
+        device.update();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    colors = buildColors();
     return BlocListener(
       listener: listener,
-      bloc: bloc,
+      bloc: effectBloc,
       child: Column(
         children: <Widget>[
           ...buildRows(),
@@ -37,29 +56,39 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   }
 
   void listener(BuildContext context, EffectState state) {
-    setEffectGridDataIfHasDifferentSize(state);
-    if (shouldSetState) {
-      shouldSetState = false;
+    final EffectState currentState = effectBloc.state;
+    final bool shouldSetState =
+        currentState.hasEffectGridDataSizeOrMinChanged(state);
+    if (shouldSetState || state.forceUpdate) {
+      effectGridData = state.effectGridData;
       setState(() {});
     }
   }
 
-  void setEffectGridDataIfHasDifferentSize(EffectState state) {
-    final EffectGridData effectGridData = state.effectGridData;
-    final bool hasDifferentSizeX =
-        effectGridData.sizeX != this.effectGridData.sizeX;
-    final bool hasDifferentSizeY =
-        effectGridData.sizeY != this.effectGridData.sizeY;
-    if (hasDifferentSizeX || hasDifferentSizeY) {
-      this.effectGridData = effectGridData;
-      shouldSetState = true;
+  List<List<Color>> buildColors() {
+    final List<List<Color>> colors = <List<Color>>[];
+    for (int i = 0; i < effectGridData.sizeY; i++) {
+      final List<Color> colorRows = buildColorRows();
+      colors.add(colorRows);
     }
+
+    return colors;
+  }
+
+  List<Color> buildColorRows() {
+    final List<Color> colors = <Color>[];
+    for (int i = 0; i < effectGridData.sizeX; i++) {
+      final Color color = Color.fromARGB(1, 255, 255, 255);
+      colors.add(color);
+    }
+
+    return colors;
   }
 
   List<Widget> buildRows() {
     final List<Widget> rows = <Widget>[];
     for (int i = 0; i < effectGridData.sizeY; i++) {
-      final List<Widget> cells = buildCells();
+      final List<Widget> cells = buildCells(i);
       final Widget row = Row(
         children: <Widget>[
           ...cells,
@@ -71,14 +100,12 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     return rows;
   }
 
-  List<Widget> buildCells() {
+  List<Widget> buildCells(int i) {
     final List<Widget> cells = <Widget>[];
-    for (int i = 0; i < effectGridData.sizeX; i++) {
-      final Widget cell = Container(
-        color: Colors.red,
-        width: 20,
-        height: 20,
-        margin: EdgeInsets.all(2),
+    for (int j = 0; j < effectGridData.sizeX; j++) {
+      final Widget cell = EffectGridCell(
+        x: j,
+        y: i,
       );
       cells.add(cell);
     }

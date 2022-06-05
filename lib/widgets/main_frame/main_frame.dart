@@ -31,9 +31,12 @@ class _MainFrameState extends State<MainFrame> {
     LibusbLoader.initLibusb();
     final quickUsb = QuickUsb();
     deviceProductInfo = quickUsb.getDeviceProductInfo();
-    _devicesBloc = DevicesBloc(availableDevices: deviceProductInfo);
-    _keyBloc = KeyBloc();
     _effectBloc = EffectBloc();
+    _devicesBloc = DevicesBloc(
+      availableDevices: deviceProductInfo,
+      effectBloc: _effectBloc,
+    );
+    _keyBloc = KeyBloc();
     _devicesBloc.add(RestoreDevicesEvent());
   }
 
@@ -70,7 +73,8 @@ class _MainFrameState extends State<MainFrame> {
               ),
               BlocProvider<KeyBloc>(
                 create: (BuildContext context) => _keyBloc,
-              ), BlocProvider<EffectBloc>(
+              ),
+              BlocProvider<EffectBloc>(
                 create: (BuildContext context) => _effectBloc,
               ),
             ],

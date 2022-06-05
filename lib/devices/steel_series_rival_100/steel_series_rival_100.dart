@@ -28,7 +28,7 @@ class SteelSeriesRival100 extends DeviceInterface {
     libusb.libusb_claim_interface(devHandle, 0);
     libusb.libusb_set_configuration(devHandle, 1);
     //test();
-    blink();
+    //blink();
   }
 
   @override
@@ -93,5 +93,19 @@ class SteelSeriesRival100 extends DeviceInterface {
   void dispose() {
     tester.dispose();
     super.dispose();
+  }
+
+  @override
+  void update() {
+    try {
+      color = effectBloc.colors[offsetY][offsetX];
+    } catch (e) {
+      print(offsetX.toString() +
+          ', ' +
+          offsetY.toString() +
+          ' out of range ' +
+          device.deviceProductVendor.name);
+    }
+    sendData();
   }
 }

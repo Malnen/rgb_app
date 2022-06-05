@@ -15,4 +15,8 @@ class UnknownDevice extends DeviceInterface {
 
   @override
   void blink() {}
+
+  @override
+  void update() {
+  }
 }

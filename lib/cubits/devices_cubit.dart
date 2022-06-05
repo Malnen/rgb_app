@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 

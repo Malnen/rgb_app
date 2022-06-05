@@ -18,12 +18,14 @@ class _EffectGridState extends State<EffectGrid> {
   final TextEditingController controllerX = TextEditingController();
   final TextEditingController controllerY = TextEditingController();
 
+  late EffectGridData effectGridData;
   late EffectBloc bloc;
 
   @override
   void initState() {
     super.initState();
     bloc = context.read();
+    effectGridData = bloc.state.effectGridData;
     setControllersValue(bloc.state);
   }
 
@@ -42,16 +44,15 @@ class _EffectGridState extends State<EffectGrid> {
   }
 
   void listener(BuildContext context, EffectState state) {
-    setControllersValue(state);
-  }
-
-  void setControllersValue(EffectState state) {
-    final EffectGridData effectGridData = state.effectGridData;
-    final int sizeX = effectGridData.sizeX;
-    final int sizeY = effectGridData.sizeY;
-
-    controllerX.text = sizeX.toString();
-    controllerY.text = sizeY.toString();
+    final EffectState currentState = bloc.state;
+    final bool shouldSetState =
+    currentState.hasEffectGridDataSizeOrMinChanged(state);
+    if (shouldSetState) {
+      effectGridData = state.effectGridData;
+      setGridSize();
+      setControllersValue(state);
+      setState(() {});
+    }
   }
 
   Row top() {
@@ -84,10 +85,14 @@ class _EffectGridState extends State<EffectGrid> {
   }
 
   void setGridSize() {
-    final int x = correctValue(controllerX);
-    final int y = correctValue(controllerY);
+    final EffectState state = bloc.state;
+    final EffectGridData effectGridData = state.effectGridData;
+    final int minX = effectGridData.minSizeX;
+    final int minY = effectGridData.minSizeY;
+    final int x = correctValue(controllerX, minX);
+    final int y = correctValue(controllerY, minY);
     final SetGridSizeEvent event = SetGridSizeEvent(
-      effectGridData: EffectGridData(
+      effectGridData: effectGridData.copyWith(
         sizeX: x,
         sizeY: y,
       ),
@@ -95,18 +100,27 @@ class _EffectGridState extends State<EffectGrid> {
     bloc.add(event);
   }
 
-  int correctValue(TextEditingController controller) {
+  int correctValue(TextEditingController controller, int min) {
     final String text = controller.text;
     final bool hasText = text.isNotEmpty;
     final int parsedValue = hasText ? int.parse(text) : 0;
     if (parsedValue > 60) {
       controller.text = '60';
       return 60;
-    } else if (parsedValue < 20) {
-      controller.text = '20';
-      return 20;
+    } else if (parsedValue < min) {
+      controller.text = min.toString();
+      return min;
     }
 
     return parsedValue;
+  }
+
+  void setControllersValue(EffectState state) {
+    final EffectGridData effectGridData = state.effectGridData;
+    final int sizeX = effectGridData.sizeX;
+    final int sizeY = effectGridData.sizeY;
+
+    controllerX.text = sizeX.toString();
+    controllerY.text = sizeY.toString();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
+import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/cubits/devices_cubit.dart';
 import 'package:rgb_app/devices/device_interface.dart';
@@ -13,9 +14,14 @@ import '../../devices/device.dart';
 
 class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
   final DevicesCubit _devicesCubit;
+  final EffectBloc effectBloc;
 
-  DevicesBloc({required List<Device> availableDevices})
-      : _devicesCubit = DevicesCubit(),
+  List<DeviceInterface> get deviceInstances => state.deviceInstances;
+
+  DevicesBloc({
+    required List<Device> availableDevices,
+    required this.effectBloc,
+  })  : _devicesCubit = DevicesCubit(),
         super(DevicesState(
           devices: [],
           availableDevices: availableDevices,
@@ -66,6 +72,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       device: device,
       keyBloc: keyBloc,
     );
+    deviceInterface.setEffectBloc(effectBloc);
     final DeviceData deviceData = DeviceData(
       deviceProductVendor: device.deviceProductVendor,
     );
