@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
-import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100_tester.dart';
+import 'package:rgb_app/testers/steel_series_rival_100_tester.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 
 import '../device.dart';
@@ -19,14 +19,11 @@ class SteelSeriesRival100 extends DeviceInterface {
   void init() {
     tester = SteelSeriesRival100Tester(steelSeriesRival100: this);
     libusb.libusb_init(nullptr);
-    devHandle = libusb.libusb_open_device_with_vid_pid(
-      nullptr,
-      int.parse('0x${device.vendorId}'),
-      int.parse('0x${device.productId}'),
+    devHandle = DeviceInterface.initDeviceHandler(
+      device: device,
+      configuration: 1,
+      interface: 0,
     );
-
-    libusb.libusb_claim_interface(devHandle, 0);
-    libusb.libusb_set_configuration(devHandle, 1);
     //test();
     //blink();
   }

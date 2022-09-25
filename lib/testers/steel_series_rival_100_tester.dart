@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
+import 'package:rgb_app/testers/device_tester.dart';
 
-class SteelSeriesRival100Tester {
+class SteelSeriesRival100Tester implements DeviceTester {
   final List<Timer> timers = [];
   final SteelSeriesRival100 steelSeriesRival100;
 
@@ -14,11 +15,13 @@ class SteelSeriesRival100Tester {
     required this.steelSeriesRival100,
   });
 
+  @override
   void test() {
     steelSeriesRival100.color = Color.fromARGB(1, 255, 255, 255);
     steelSeriesRival100.sendData();
   }
 
+  @override
   void blink() {
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
@@ -56,6 +59,7 @@ class SteelSeriesRival100Tester {
     timers.add(timer);
   }
 
+  @override
   void dispose() {
     for (Timer timer in timers) {
       timer.cancel();

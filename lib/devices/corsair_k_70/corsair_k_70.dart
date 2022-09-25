@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
-import 'package:rgb_app/devices/corsair_k_70/corsair_k70_packet_filler.dart';
-import 'package:rgb_app/devices/corsair_k_70/corsair_k70_tester.dart';
+import 'package:rgb_app/packet_managers/corsair_k70_packet_manager.dart';
+import 'package:rgb_app/testers/corsair_k70_tester.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_key_dictionary.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/enums/key_code.dart';
@@ -53,14 +53,11 @@ class CorsairK70 extends DeviceInterface {
       keyBloc: keyBloc,
     );
     libusb.libusb_init(nullptr);
-    devHandle = libusb.libusb_open_device_with_vid_pid(
-      nullptr,
-      int.parse('0x${device.vendorId}'),
-      int.parse('0x${device.productId}'),
+    devHandle = DeviceInterface.initDeviceHandler(
+      device: device,
+      configuration: 1,
+      interface: 1,
     );
-
-    libusb.libusb_claim_interface(devHandle, 1);
-    libusb.libusb_set_configuration(devHandle, 1);
     packetManager = CorsairK70PacketManager(this);
     packetManager.fill();
     //test();

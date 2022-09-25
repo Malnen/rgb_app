@@ -9,7 +9,9 @@ import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_key_dictionary.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
 import 'package:rgb_app/enums/key_code.dart';
 
-class CorsairK70Tester {
+import 'device_tester.dart';
+
+class CorsairK70Tester implements DeviceTester {
   final List<Timer> timers = [];
   final CorsairK70 corsairK70;
   final KeyBloc? keyBloc;
@@ -30,6 +32,7 @@ class CorsairK70Tester {
     this.keyBloc,
   });
 
+  @override
   Future<void> test() async {
     _rememberValues();
     keyBloc?.stream.listen((KeyState state) {
@@ -40,6 +43,7 @@ class CorsairK70Tester {
     _sendData();
   }
 
+  @override
   Future<void> blink() async {
     final Iterable<MapEntry<String, CorsairK70Key>> entries =
         CorsairK70KeyDictionary.keys.entries;
@@ -54,6 +58,7 @@ class CorsairK70Tester {
     timers.add(timer);
   }
 
+  @override
   void dispose() {
     for (Timer timer in timers) {
       timer.cancel();

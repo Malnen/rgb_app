@@ -3,12 +3,14 @@ import 'dart:ffi';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
 import 'package:ffi/ffi.dart' show calloc;
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
+import 'package:rgb_app/packet_managers/packet_manager.dart';
 
-class CorsairK70PacketManager {
+class CorsairK70PacketManager extends PacketManager {
   final CorsairK70 corsairK70;
 
   CorsairK70PacketManager(this.corsairK70);
 
+  @override
   void fill() {
     corsairK70.dataPkt1 = Uint8List.fromList([
       0x07,
@@ -815,6 +817,7 @@ class CorsairK70PacketManager {
     ]);
   }
 
+  @override
   void sendData() {
     corsairK70.libusb.libusb_bulk_transfer(
       corsairK70.devHandle,

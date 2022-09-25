@@ -52,7 +52,7 @@ class _MainFrameState extends State<MainFrame> {
       home: Scaffold(
           backgroundColor: Color.fromARGB(255, 30, 30, 30),
           appBar: AppBar(
-            title: const Text('¯\\_(ツ)_/¯r'),
+            title: const Text('¯\\_(ツ)_/¯'),
           ),
           body: MultiBlocProvider(
             child: Column(

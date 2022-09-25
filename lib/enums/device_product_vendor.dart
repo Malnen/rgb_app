@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class DeviceProductVendor {
   static const String corsairK70 = '1b1c:1b33';
+  static const String corsairVirtuoso = '1b1c:0a40';
   static const String steelSeriesRival100 = '1038:1702';
   static const String unknown = '';
 
@@ -20,6 +21,8 @@ abstract class DeviceProductVendor {
     switch (deviceId) {
       case corsairK70:
         return CorsairK70ProductVendor();
+      case corsairVirtuoso:
+        return CorsairVirtuosoProductVendor();
       case steelSeriesRival100:
         return SteelSeriesRival100ProductVendor();
       default:
@@ -41,10 +44,19 @@ abstract class DeviceProductVendor {
 class CorsairK70ProductVendor extends DeviceProductVendor {
   CorsairK70ProductVendor()
       : super(
-          name: 'Corsair k70',
-          productVendor: DeviceProductVendor.corsairK70,
-          icon: Icons.keyboard,
-        );
+    name: 'Corsair k70',
+    productVendor: DeviceProductVendor.corsairK70,
+    icon: Icons.keyboard,
+  );
+}
+
+class CorsairVirtuosoProductVendor extends DeviceProductVendor {
+  CorsairVirtuosoProductVendor()
+      : super(
+    name: 'Corsair Virtuoso',
+    productVendor: DeviceProductVendor.corsairVirtuoso,
+    icon: Icons.headphones,
+  );
 }
 
 class SteelSeriesRival100ProductVendor extends DeviceProductVendor {
