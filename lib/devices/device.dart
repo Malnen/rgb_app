@@ -5,11 +5,15 @@ class Device extends Equatable {
   final DeviceProductVendor deviceProductVendor;
   final String vendorId;
   final String productId;
+  final int offsetX;
+  final int offsetY;
 
   const Device({
     required this.deviceProductVendor,
     required this.vendorId,
     required this.productId,
+    this.offsetX = 0,
+    this.offsetY = 0,
   });
 
   factory Device.empty() {

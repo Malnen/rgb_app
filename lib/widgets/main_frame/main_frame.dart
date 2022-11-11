@@ -1,8 +1,13 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
+import 'package:rgb_app/blocs/key_bloc/key_event.dart';
+import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/widgets/left_panel/left_panel.dart';
 import 'package:rgb_app/widgets/right_panel/right_panel.dart';
 
@@ -50,35 +55,59 @@ class _MainFrameState extends State<MainFrame> {
     return MaterialApp(
       title: 'RGB App',
       home: Scaffold(
-          backgroundColor: Color.fromARGB(255, 30, 30, 30),
-          appBar: AppBar(
-            title: const Text('¯\\_(ツ)_/¯'),
-          ),
-          body: MultiBlocProvider(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      LeftPanel(),
-                      RightPanel(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            providers: [
-              BlocProvider<DevicesBloc>(
-                create: (BuildContext context) => _devicesBloc,
-              ),
-              BlocProvider<KeyBloc>(
-                create: (BuildContext context) => _keyBloc,
-              ),
-              BlocProvider<EffectBloc>(
-                create: (BuildContext context) => _effectBloc,
-              ),
+        backgroundColor: Color.fromARGB(255, 30, 30, 30),
+        appBar: AppBar(
+          title: const Text('¯\\_(ツ)_/¯'),
+        ),
+        body: _buildMultiBlocProvider(),
+      ),
+    );
+  }
+
+  MultiBlocProvider _buildMultiBlocProvider() {
+    return MultiBlocProvider(
+      child: BlocListener<DevicesBloc, DevicesState>(
+        child: _body(),
+        listener: _devicesBlocListener,
+        bloc: _devicesBloc,
+      ),
+      providers: [
+        BlocProvider<DevicesBloc>.value(
+          value: _devicesBloc,
+        ),
+        BlocProvider<KeyBloc>.value(
+          value: _keyBloc,
+        ),
+        BlocProvider<EffectBloc>.value(
+          value: _effectBloc,
+        ),
+      ],
+    );
+  }
+
+  void _devicesBlocListener(BuildContext context, DevicesState state) {
+    final DeviceInterface? firstKeyboard = state.deviceInstances
+        .firstWhereOrNull(
+            (DeviceInterface element) => element is KeyboardInterface);
+    SetOffsetEvent setOffsetEvent = SetOffsetEvent(
+      offsetX: firstKeyboard?.offsetX ?? 0,
+      offsetY: firstKeyboard?.offsetY ?? 0,
+    );
+    _keyBloc.add(setOffsetEvent);
+  }
+
+  Column _body() {
+    return Column(
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              LeftPanel(),
+              RightPanel(),
             ],
-          )),
+          ),
+        ),
+      ],
     );
   }
 }

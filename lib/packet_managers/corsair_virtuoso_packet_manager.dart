@@ -1,11 +1,11 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 import 'package:rgb_app/packet_managers/packet_manager.dart';
 import 'package:ffi/ffi.dart' show calloc;
-
 
 class CorsairVirtuosoPacketManager extends PacketManager {
   final CorsairVirtuoso corsairVirtuoso;
@@ -17,10 +17,10 @@ class CorsairVirtuosoPacketManager extends PacketManager {
     corsairVirtuoso.dataPkt1 = Uint8List.fromList([
       0x1b,
       0x00,
-      0xa0,
-      0xf9,
-      0x46,
-      0x19,
+      0x20,
+      0x03,
+      0x72,
+      0x20,
       0x8c,
       0xdd,
       0xff,
@@ -34,7 +34,8 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x01,
       0x01,
       0x00,
-      0x10,
+      0x0a,
+      0x00,
       0x82,
       0x01,
       0x40,
@@ -84,10 +85,10 @@ class CorsairVirtuosoPacketManager extends PacketManager {
     corsairVirtuoso.dataPkt2 = Uint8List.fromList([
       0x1b,
       0x00,
-      0xa0,
-      0xc2,
-      0x5c,
-      0x15,
+      0x20,
+      0x03,
+      0x72,
+      0x20,
       0x8c,
       0xdd,
       0xff,
@@ -101,7 +102,8 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x01,
       0x01,
       0x00,
-      0x10,
+      0x0a,
+      0x00,
       0x82,
       0x01,
       0x40,
@@ -151,10 +153,10 @@ class CorsairVirtuosoPacketManager extends PacketManager {
     corsairVirtuoso.rPkt1 = Uint8List.fromList([
       0x1b,
       0x00,
-      0x50,
-      0xc0,
-      0x5a,
-      0x1f,
+      0x60,
+      0x45,
+      0x32,
+      0x22,
       0x8c,
       0xdd,
       0xff,
@@ -168,7 +170,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x00,
       0x01,
       0x00,
-      0x10,
+      0x0a,
       0x00,
       0x02,
       0x01,
@@ -184,10 +186,10 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x00,
       0x00,
       0xff,
-      0xff,
+      0x00,
       0xff,
       0x00,
-      0xbe,
+      0x80,
       0x00,
       0x00,
       0x00,
@@ -285,37 +287,33 @@ class CorsairVirtuosoPacketManager extends PacketManager {
 
   @override
   void sendData() {
-    corsairVirtuoso.libusb.libusb_interrupt_transfer(
-      corsairVirtuoso.devHandle,
-      0x02,
-      corsairVirtuoso.rPkt1.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairVirtuoso.libusb.libusb_interrupt_transfer(
-      corsairVirtuoso.devHandle,
-      0x82,
-      corsairVirtuoso.dataPkt1.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairVirtuoso.libusb.libusb_interrupt_transfer(
-      corsairVirtuoso.devHandle,
-      0x02,
-      corsairVirtuoso.lPkt1.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairVirtuoso.libusb.libusb_interrupt_transfer(
-      corsairVirtuoso.devHandle,
-      0x82,
-      corsairVirtuoso.dataPkt2.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
+    for (int i = 0; i < 256; i++) {
+      print('====================================');
+      print(i);
+      int interupt = corsairVirtuoso.libusb.libusb_interrupt_transfer(
+        corsairVirtuoso.devHandle,
+        i,
+        corsairVirtuoso.rPkt1.allocatePointer(),
+        64,
+        calloc<Int32>(),
+        1000,
+      );
+      print('interupt $interupt');
+      int bulk = corsairVirtuoso.libusb.libusb_bulk_transfer(
+        corsairVirtuoso.devHandle,
+        i,
+        corsairVirtuoso.lPkt1.allocatePointer(),
+        64,
+        calloc<Int32>(),
+        1000,
+      );
+      print('bulk $bulk');
+      sleep(Duration(milliseconds: 50));
+      if(interupt == 0 || bulk == 0){
+        print('mamy to widzowie');
+        break;
+      }
+    }
+    print('====================================');
   }
 }

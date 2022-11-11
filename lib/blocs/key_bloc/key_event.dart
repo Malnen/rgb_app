@@ -38,3 +38,19 @@ class KeyReleasedEvent extends KeyEvent {
         keyName,
       ];
 }
+
+class SetOffsetEvent extends KeyEvent {
+  final int offsetX;
+  final int offsetY;
+
+  SetOffsetEvent({
+    required this.offsetX,
+    required this.offsetY,
+  });
+
+  @override
+  List<Object> get props => <Object>[
+        offsetX,
+        offsetY,
+      ];
+}

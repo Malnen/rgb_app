@@ -3,10 +3,11 @@ import 'dart:typed_data';
 
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
+import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
-import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_key.dart';
-import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_key_dictionary.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
+import 'package:rgb_app/devices/key_dictionary.dart';
+import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 
 import 'device_tester.dart';
@@ -36,7 +37,7 @@ class CorsairK70Tester implements DeviceTester {
   Future<void> test() async {
     _rememberValues();
     keyBloc?.stream.listen((KeyState state) {
-      if (state is KeyReleasedState) {
+      if (state.type == KeyStateType.released) {
         _onKeyReleased(state);
       }
     });
@@ -45,8 +46,8 @@ class CorsairK70Tester implements DeviceTester {
 
   @override
   Future<void> blink() async {
-    final Iterable<MapEntry<String, CorsairK70Key>> entries =
-        CorsairK70KeyDictionary.keys.entries;
+    final Iterable<MapEntry<String, KeyboardKey>> entries =
+        KeyDictionary.keys.entries;
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
@@ -65,9 +66,9 @@ class CorsairK70Tester implements DeviceTester {
     }
   }
 
-  void _blink(Iterable<MapEntry<String, CorsairK70Key>> entries) {
-    for (MapEntry<String, CorsairK70Key> entry in entries) {
-      final CorsairK70Key key = entry.value;
+  void _blink(Iterable<MapEntry<String, KeyboardKey>> entries) {
+    for (MapEntry<String, KeyboardKey> entry in entries) {
+      final KeyboardKey key = entry.value;
       final int packetIndex = key.packetIndex;
       if (packetIndex < 0) continue;
       _setBlinkColor(packetIndex, key);
@@ -75,7 +76,7 @@ class CorsairK70Tester implements DeviceTester {
     corsairK70.sendData();
   }
 
-  void _setBlinkColor(int packetIndex, CorsairK70Key key) {
+  void _setBlinkColor(int packetIndex, KeyboardKey key) {
     final CorsairK70Packets packets = corsairK70.getPacket(packetIndex);
     final Uint8List rPkt = packets.rPkt;
     final Uint8List gPkt = packets.gPkt;
@@ -101,7 +102,7 @@ class CorsairK70Tester implements DeviceTester {
     }
   }
 
-  void _onKeyReleased(KeyReleasedState state) {
+  void _onKeyReleased(KeyState state) {
     if (state.keyName == KeyCodeExtension.name(KeyCode.esc.keyCode)) {
       _next();
     }

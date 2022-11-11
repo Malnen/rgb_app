@@ -3,12 +3,14 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/mouse_interface.dart';
 import 'package:rgb_app/testers/steel_series_rival_100_tester.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 
 import '../device.dart';
 
-class SteelSeriesRival100 extends DeviceInterface {
+class SteelSeriesRival100 extends MouseInterface
+{
   late SteelSeriesRival100Tester tester;
 
   Color color = Color.fromARGB(1, 0, 0, 0);

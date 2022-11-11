@@ -1,8 +1,9 @@
-import 'dart:ffi';
+    import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:rgb_app/packet_managers/corsair_virtuoso_packet_manager.dart';
+import 'package:rgb_app/testers/corsair_virtuoso_tester.dart';
 
 import '../device_interface.dart';
 
@@ -14,6 +15,7 @@ class CorsairVirtuoso extends DeviceInterface {
   late Uint8List dataPkt2;
   late Uint8List rPkt1;
   late CorsairVirtuosoPacketManager packetManager;
+  late CorsairVirtuosoTester tester;
 
   CorsairVirtuoso({
     required super.device,
@@ -21,11 +23,12 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void init() {
+    tester = CorsairVirtuosoTester(corsairVirtuoso: this);
     libusb.libusb_init(nullptr);
     devHandle = DeviceInterface.initDeviceHandler(
       device: device,
       configuration: 1,
-      interface: 0,
+      interface: 3,
     );
     packetManager = CorsairVirtuosoPacketManager(this);
     packetManager.fill();
@@ -44,7 +47,7 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void test() {
-    // TODO: implement test
+    tester.test();
   }
 
   @override

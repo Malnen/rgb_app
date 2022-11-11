@@ -1,45 +1,49 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
 
-abstract class KeyState extends Equatable {}
-
-class KeyInitialState extends KeyState {
-  @override
-  List<Object> get props => <Object>[];
-}
-
-class KeyPressedState extends KeyState {
+class KeyState extends Equatable {
   final int keyCode;
   final String keyName;
   final UniqueKey key;
+  final KeyStateType type;
+  final int offsetX;
+  final int offsetY;
 
-  KeyPressedState({
+  KeyState({
     required this.keyCode,
     required this.keyName,
-  }) : key = UniqueKey();
+    required this.type,
+    this.offsetX = 0,
+    this.offsetY = 0,
+    UniqueKey? key,
+  }) : key = key ?? UniqueKey();
+
+  KeyState copyWith({
+    int? keyCode,
+    String? keyName,
+    UniqueKey? key,
+    KeyStateType? type,
+    int? offsetX,
+    int? offsetY,
+  }) {
+    return KeyState(
+      keyCode: keyCode ?? this.keyCode,
+      keyName: keyName ?? this.keyName,
+      type: type ?? this.type,
+      key: key ?? this.key,
+      offsetX: offsetX ?? this.offsetX,
+      offsetY: offsetY ?? this.offsetY,
+    );
+  }
 
   @override
   List<Object> get props => <Object>[
         keyCode,
         key,
         keyName,
-      ];
-}
-
-class KeyReleasedState extends KeyState {
-  final int keyCode;
-  final String keyName;
-  final UniqueKey key;
-
-  KeyReleasedState({
-    required this.keyCode,
-    required this.keyName,
-  }) : key = UniqueKey();
-
-  @override
-  List<Object> get props => <Object>[
-        keyCode,
-        key,
-        keyName,
+        type,
+        offsetY,
+        offsetX,
       ];
 }

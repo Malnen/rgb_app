@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
+import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/effects/key_stroke/key_stroke_effect.dart';
 import 'package:rgb_app/effects/rainbow_wave_effect.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_cell.dart';
@@ -19,22 +22,33 @@ class EffectGridContainer extends StatefulWidget {
 
 class _EffectGridContainerState extends State<EffectGridContainer> {
   late EffectBloc effectBloc;
+  late KeyBloc keyBloc;
   late DevicesBloc devicesBloc;
   late EffectGridData effectGridData;
   late List<List<Color>> colors;
+  late List<Effect> effects;
 
   @override
   void initState() {
     super.initState();
     effectBloc = context.read();
     devicesBloc = context.read();
+    keyBloc = context.read();
     effectGridData = effectBloc.state.effectGridData;
-    final RainbowWaveEffect effect = RainbowWaveEffect(effectBloc: effectBloc);
+    effects = <Effect>[
+      RainbowWaveEffect(effectBloc: effectBloc),
+      KeyStrokeEffect(
+        effectBloc: effectBloc,
+        keyBloc: keyBloc,
+      ),
+    ];
 
-    Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
+    Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
       final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);
       effectBloc.add(event);
-      effect.update();
+      for (Effect effect in effects) {
+        effect.update();
+      }
       for (DeviceInterface device in devicesBloc.deviceInstances) {
         device.update();
       }

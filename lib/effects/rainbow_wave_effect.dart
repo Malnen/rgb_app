@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
 import 'effect.dart';
 
 class RainbowWaveEffect extends Effect {
-  final EffectBloc effectBloc;
-
   double size = 15;
-  double speed = 10;
+  double speed = 2.5;
   double value = 1;
   int direction = -1;
 
   RainbowWaveEffect({
-    required this.effectBloc,
+    required super.effectBloc,
   });
 
   @override
@@ -27,6 +24,7 @@ class RainbowWaveEffect extends Effect {
     for (int i = 0; i < sizeX; i++) {
       _setColor(i, sizeY, colors);
     }
+
     value += speed * direction;
     value = value % 360;
   }
