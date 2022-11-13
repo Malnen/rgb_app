@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
@@ -155,16 +156,16 @@ class CorsairK70 extends KeyboardInterface {
   }
 
   void _setKeys() {
-    final Map<String, KeyboardKey> keys = KeyDictionary.keys;
-    final Iterable<MapEntry<String, KeyboardKey>> keyEntries = keys.entries;
+    final Map<CellCoords, KeyboardKey> keys = KeyDictionary.keys;
+    final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries = keys.entries;
     _setMinMax(keyEntries);
     _setKeysDimensions(keyEntries);
-    for (MapEntry<String, KeyboardKey> entry in keyEntries) {
+    for (MapEntry<CellCoords, KeyboardKey> entry in keyEntries) {
       _setKey(entry);
     }
   }
 
-  void _setMinMax(Iterable<MapEntry<String, KeyboardKey>> keyEntries) {
+  void _setMinMax(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries) + 1;
     final int maxX = _getMaxX(keyEntries) + 1;
     final EffectState state = effectBloc.state;
@@ -181,7 +182,7 @@ class CorsairK70 extends KeyboardInterface {
   }
 
   void _setKeysDimensions(
-      Iterable<MapEntry<String, KeyboardKey>> keyEntries) {
+      Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries);
     final int maxX = _getMaxX(keyEntries);
 
@@ -192,43 +193,27 @@ class CorsairK70 extends KeyboardInterface {
         growable: false);
   }
 
-  int _getLastKeyY(Iterable<MapEntry<String, KeyboardKey>> keyEntries) {
-    final MapEntry<String, KeyboardKey> lastKeyEntry = keyEntries.last;
-    final String lastKey = lastKeyEntry.key;
+  int _getLastKeyY(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+    final MapEntry<CellCoords, KeyboardKey> lastKeyEntry = keyEntries.last;
+    final CellCoords lastKey = lastKeyEntry.key;
 
-    return _getY(lastKey);
+    return lastKey.y;
   }
 
-  void _setKey(MapEntry<String, KeyboardKey> entry) {
-    final String key = entry.key;
+  void _setKey(MapEntry<CellCoords, KeyboardKey> entry) {
+    final CellCoords key = entry.key;
     final KeyboardKey value = entry.value;
-    final int y = _getY(key);
-    final int x = _getX(key);
+    final int y = key.y;
+    final int x = key.x;
 
     keys[y][x] = value;
   }
 
-  int _getMaxX(Iterable<MapEntry<String, KeyboardKey>> keyEntries) {
+  int _getMaxX(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final List<int> xValues = keyEntries
-        .map((MapEntry<String, KeyboardKey> entry) => _getX(entry.key))
+        .map((MapEntry<CellCoords, KeyboardKey> entry) => entry.key.x)
         .toList();
+
     return xValues.max;
-  }
-
-  int _getX(String key) {
-    final int indexOfX = key.indexOf('x');
-    final int offset = indexOfX + 1;
-    final int indexOfY = key.indexOf('y');
-    final String x = key.substring(offset, indexOfY);
-
-    return int.parse(x);
-  }
-
-  int _getY(String key) {
-    final int indexOfY = key.indexOf('y');
-    final int offset = indexOfY + 1;
-    final String y = key.substring(offset);
-
-    return int.parse(y);
   }
 }

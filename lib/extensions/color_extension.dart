@@ -10,7 +10,7 @@ extension ColorExtension on Color {
     int bToMix = colorToMix.blue;
 
     return Color.fromARGB(
-      0,
+      255,
       _getMixed(r, rToMix, fraction),
       _getMixed(g, gToMix, fraction),
       _getMixed(b, bToMix, fraction),

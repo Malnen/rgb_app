@@ -9,8 +9,7 @@ import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 
 import '../device.dart';
 
-class SteelSeriesRival100 extends MouseInterface
-{
+class SteelSeriesRival100 extends MouseInterface {
   late SteelSeriesRival100Tester tester;
 
   Color color = Color.fromARGB(1, 0, 0, 0);
@@ -26,6 +25,8 @@ class SteelSeriesRival100 extends MouseInterface
       configuration: 1,
       interface: 0,
     );
+    offsetX = 22;
+    offsetY = 3;
     //test();
     //blink();
   }

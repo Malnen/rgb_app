@@ -1,61 +1,33 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:rgb_app/devices/key_dictionary.dart';
-import 'package:rgb_app/devices/keyboard_key.dart';
+import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 
 class KeyStrokeData extends Equatable {
-  final int x;
-  final int y;
-  final KeyboardKey? keyboardKey;
+  final CellCoords cellCoords;
   final Color color;
   final double duration;
   final bool increment;
   final double opacity;
 
   KeyStrokeData({
-    required this.x,
-    required this.y,
-    required this.keyboardKey,
+    required this.cellCoords,
     required this.color,
     required this.duration,
     this.increment = true,
     this.opacity = 0,
   });
 
-  factory KeyStrokeData.create({
-    required String coords,
-    required Color color,
-    required double duration,
-  }) {
-    final int x = KeyDictionary.getX(coords);
-    final int y = KeyDictionary.getY(coords);
-    final Map<String, KeyboardKey> keys = KeyDictionary.keys;
-    final KeyboardKey? keyboardKey = keys[coords];
-
-    return KeyStrokeData(
-      x: x,
-      y: y,
-      color: color,
-      duration: duration,
-      keyboardKey: keyboardKey,
-    );
-  }
-
   KeyStrokeData copyWith({
-    int? x,
-    int? y,
+    CellCoords? cellCoords,
     Color? color,
     double? duration,
-    KeyboardKey? keyboardKey,
     bool? increment,
     double? opacity,
   }) {
     return KeyStrokeData(
-      x: x ?? this.x,
-      y: y ?? this.y,
+      cellCoords: cellCoords ?? this.cellCoords,
       color: color ?? this.color,
       duration: duration ?? this.duration,
-      keyboardKey: keyboardKey ?? this.keyboardKey,
       increment: increment ?? this.increment,
       opacity: opacity ?? this.opacity,
     );
@@ -63,9 +35,7 @@ class KeyStrokeData extends Equatable {
 
   @override
   List<Object?> get props => [
-        x,
-        y,
-        keyboardKey,
+        cellCoords,
         color,
         duration,
         opacity,

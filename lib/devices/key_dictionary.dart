@@ -1,3 +1,4 @@
+import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 
@@ -557,191 +558,171 @@ class KeyDictionary {
     index: 25,
     keyCode: KeyCode.decimal,
   );
-  static KeyboardKey get emptyKey => KeyboardKey(
-    packetIndex: -1,
-    index: -1,
-    keyCode: KeyCode.unknown,
-  );
 
-  static Map<String, KeyboardKey> keys = <String, KeyboardKey>{
-    'x0y0': emptyKey,
-    'x1y0': emptyKey,
-    'x2y0': emptyKey,
-    'x3y0': emptyKey,
-    'x4y0': emptyKey,
-    'x5y0': emptyKey,
-    'x6y0': emptyKey,
-    'x7y0': emptyKey,
-    'x8y0': emptyKey,
-    'x9y0': emptyKey,
-    'x10y0': emptyKey,
-    'x11y0': emptyKey,
-    'x12y0': emptyKey,
-    'x13y0': emptyKey,
-    'x14y0': emptyKey,
-    'x15y0': corsairStar,
-    'x16y0': emptyKey,
-    'x17y0': emptyKey,
-    'x18y0': emptyKey,
-    'x19y0': mute,
-    'x20y0': emptyKey,
-    'x21y0': emptyKey,
-    'x0y1': esc,
-    'x1y1': emptyKey,
-    'x2y1': f1,
-    'x3y1': f2,
-    'x4y1': f3,
-    'x5y1': f4,
-    'x6y1': f5,
-    'x7y1': f6,
-    'x8y1': f7,
-    'x9y1': f8,
-    'x10y1': emptyKey,
-    'x11y1': f9,
-    'x12y1': f10,
-    'x13y1': f11,
-    'x14y1': f12,
-    'x15y1': printScreen,
-    'x16y1': scrollLock,
-    'x17y1': pauseBreak,
-    'x18y1': pause,
-    'x19y1': previous,
-    'x20y1': resumeStop,
-    'x21y1': next,
-    'x0y2': backQuote,
-    'x1y2': key1,
-    'x2y2': key2,
-    'x3y2': key3,
-    'x4y2': key4,
-    'x5y2': key5,
-    'x6y2': key6,
-    'x7y2': key7,
-    'x8y2': key8,
-    'x9y2': key9,
-    'x10y2': key0,
-    'x11y2': minus,
-    'x12y2': equal,
-    'x13y2': emptyKey,
-    'x14y2': backSpace,
-    'x15y2': insert,
-    'x16y2': home,
-    'x17y2': pageUp,
-    'x18y2': numLock,
-    'x19y2': divide,
-    'x20y2': multiply,
-    'x21y2': subtract,
-    'x0y3': tab,
-    'x1y3': q,
-    'x2y3': w,
-    'x3y3': e,
-    'x4y3': r,
-    'x5y3': t,
-    'x6y3': y,
-    'x7y3': u,
-    'x8y3': i,
-    'x9y3': o,
-    'x10y3': p,
-    'x11y3': openBracket,
-    'x12y3': closeBracket,
-    'x13y3': enter,
-    'x14y3': emptyKey,
-    'x15y3': delete,
-    'x16y3': end,
-    'x17y3': pageDown,
-    'x18y3': num7,
-    'x19y3': num8,
-    'x20y3': num9,
-    'x21y3': add,
-    'x0y4': capsLock,
-    'x1y4': a,
-    'x2y4': s,
-    'x3y4': d,
-    'x4y4': f,
-    'x5y4': g,
-    'x6y4': h,
-    'x7y4': j,
-    'x8y4': k,
-    'x9y4': l,
-    'x10y4': semicolon,
-    'x11y4': quote,
-    'x12y4': backSlash,
-    'x13y4': emptyKey,
-    'x14y4': emptyKey,
-    'x15y4': emptyKey,
-    'x16y4': emptyKey,
-    'x17y4': emptyKey,
-    'x18y4': num4,
-    'x19y4': num5,
-    'x20y4': num6,
-    'x21y4': emptyKey,
-    'x0y5': leftShift,
-    'x1y5': leftBackSlash,
-    'x2y5': z,
-    'x3y5': x,
-    'x4y5': c,
-    'x5y5': v,
-    'x6y5': b,
-    'x7y5': n,
-    'x8y5': m,
-    'x9y5': comma,
-    'x10y5': period,
-    'x11y5': slash,
-    'x12y5': emptyKey,
-    'x13y5': rightShift,
-    'x14y5': emptyKey,
-    'x15y5': emptyKey,
-    'x16y5': upArrow,
-    'x17y5': emptyKey,
-    'x18y5': num1,
-    'x19y5': num2,
-    'x20y5': num3,
-    'x21y5': rightEnter,
-    'x0y6': leftControl,
-    'x1y6': leftWin,
-    'x2y6': leftAlt,
-    'x3y6': emptyKey,
-    'x4y6': emptyKey,
-    'x5y6': emptyKey,
-    'x6y6': space,
-    'x7y6': emptyKey,
-    'x8y6': emptyKey,
-    'x9y6': emptyKey,
-    'x10y6': rightAlt,
-    'x11y6': rightWin,
-    'x12y6': contextMenu,
-    'x13y6': emptyKey,
-    'x14y6': rightControl,
-    'x15y6': leftArrow,
-    'x16y6': downArrow,
-    'x17y6': rightArrow,
-    'x18y6': num0,
-    'x19y6': emptyKey,
-    'x20y6': decimal,
-    'x21y6': emptyKey,
+  static KeyboardKey get emptyKey => KeyboardKey(
+        packetIndex: -1,
+        index: -1,
+        keyCode: KeyCode.unknown,
+      );
+
+  static Map<CellCoords, KeyboardKey> keys = <CellCoords, KeyboardKey>{
+    CellCoords(x: 0, y: 0): emptyKey,
+    CellCoords(x: 1, y: 0): emptyKey,
+    CellCoords(x: 2, y: 0): emptyKey,
+    CellCoords(x: 3, y: 0): emptyKey,
+    CellCoords(x: 4, y: 0): emptyKey,
+    CellCoords(x: 5, y: 0): emptyKey,
+    CellCoords(x: 6, y: 0): emptyKey,
+    CellCoords(x: 7, y: 0): emptyKey,
+    CellCoords(x: 8, y: 0): emptyKey,
+    CellCoords(x: 9, y: 0): emptyKey,
+    CellCoords(x: 10, y: 0): emptyKey,
+    CellCoords(x: 11, y: 0): emptyKey,
+    CellCoords(x: 12, y: 0): emptyKey,
+    CellCoords(x: 13, y: 0): emptyKey,
+    CellCoords(x: 14, y: 0): emptyKey,
+    CellCoords(x: 15, y: 0): corsairStar,
+    CellCoords(x: 16, y: 0): emptyKey,
+    CellCoords(x: 17, y: 0): emptyKey,
+    CellCoords(x: 18, y: 0): emptyKey,
+    CellCoords(x: 19, y: 0): mute,
+    CellCoords(x: 20, y: 0): emptyKey,
+    CellCoords(x: 21, y: 0): emptyKey,
+    CellCoords(x: 0, y: 1): esc,
+    CellCoords(x: 1, y: 1): emptyKey,
+    CellCoords(x: 2, y: 1): f1,
+    CellCoords(x: 3, y: 1): f2,
+    CellCoords(x: 4, y: 1): f3,
+    CellCoords(x: 5, y: 1): f4,
+    CellCoords(x: 6, y: 1): f5,
+    CellCoords(x: 7, y: 1): f6,
+    CellCoords(x: 8, y: 1): f7,
+    CellCoords(x: 9, y: 1): f8,
+    CellCoords(x: 10, y: 1): emptyKey,
+    CellCoords(x: 11, y: 1): f9,
+    CellCoords(x: 12, y: 1): f10,
+    CellCoords(x: 13, y: 1): f11,
+    CellCoords(x: 14, y: 1): f12,
+    CellCoords(x: 15, y: 1): printScreen,
+    CellCoords(x: 16, y: 1): scrollLock,
+    CellCoords(x: 17, y: 1): pauseBreak,
+    CellCoords(x: 18, y: 1): pause,
+    CellCoords(x: 19, y: 1): previous,
+    CellCoords(x: 20, y: 1): resumeStop,
+    CellCoords(x: 21, y: 1): next,
+    CellCoords(x: 0, y: 2): backQuote,
+    CellCoords(x: 1, y: 2): key1,
+    CellCoords(x: 2, y: 2): key2,
+    CellCoords(x: 3, y: 2): key3,
+    CellCoords(x: 4, y: 2): key4,
+    CellCoords(x: 5, y: 2): key5,
+    CellCoords(x: 6, y: 2): key6,
+    CellCoords(x: 7, y: 2): key7,
+    CellCoords(x: 8, y: 2): key8,
+    CellCoords(x: 9, y: 2): key9,
+    CellCoords(x: 10, y: 2): key0,
+    CellCoords(x: 11, y: 2): minus,
+    CellCoords(x: 12, y: 2): equal,
+    CellCoords(x: 13, y: 2): emptyKey,
+    CellCoords(x: 14, y: 2): backSpace,
+    CellCoords(x: 15, y: 2): insert,
+    CellCoords(x: 16, y: 2): home,
+    CellCoords(x: 17, y: 2): pageUp,
+    CellCoords(x: 18, y: 2): numLock,
+    CellCoords(x: 19, y: 2): divide,
+    CellCoords(x: 20, y: 2): multiply,
+    CellCoords(x: 21, y: 2): subtract,
+    CellCoords(x: 0, y: 3): tab,
+    CellCoords(x: 1, y: 3): q,
+    CellCoords(x: 2, y: 3): w,
+    CellCoords(x: 3, y: 3): e,
+    CellCoords(x: 4, y: 3): r,
+    CellCoords(x: 5, y: 3): t,
+    CellCoords(x: 6, y: 3): y,
+    CellCoords(x: 7, y: 3): u,
+    CellCoords(x: 8, y: 3): i,
+    CellCoords(x: 9, y: 3): o,
+    CellCoords(x: 10, y: 3): p,
+    CellCoords(x: 11, y: 3): openBracket,
+    CellCoords(x: 12, y: 3): closeBracket,
+    CellCoords(x: 13, y: 3): enter,
+    CellCoords(x: 14, y: 3): emptyKey,
+    CellCoords(x: 15, y: 3): delete,
+    CellCoords(x: 16, y: 3): end,
+    CellCoords(x: 17, y: 3): pageDown,
+    CellCoords(x: 18, y: 3): num7,
+    CellCoords(x: 19, y: 3): num8,
+    CellCoords(x: 20, y: 3): num9,
+    CellCoords(x: 21, y: 3): add,
+    CellCoords(x: 0, y: 4): capsLock,
+    CellCoords(x: 1, y: 4): a,
+    CellCoords(x: 2, y: 4): s,
+    CellCoords(x: 3, y: 4): d,
+    CellCoords(x: 4, y: 4): f,
+    CellCoords(x: 5, y: 4): g,
+    CellCoords(x: 6, y: 4): h,
+    CellCoords(x: 7, y: 4): j,
+    CellCoords(x: 8, y: 4): k,
+    CellCoords(x: 9, y: 4): l,
+    CellCoords(x: 10, y: 4): semicolon,
+    CellCoords(x: 11, y: 4): quote,
+    CellCoords(x: 12, y: 4): backSlash,
+    CellCoords(x: 13, y: 4): emptyKey,
+    CellCoords(x: 14, y: 4): emptyKey,
+    CellCoords(x: 15, y: 4): emptyKey,
+    CellCoords(x: 16, y: 4): emptyKey,
+    CellCoords(x: 17, y: 4): emptyKey,
+    CellCoords(x: 18, y: 4): num4,
+    CellCoords(x: 19, y: 4): num5,
+    CellCoords(x: 20, y: 4): num6,
+    CellCoords(x: 21, y: 4): emptyKey,
+    CellCoords(x: 0, y: 5): leftShift,
+    CellCoords(x: 1, y: 5): leftBackSlash,
+    CellCoords(x: 2, y: 5): z,
+    CellCoords(x: 3, y: 5): x,
+    CellCoords(x: 4, y: 5): c,
+    CellCoords(x: 5, y: 5): v,
+    CellCoords(x: 6, y: 5): b,
+    CellCoords(x: 7, y: 5): n,
+    CellCoords(x: 8, y: 5): m,
+    CellCoords(x: 9, y: 5): comma,
+    CellCoords(x: 10, y: 5): period,
+    CellCoords(x: 11, y: 5): slash,
+    CellCoords(x: 12, y: 5): emptyKey,
+    CellCoords(x: 13, y: 5): rightShift,
+    CellCoords(x: 14, y: 5): emptyKey,
+    CellCoords(x: 15, y: 5): emptyKey,
+    CellCoords(x: 16, y: 5): upArrow,
+    CellCoords(x: 17, y: 5): emptyKey,
+    CellCoords(x: 18, y: 5): num1,
+    CellCoords(x: 19, y: 5): num2,
+    CellCoords(x: 20, y: 5): num3,
+    CellCoords(x: 21, y: 5): rightEnter,
+    CellCoords(x: 0, y: 6): leftControl,
+    CellCoords(x: 1, y: 6): leftWin,
+    CellCoords(x: 2, y: 6): leftAlt,
+    CellCoords(x: 3, y: 6): emptyKey,
+    CellCoords(x: 4, y: 6): emptyKey,
+    CellCoords(x: 5, y: 6): emptyKey,
+    CellCoords(x: 6, y: 6): space,
+    CellCoords(x: 7, y: 6): emptyKey,
+    CellCoords(x: 8, y: 6): emptyKey,
+    CellCoords(x: 9, y: 6): emptyKey,
+    CellCoords(x: 10, y: 6): rightAlt,
+    CellCoords(x: 11, y: 6): rightWin,
+    CellCoords(x: 12, y: 6): contextMenu,
+    CellCoords(x: 13, y: 6): emptyKey,
+    CellCoords(x: 14, y: 6): rightControl,
+    CellCoords(x: 15, y: 6): leftArrow,
+    CellCoords(x: 16, y: 6): downArrow,
+    CellCoords(x: 17, y: 6): rightArrow,
+    CellCoords(x: 18, y: 6): num0,
+    CellCoords(x: 19, y: 6): emptyKey,
+    CellCoords(x: 20, y: 6): decimal,
+    CellCoords(x: 21, y: 6): emptyKey,
   };
 
-  static Map<KeyboardKey, String> get reverseKeys {
-    if (_reverseKeys.isEmpty) {
-      _initReverseKeys();
-    }
-
-    return _reverseKeys;
-  }
-
-  static Map<KeyboardKey, String> _reverseKeys = {};
-
-  static void _initReverseKeys() {
-    _reverseKeys = Map<KeyboardKey, String>.fromEntries(
-      keys.entries.map(
-        (MapEntry<String, KeyboardKey> entry) => MapEntry<KeyboardKey, String>(
-          entry.value,
-          entry.key,
-        ),
-      ),
-    );
-  }
-
-  static Map<KeyCode, String> get reverseKeyCodes {
+  static Map<KeyCode, CellCoords> get reverseKeyCodes {
     if (_reverseKeyCodes.isEmpty) {
       _initReverseKeyCodes();
     }
@@ -749,53 +730,16 @@ class KeyDictionary {
     return _reverseKeyCodes;
   }
 
-  static Map<KeyCode, String> _reverseKeyCodes = {};
+  static Map<KeyCode, CellCoords> _reverseKeyCodes = {};
 
   static void _initReverseKeyCodes() {
-    _reverseKeyCodes = Map<KeyCode, String>.fromEntries(
+    _reverseKeyCodes = Map<KeyCode, CellCoords>.fromEntries(
       keys.entries.map(
-            (MapEntry<String, KeyboardKey> entry) => MapEntry<KeyCode, String>(
+        (MapEntry<CellCoords, KeyboardKey> entry) => MapEntry<KeyCode, CellCoords>(
           entry.value.keyCode,
           entry.key,
         ),
       ),
     );
-  }
-
-  static KeyboardKey? getWithOffset({
-    required KeyboardKey? keyboardKey,
-    int offsetX = 0,
-    int offsetY = 0,
-  }) {
-    String coords = reverseKeys[keyboardKey] ?? '';
-    int x = getX(coords);
-    int y = getY(coords);
-    int newX = x + offsetX;
-    int newY = y + offsetY;
-    String newCoords = getCoords(newX, newY);
-
-    return keys[newCoords];
-  }
-
-  static int getX(String coords) {
-    final int yIndex = _getYIndex(coords);
-    final String x = coords.substring(1, yIndex);
-
-    return int.parse(x);
-  }
-
-  static int getY(String coords) {
-    final int yIndex = _getYIndex(coords);
-    final String y = coords.substring(yIndex + 1);
-
-    return int.parse(y);
-  }
-
-  static int _getYIndex(String coords) {
-    return coords.indexOf('y');
-  }
-
-  static String getCoords(int x, int y) {
-    return 'x${x}y$y';
   }
 }

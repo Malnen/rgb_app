@@ -6,6 +6,8 @@ import 'package:rgb_app/models/effect_grid_data.dart';
 
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   List<List<Color>> get colors => state.effectGridData.colors;
+  int get sizeX => state.effectGridData.sizeX;
+  int get sizeY => state.effectGridData.sizeY;
 
   EffectBloc()
       : super(
