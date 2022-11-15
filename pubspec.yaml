@@ -15,6 +15,7 @@ dependencies:
   keyboard_event: ^0.3.2
   hydrated_bloc: ^8.1.0
   path_provider: ^2.0.10
+  get_it: ^7.2.0
 
 dev_dependencies:
   flutter_test:

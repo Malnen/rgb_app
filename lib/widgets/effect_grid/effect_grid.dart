@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
@@ -24,7 +25,7 @@ class _EffectGridState extends State<EffectGrid> {
   @override
   void initState() {
     super.initState();
-    bloc = context.read();
+    bloc = GetIt.instance.get();
     effectGridData = bloc.state.effectGridData;
     setControllersValue(bloc.state);
   }

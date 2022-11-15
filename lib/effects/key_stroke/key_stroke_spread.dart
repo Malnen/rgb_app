@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
@@ -8,26 +9,26 @@ import 'package:rgb_app/extensions/color_extension.dart';
 
 class KeyStrokeSpread {
   final KeyStrokeData data;
-  final EffectBloc effectBloc;
   final double fadeSpeed = 1;
   final double spreadDelay = 0;
   final double opacitySpeed = 0.15;
   final double duration;
   late HashSet<CellCoords> _visitedCells;
   late double _startDecreasing;
+  late EffectBloc _effectBloc;
   List<KeyStrokeData> _spread = [];
 
-  List<List<Color>> get colors => effectBloc.colors;
+  List<List<Color>> get colors => _effectBloc.colors;
 
-  int get sizeX => effectBloc.sizeX;
+  int get sizeX => _effectBloc.sizeX;
 
-  int get sizeY => effectBloc.sizeY;
+  int get sizeY => _effectBloc.sizeY;
 
   KeyStrokeSpread({
     required this.data,
-    required this.effectBloc,
     required this.duration,
   }) {
+    _effectBloc = GetIt.instance.get();
     _spread.add(data);
     _visitedCells = HashSet();
     _startDecreasing = fadeSpeed / opacitySpeed;

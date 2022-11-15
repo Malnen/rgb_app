@@ -10,9 +10,7 @@ class RainbowWaveEffect extends Effect {
   double value = 1;
   int direction = -1;
 
-  RainbowWaveEffect({
-    required super.effectBloc,
-  });
+  RainbowWaveEffect();
 
   @override
   void update() {
@@ -21,12 +19,18 @@ class RainbowWaveEffect extends Effect {
     final List<List<Color>> colors = effectBloc.colors;
     final int sizeX = effectGridData.sizeX;
     final int sizeY = effectGridData.sizeY;
-    for (int i = 0; i < sizeX; i++) {
-      _setColor(i, sizeY, colors);
+    if (colors.isNotEmpty) {
+      _setColors(sizeX, sizeY, colors);
     }
 
     value += speed * direction;
     value = value % 360;
+  }
+
+  void _setColors(int sizeX, int sizeY, List<List<Color>> colors) {
+    for (int i = 0; i < sizeX; i++) {
+      _setColor(i, sizeY, colors);
+    }
   }
 
   void _setColor(int i, int sizeY, List<List<Color>> colors) {

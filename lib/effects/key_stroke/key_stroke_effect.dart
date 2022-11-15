@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:keyboard_event/keyboard_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
@@ -21,7 +20,6 @@ class KeyStrokeEffect extends Effect {
   int colorIndex = 0;
 
   KeyStrokeEffect({
-    required super.effectBloc,
     required this.keyBloc,
   }) {
     _spreads = [];
@@ -50,7 +48,6 @@ class KeyStrokeEffect extends Effect {
     );
     final KeyStrokeSpread spread = KeyStrokeSpread(
       data: data,
-      effectBloc: effectBloc,
       duration: duration,
     );
     _spreads.add(spread);

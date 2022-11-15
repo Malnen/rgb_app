@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
-import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_event.dart';
 import 'package:rgb_app/devices/device_interface.dart';
@@ -28,7 +27,6 @@ class _MainFrameState extends State<MainFrame> {
 
   late DevicesBloc _devicesBloc;
   late KeyBloc _keyBloc;
-  late EffectBloc _effectBloc;
 
   @override
   void initState() {
@@ -36,10 +34,8 @@ class _MainFrameState extends State<MainFrame> {
     LibusbLoader.initLibusb();
     final quickUsb = QuickUsb();
     deviceProductInfo = quickUsb.getDeviceProductInfo();
-    _effectBloc = EffectBloc();
     _devicesBloc = DevicesBloc(
       availableDevices: deviceProductInfo,
-      effectBloc: _effectBloc,
     );
     _keyBloc = KeyBloc();
     _devicesBloc.add(RestoreDevicesEvent());
@@ -77,9 +73,6 @@ class _MainFrameState extends State<MainFrame> {
         ),
         BlocProvider<KeyBloc>.value(
           value: _keyBloc,
-        ),
-        BlocProvider<EffectBloc>.value(
-          value: _effectBloc,
         ),
       ],
     );

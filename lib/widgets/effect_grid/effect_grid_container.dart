@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/devices/device_interface.dart';
@@ -31,14 +32,13 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   @override
   void initState() {
     super.initState();
-    effectBloc = context.read();
+    effectBloc = GetIt.instance.get();
     devicesBloc = context.read();
     keyBloc = context.read();
     effectGridData = effectBloc.state.effectGridData;
     effects = <Effect>[
-      RainbowWaveEffect(effectBloc: effectBloc),
+      RainbowWaveEffect(),
       KeyStrokeEffect(
-        effectBloc: effectBloc,
         keyBloc: keyBloc,
       ),
     ];

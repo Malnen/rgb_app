@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:get_it/get_it.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
@@ -23,7 +24,9 @@ abstract class DeviceInterface {
 
   DeviceInterface({
     required this.device,
-  });
+  }){
+    effectBloc = GetIt.instance.get();
+  }
 
   Libusb get libusb => LibusbLoader.getInstance;
 
@@ -63,10 +66,6 @@ abstract class DeviceInterface {
     libusb.libusb_set_configuration(devHandle, configuration);
 
     return devHandle;
-  }
-
-  void setEffectBloc(EffectBloc bloc) {
-    effectBloc = bloc;
   }
 
   void init();
