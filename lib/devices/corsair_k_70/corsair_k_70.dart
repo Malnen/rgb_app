@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
@@ -20,14 +21,14 @@ import '../keyboard_key.dart';
 import 'corsair_k_70_packets.dart';
 
 class CorsairK70 extends KeyboardInterface {
-  late CorsairK70Tester tester;
+  final KeyBloc keyBloc;
 
-  final KeyBloc? keyBloc;
+  late CorsairK70Tester tester;
 
   CorsairK70({
     required Device device,
-    this.keyBloc,
-  }) : super(device: device);
+  })  : keyBloc = GetIt.instance.get(),
+        super(device: device);
 
   late Uint8List dataPkt1;
   late Uint8List rPkt1;
@@ -52,7 +53,6 @@ class CorsairK70 extends KeyboardInterface {
     _setKeys();
     tester = CorsairK70Tester(
       corsairK70: this,
-      keyBloc: keyBloc,
     );
     libusb.libusb_init(nullptr);
     devHandle = DeviceInterface.initDeviceHandler(
@@ -92,11 +92,7 @@ class CorsairK70 extends KeyboardInterface {
     try {
       _updateKeys();
     } catch (e) {
-      print(offsetX.toString() +
-          ', ' +
-          offsetY.toString() +
-          ' out of range ' +
-          device.deviceProductVendor.name);
+      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
     }
     sendData();
   }
@@ -181,15 +177,11 @@ class CorsairK70 extends KeyboardInterface {
     effectBloc.add(event);
   }
 
-  void _setKeysDimensions(
-      Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+  void _setKeysDimensions(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries);
     final int maxX = _getMaxX(keyEntries);
 
-    keys = List.generate(
-        lastY + 1,
-        (_) => List.generate(maxX + 1, (_) => KeyDictionary.emptyKey,
-            growable: false),
+    keys = List.generate(lastY + 1, (_) => List.generate(maxX + 1, (_) => KeyDictionary.emptyKey, growable: false),
         growable: false);
   }
 
@@ -210,9 +202,7 @@ class CorsairK70 extends KeyboardInterface {
   }
 
   int _getMaxX(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
-    final List<int> xValues = keyEntries
-        .map((MapEntry<CellCoords, KeyboardKey> entry) => entry.key.x)
-        .toList();
+    final List<int> xValues = keyEntries.map((MapEntry<CellCoords, KeyboardKey> entry) => entry.key.x).toList();
 
     return xValues.max;
   }

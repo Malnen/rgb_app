@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
-import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
@@ -65,7 +64,6 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
         device,
         devices,
         deviceInstances,
-        event.keyBloc,
       );
     }
 
@@ -79,12 +77,10 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     Device device,
     List<Device> devices,
     List<DeviceInterface> deviceInstances,
-    KeyBloc? keyBloc,
   ) {
     devices.add(device);
     final DeviceInterface deviceInterface = DeviceInterface.fromDevice(
       device: device,
-      keyBloc: keyBloc,
     );
     final DeviceData deviceData = DeviceData(
       deviceProductVendor: device.deviceProductVendor,

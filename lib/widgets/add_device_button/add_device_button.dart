@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
@@ -60,10 +59,7 @@ class _AddDeviceButtonState extends State<AddDeviceButton> {
   }
 
   void _addDeviceEvent(Device device) {
-    AddDeviceEvent event = AddDeviceEvent(
-      device: device,
-      keyBloc: context.read(),
-    );
+    AddDeviceEvent event = AddDeviceEvent(device: device);
     bloc.add(event);
     Navigator.of(context).pop();
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
@@ -16,7 +17,7 @@ import 'device_tester.dart';
 class CorsairK70Tester implements DeviceTester {
   final List<Timer> timers = [];
   final CorsairK70 corsairK70;
-  final KeyBloc? keyBloc;
+  final KeyBloc keyBloc;
 
   int currentPacketIndex = 0;
   int currentIndex = 0;
@@ -31,13 +32,12 @@ class CorsairK70Tester implements DeviceTester {
 
   CorsairK70Tester({
     required this.corsairK70,
-    this.keyBloc,
-  });
+  }) : keyBloc = GetIt.instance.get();
 
   @override
   Future<void> test() async {
     _rememberValues();
-    keyBloc?.stream.listen((KeyState state) {
+    keyBloc.stream.listen((KeyState state) {
       if (state.type == KeyStateType.released) {
         _onKeyReleased(state);
       }
@@ -47,8 +47,7 @@ class CorsairK70Tester implements DeviceTester {
 
   @override
   Future<void> blink() async {
-    final Iterable<MapEntry<CellCoords, KeyboardKey>> entries =
-        KeyDictionary.keys.entries;
+    final Iterable<MapEntry<CellCoords, KeyboardKey>> entries = KeyDictionary.keys.entries;
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
@@ -132,7 +131,7 @@ class CorsairK70Tester implements DeviceTester {
 
   Future<void> _sendData() async {
     _updateColor();
-    final Timer timer =Timer.periodic(
+    final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
       (Timer timer) {
         _setCurrentIndexValue(
@@ -148,7 +147,7 @@ class CorsairK70Tester implements DeviceTester {
 
   void _updateColor([Duration? duration, double? speed]) {
     final double updateSpeed = speed ?? 5;
-    final Timer timer =Timer.periodic(
+    final Timer timer = Timer.periodic(
       duration ?? Duration(microseconds: 2000),
       (Timer timer) {
         if (inc) {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
-import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_effect.dart';
@@ -23,7 +22,6 @@ class EffectGridContainer extends StatefulWidget {
 
 class _EffectGridContainerState extends State<EffectGridContainer> {
   late EffectBloc effectBloc;
-  late KeyBloc keyBloc;
   late DevicesBloc devicesBloc;
   late EffectGridData effectGridData;
   late List<List<Color>> colors;
@@ -34,13 +32,10 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     super.initState();
     effectBloc = GetIt.instance.get();
     devicesBloc = GetIt.instance.get();
-    keyBloc = context.read();
     effectGridData = effectBloc.state.effectGridData;
     effects = <Effect>[
       RainbowWaveEffect(),
-      KeyStrokeEffect(
-        keyBloc: keyBloc,
-      ),
+      KeyStrokeEffect(),
     ];
 
     Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
@@ -71,8 +66,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
 
   void listener(BuildContext context, EffectState state) {
     final EffectState currentState = effectBloc.state;
-    final bool shouldSetState =
-        currentState.hasEffectGridDataSizeOrMinChanged(state);
+    final bool shouldSetState = currentState.hasEffectGridDataSizeOrMinChanged(state);
     if (shouldSetState || state.forceUpdate) {
       effectGridData = state.effectGridData;
       setState(() {});

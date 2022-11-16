@@ -3,7 +3,6 @@ import 'dart:ffi';
 import 'package:get_it/get_it.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
@@ -32,13 +31,11 @@ abstract class DeviceInterface {
 
   static DeviceInterface fromDevice({
     required Device device,
-    KeyBloc? keyBloc,
   }) {
     switch (device.deviceProductVendor.productVendor) {
       case DeviceProductVendor.corsairK70:
         return CorsairK70(
           device: device,
-          keyBloc: keyBloc,
         );
       case DeviceProductVendor.corsairVirtuoso:
         return CorsairVirtuoso(device: device);

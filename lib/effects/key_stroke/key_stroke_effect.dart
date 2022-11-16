@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
@@ -19,12 +20,11 @@ class KeyStrokeEffect extends Effect {
   late List<KeyStrokeSpread> _spreads;
   int colorIndex = 0;
 
-  KeyStrokeEffect({
-    required this.keyBloc,
-  }) {
+  KeyStrokeEffect() : keyBloc = GetIt.instance.get() {
     _spreads = [];
     keyBloc.stream.listen(_onKeyEvent);
   }
+
   @override
   void update() {
     for (KeyStrokeSpread spread in _spreads) {
