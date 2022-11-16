@@ -6,22 +6,12 @@ import 'package:rgb_app/models/effect_grid_data.dart';
 
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   List<List<Color>> get colors => state.effectGridData.colors;
+
   int get sizeX => state.effectGridData.sizeX;
+
   int get sizeY => state.effectGridData.sizeY;
 
-  EffectBloc()
-      : super(
-          EffectState(
-            effectGridData: EffectGridData(
-              sizeX: 20,
-              sizeY: 20,
-              colors: [],
-              minSizeX: 20,
-              minSizeY: 20,
-            ),
-            forceUpdate: false,
-          ),
-        ) {
+  EffectBloc() : super(EffectState.initial()) {
     on<SetGridSizeEvent>(_onSetGridSizeEvent);
     on<ColorsUpdatedEvent>(_onColorsUpdatedEvent);
   }
@@ -43,22 +33,20 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     };
   }
 
-  Future<void> _onSetGridSizeEvent(
-      SetGridSizeEvent event, Emitter<EffectState> emit) async {
+  Future<void> _onSetGridSizeEvent(SetGridSizeEvent event, Emitter<EffectState> emit) async {
     final EffectState newState = state.copyWith(
       effectGridData: event.effectGridData,
       forceUpdate: true,
     );
+
     emit(newState);
   }
 
-  Future<void> _onColorsUpdatedEvent(
-      ColorsUpdatedEvent event, Emitter<EffectState> emit) async {
-    final EffectState newState = state.copyWith(
-      effectGridData: state.effectGridData.copyWith(
-        colors: event.colors,
-      ),
-    );
+  Future<void> _onColorsUpdatedEvent(ColorsUpdatedEvent event, Emitter<EffectState> emit) async {
+    final EffectGridData currentData = state.effectGridData;
+    final EffectGridData data = currentData.copyWith(colors: event.colors);
+    final EffectState newState = state.copyWith(effectGridData: data);
+
     emit(newState);
   }
 }

@@ -30,7 +30,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   @override
   void initState() {
     super.initState();
-    effectBloc = GetIt.instance.get();
+    effectBloc = context.read();
     devicesBloc = GetIt.instance.get();
     effectGridData = effectBloc.state.effectGridData;
     effects = <Effect>[
@@ -53,24 +53,11 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   @override
   Widget build(BuildContext context) {
     colors = buildColors();
-    return BlocListener(
-      listener: listener,
-      bloc: effectBloc,
-      child: Column(
-        children: <Widget>[
-          ...buildRows(),
-        ],
-      ),
+    return Column(
+      children: <Widget>[
+        ...buildRows(),
+      ],
     );
-  }
-
-  void listener(BuildContext context, EffectState state) {
-    final EffectState currentState = effectBloc.state;
-    final bool shouldSetState = currentState.hasEffectGridDataSizeOrMinChanged(state);
-    if (shouldSetState || state.forceUpdate) {
-      effectGridData = state.effectGridData;
-      setState(() {});
-    }
   }
 
   List<List<Color>> buildColors() {

@@ -3,10 +3,11 @@ import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
+import 'package:rgb_app/widgets/device_tile/device_tile.dart';
 
 import '../../blocs/devices_bloc/devices_state.dart';
 import '../../devices/device.dart';
-import '../dialogs/dialogs.dart';
+import '../dialogs/dialog_manager.dart';
 
 class AddDeviceButton extends StatefulWidget {
   @override
@@ -49,11 +50,21 @@ class _AddDeviceButtonState extends State<AddDeviceButton> {
     availableDevices = availableDevices
         .where((Device device) => device.deviceProductVendor.productVendor != DeviceProductVendor.unknown)
         .toList();
+
     Navigator.of(context).push(
-      Dialogs.showAddDeviceDialog(
-        context,
-        _addDeviceEvent,
-        availableDevices,
+      DialogManager.showDialog(
+        context: context,
+        title: 'Choose device',
+        child: Column(
+          children: [
+            ...availableDevices.map(
+              (Device device) => DeviceTile(
+                device: device,
+                onTap: _addDeviceEvent,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

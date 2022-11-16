@@ -11,7 +11,7 @@ class EffectState extends Equatable {
   EffectState({
     required this.effectGridData,
     required this.forceUpdate,
-  })  : key = UniqueKey();
+  }) : key = UniqueKey();
 
   @override
   List<Object> get props => <Object>[
@@ -19,6 +19,13 @@ class EffectState extends Equatable {
         forceUpdate,
         key,
       ];
+
+  factory EffectState.initial() {
+    return EffectState(
+      effectGridData: EffectGridData.initial(),
+      forceUpdate: false,
+    );
+  }
 
   EffectState copyWith({
     EffectGridData? effectGridData,
@@ -28,21 +35,5 @@ class EffectState extends Equatable {
       effectGridData: effectGridData ?? this.effectGridData,
       forceUpdate: forceUpdate ?? false,
     );
-  }
-
-  bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
-    final EffectGridData effectGridData = state.effectGridData;
-    final bool hasDifferentSizeX =
-        effectGridData.sizeX != this.effectGridData.sizeX;
-    final bool hasDifferentSizeY =
-        effectGridData.sizeY != this.effectGridData.sizeY;
-    final bool hasDifferentMinX =
-        effectGridData.minSizeX != this.effectGridData.minSizeX;
-    final bool hasDifferentMinY =
-        effectGridData.minSizeY != this.effectGridData.minSizeY;
-    return hasDifferentSizeX ||
-        hasDifferentSizeY ||
-        hasDifferentMinX ||
-        hasDifferentMinY;
   }
 }

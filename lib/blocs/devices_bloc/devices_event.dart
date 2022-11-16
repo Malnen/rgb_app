@@ -10,14 +10,10 @@ abstract class DevicesEvent extends Equatable {
 class AddDeviceEvent extends DevicesEvent {
   final Device device;
 
-  AddDeviceEvent({
-    required this.device
-  });
+  AddDeviceEvent({required this.device});
 
   @override
-  List<Object?> get props => <Object?>[
-        device
-      ];
+  List<Object?> get props => <Object?>[device];
 }
 
 class RemoveDeviceEvent extends DevicesEvent {

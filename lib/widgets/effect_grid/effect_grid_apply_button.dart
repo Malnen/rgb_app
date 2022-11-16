@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 class EffectGridApplyButton extends StatefulWidget {
   final void Function() onTap;
 
-  const EffectGridApplyButton({
-    required this.onTap,
-  });
+  const EffectGridApplyButton({required this.onTap});
 
   @override
   State<EffectGridApplyButton> createState() => _EffectGridApplyButtonState();
 }
 
 class _EffectGridApplyButtonState extends State<EffectGridApplyButton> {
-
   @override
   void initState() {
     super.initState();

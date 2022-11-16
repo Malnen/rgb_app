@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-
-import '../../blocs/effects_bloc/effect_state.dart';
 
 class EffectGridCell extends StatefulWidget {
   final int x;
@@ -26,24 +23,21 @@ class _EffectGridCellState extends State<EffectGridCell> {
   @override
   void initState() {
     super.initState();
-    bloc = GetIt.instance.get();
+    bloc = context.read();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      listener: setColor,
-      bloc: bloc,
-      child: Container(
-        color: color,
-        width: 20,
-        height: 20,
-        margin: EdgeInsets.all(2),
-      ),
+    setColor();
+    return Container(
+      color: color,
+      width: 20,
+      height: 20,
+      margin: EdgeInsets.all(2),
     );
   }
 
-  void setColor(BuildContext context, EffectState state) {
+  void setColor() {
     try {
       color = bloc.colors[widget.y][widget.x];
       setState(() {});

@@ -100,12 +100,9 @@ class SteelSeriesRival100 extends MouseInterface {
     try {
       color = effectBloc.colors[offsetY][offsetX];
     } catch (e) {
-      print(offsetX.toString() +
-          ', ' +
-          offsetY.toString() +
-          ' out of range ' +
-          device.deviceProductVendor.name);
+      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
     }
+
     sendData();
   }
 }

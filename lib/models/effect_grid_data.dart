@@ -19,6 +19,16 @@ class EffectGridData extends Equatable {
   @override
   List<Object> get props => <Object>[];
 
+  factory EffectGridData.initial() {
+    return EffectGridData(
+      sizeX: 20,
+      sizeY: 20,
+      colors: [],
+      minSizeX: 20,
+      minSizeY: 20,
+    );
+  }
+
   EffectGridData.fromJson(Map<String, dynamic> json)
       : sizeX = json['sizeX'] as int,
         sizeY = json['sizeY'] as int,

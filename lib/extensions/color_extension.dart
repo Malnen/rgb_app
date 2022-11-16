@@ -19,7 +19,6 @@ extension ColorExtension on Color {
 
   static int _getMixed(int value, int valueToMix, double fraction) {
     double mixedValue = (value - valueToMix) * fraction + valueToMix;
-
     return mixedValue.toInt();
   }
 }

@@ -25,9 +25,8 @@ class CorsairK70 extends KeyboardInterface {
 
   late CorsairK70Tester tester;
 
-  CorsairK70({
-    required Device device,
-  })  : keyBloc = GetIt.instance.get(),
+  CorsairK70({required Device device})
+      : keyBloc = GetIt.instance.get(),
         super(device: device);
 
   late Uint8List dataPkt1;
@@ -94,6 +93,7 @@ class CorsairK70 extends KeyboardInterface {
     } catch (e) {
       print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
     }
+
     sendData();
   }
 
@@ -121,6 +121,7 @@ class CorsairK70 extends KeyboardInterface {
     final int g = color.green;
     final int b = color.blue;
     final CorsairK70Packets corsairK70Packets = getPacket(packetIndex);
+
     corsairK70Packets.rPkt[index] = r;
     corsairK70Packets.gPkt[index] = g;
     corsairK70Packets.bPkt[index] = b;
@@ -181,8 +182,11 @@ class CorsairK70 extends KeyboardInterface {
     final int lastY = _getLastKeyY(keyEntries);
     final int maxX = _getMaxX(keyEntries);
 
-    keys = List.generate(lastY + 1, (_) => List.generate(maxX + 1, (_) => KeyDictionary.emptyKey, growable: false),
-        growable: false);
+    keys = List.generate(
+      lastY + 1,
+      (_) => List.generate(maxX + 1, (_) => KeyDictionary.emptyKey, growable: false),
+      growable: false,
+    );
   }
 
   int _getLastKeyY(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {

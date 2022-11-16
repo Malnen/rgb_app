@@ -7,14 +7,10 @@ abstract class EffectEvent extends Equatable {}
 class SetGridSizeEvent extends EffectEvent {
   final EffectGridData effectGridData;
 
-  SetGridSizeEvent({
-    required this.effectGridData,
-  });
+  SetGridSizeEvent({required this.effectGridData});
 
   @override
-  List<Object> get props => <Object>[
-        effectGridData,
-      ];
+  List<Object> get props => <Object>[effectGridData];
 }
 
 class ColorsUpdatedEvent extends EffectEvent {

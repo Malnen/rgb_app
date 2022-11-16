@@ -9,14 +9,10 @@ import 'key_state.dart';
 class KeyBloc extends Bloc<KeyEvent, KeyState> {
   late ke.KeyboardEvent keyboardEvent;
 
-  KeyBloc()
-      : super(KeyState(
-          keyCode: 0,
-          keyName: '',
-          type: KeyStateType.initial,
-        )) {
+  KeyBloc() : super(KeyState.empty()) {
     keyboardEvent = ke.KeyboardEvent();
     keyboardEvent.startListening(_startListening);
+
     on<KeyPressedEvent>(_onKeyPressedEvent);
     on<KeyReleasedEvent>(_onKeyReleasedEvent);
     on<SetOffsetEvent>(_onSetOffsetEvent);

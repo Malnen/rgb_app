@@ -3,27 +3,12 @@ import 'package:flutter/material.dart';
 import '../../devices/device.dart';
 import '../device_tile/device_tile.dart';
 
-class Dialogs {
-  static DialogRoute<void> showAddDeviceDialog(
-    BuildContext context,
-    Function(Device device) onTap,
-    List<Device> availableDevices,
-  ) {
-    List<Widget> deviceTiles = availableDevices
-        .map((Device device) => DeviceTile(
-              device: device,
-              onTap: onTap,
-            ))
-        .toList();
-    final Widget child = Column(children: deviceTiles);
-    return _showDialog(context, child, 'Choose device');
-  }
-
-  static DialogRoute<void> _showDialog(
-    BuildContext context,
-    Widget child,
-    String title,
-  ) {
+class DialogManager {
+  static DialogRoute<void> showDialog({
+    required BuildContext context,
+    required Widget child,
+    required String title,
+  }) {
     return DialogRoute<void>(
       context: context,
       builder: (BuildContext context) => Dialog(

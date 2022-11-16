@@ -21,22 +21,16 @@ abstract class DeviceInterface {
   int offsetX = 0;
   int offsetY = 0;
 
-  DeviceInterface({
-    required this.device,
-  }){
+  DeviceInterface({required this.device}) {
     effectBloc = GetIt.instance.get();
   }
 
   Libusb get libusb => LibusbLoader.getInstance;
 
-  static DeviceInterface fromDevice({
-    required Device device,
-  }) {
+  static DeviceInterface fromDevice({required Device device}) {
     switch (device.deviceProductVendor.productVendor) {
       case DeviceProductVendor.corsairK70:
-        return CorsairK70(
-          device: device,
-        );
+        return CorsairK70(device: device);
       case DeviceProductVendor.corsairVirtuoso:
         return CorsairVirtuoso(device: device);
       case DeviceProductVendor.steelSeriesRival100:
@@ -52,8 +46,7 @@ abstract class DeviceInterface {
     required int configuration,
   }) {
     final libusb = LibusbLoader.getInstance;
-    final Pointer<libusb_device_handle> devHandle =
-        libusb.libusb_open_device_with_vid_pid(
+    final Pointer<libusb_device_handle> devHandle = libusb.libusb_open_device_with_vid_pid(
       nullptr,
       int.parse('0x${device.vendorId}'),
       int.parse('0x${device.productId}'),

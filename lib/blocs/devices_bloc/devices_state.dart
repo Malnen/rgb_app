@@ -20,11 +20,7 @@ class DevicesState extends Equatable {
   }) : key = UniqueKey();
 
   factory DevicesState.empty() {
-    return DevicesState(
-        devices: [],
-        devicesData: [],
-        deviceInstances: [],
-        availableDevices: []);
+    return DevicesState(devices: [], devicesData: [], deviceInstances: [], availableDevices: []);
   }
 
   DevicesState copyWith({
@@ -59,8 +55,7 @@ class DevicesState extends Equatable {
   static List<DeviceData> _mapDeviceData(List<dynamic> json) {
     return json
         .map(
-          (dynamic element) =>
-              DeviceData.fromJson(element as Map<String, dynamic>),
+          (dynamic element) => DeviceData.fromJson(element as Map<String, dynamic>),
         )
         .toList();
   }

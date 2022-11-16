@@ -25,35 +25,24 @@ class _EffectGridState extends State<EffectGrid> {
   @override
   void initState() {
     super.initState();
-    bloc = GetIt.instance.get();
+    bloc = context.read();
     effectGridData = bloc.state.effectGridData;
-    setControllersValue(bloc.state);
+    setControllersValue();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      listener: listener,
-      bloc: bloc,
-      child: Column(
-        children: <Widget>[
-          top(),
-          EffectGridContainer(),
-        ],
-      ),
-    );
-  }
+    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeX);
+    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeY);
+    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.minSizeY);
+    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.minSizeX);
 
-  void listener(BuildContext context, EffectState state) {
-    final EffectState currentState = bloc.state;
-    final bool shouldSetState =
-    currentState.hasEffectGridDataSizeOrMinChanged(state);
-    if (shouldSetState) {
-      effectGridData = state.effectGridData;
-      setGridSize();
-      setControllersValue(state);
-      setState(() {});
-    }
+    return Column(
+      children: <Widget>[
+        top(),
+        EffectGridContainer(),
+      ],
+    );
   }
 
   Row top() {
@@ -116,7 +105,8 @@ class _EffectGridState extends State<EffectGrid> {
     return parsedValue;
   }
 
-  void setControllersValue(EffectState state) {
+  void setControllersValue() {
+    final EffectState state = bloc.state;
     final EffectGridData effectGridData = state.effectGridData;
     final int sizeX = effectGridData.sizeX;
     final int sizeY = effectGridData.sizeY;

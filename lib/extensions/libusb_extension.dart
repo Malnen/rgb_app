@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/utils/libusb_loader.dart';
@@ -11,9 +12,11 @@ extension LibusbExtension on Libusb {
   static final Libusb _libusb = LibusbLoader.getInstance;
 
   String describeError(int error) {
-    var array = _libusb.libusb_error_name(error);
-    var nativeString = array.cast<Uint8>().asTypedList(_maxSize);
-    var strlen = nativeString.indexWhere((char) => char == 0);
-    return utf8.decode(array.cast<Uint8>().asTypedList(strlen));
+    final Pointer<Int8> array = _libusb.libusb_error_name(error);
+    final Uint8List nativeString = array.cast<Uint8>().asTypedList(_maxSize);
+    final int length = nativeString.indexWhere((char) => char == 0);
+    final Uint8List typedList = array.cast<Uint8>().asTypedList(length);
+
+    return utf8.decode(typedList);
   }
 }

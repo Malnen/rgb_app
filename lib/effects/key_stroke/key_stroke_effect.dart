@@ -17,7 +17,9 @@ class KeyStrokeEffect extends Effect {
     Colors.white,
     Colors.black,
   ];
+
   late List<KeyStrokeSpread> _spreads;
+
   int colorIndex = 0;
 
   KeyStrokeEffect() : keyBloc = GetIt.instance.get() {

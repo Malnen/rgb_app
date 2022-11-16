@@ -19,6 +19,14 @@ class KeyState extends Equatable {
     UniqueKey? key,
   }) : key = key ?? UniqueKey();
 
+  factory KeyState.empty() {
+    return KeyState(
+      keyCode: 0,
+      keyName: '',
+      type: KeyStateType.initial,
+    );
+  }
+
   KeyState copyWith({
     int? keyCode,
     String? keyName,
