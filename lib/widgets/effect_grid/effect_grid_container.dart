@@ -33,7 +33,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   void initState() {
     super.initState();
     effectBloc = GetIt.instance.get();
-    devicesBloc = context.read();
+    devicesBloc = GetIt.instance.get();
     keyBloc = context.read();
     effectGridData = effectBloc.state.effectGridData;
     effects = <Effect>[

@@ -1,52 +1,67 @@
 import 'dart:async';
 
-import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
-import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
-import 'package:rgb_app/cubits/devices_cubit.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/quick_usb/quick_usb.dart';
 
 import '../../devices/device.dart';
 
-class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
-  final DevicesCubit _devicesCubit;
-
+class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   List<DeviceInterface> get deviceInstances => state.deviceInstances;
 
-  DevicesBloc({
-    required List<Device> availableDevices,
-  })  : _devicesCubit = DevicesCubit(),
-        super(DevicesState(
-          devices: [],
-          availableDevices: availableDevices,
-          deviceInstances: [],
-        )) {
+  DevicesBloc() : super(DevicesState.empty()) {
     on<AddDeviceEvent>(_onAddDeviceEvent);
     on<RemoveDeviceEvent>(_onRemoveDeviceEvent);
     on<RestoreDevicesEvent>(_onRestoreDevices);
+    on<LoadAvailableDevicesEvent>(_onLoadAvailableDevicesEvent);
+  }
+
+  @override
+  DevicesState fromJson(Map<String, dynamic> json) {
+    final DevicesState state = DevicesState.fromJson(
+      json['devicesState'] as Map<String, dynamic>,
+    );
+    final List<DeviceData> devicesData = state.devicesData;
+    return DevicesState(
+      availableDevices: [],
+      deviceInstances: [],
+      devices: [],
+      devicesData: devicesData,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson(DevicesState state) {
+    return {
+      'devicesState': <String, dynamic>{
+        'devicesData': state.devicesData,
+      }
+    };
   }
 
   Future<void> _onAddDeviceEvent(
       AddDeviceEvent event, Emitter<DevicesState> emit) async {
-    _addDeviceIfNew(event).then((DevicesState state) => emit(state));
+    final DevicesState newState = _addDeviceIfNew(event);
+    emit(newState);
   }
 
   Future<void> _onRemoveDeviceEvent(
       RemoveDeviceEvent event, Emitter<DevicesState> emit) async {
-    _removeDeviceIfExist(event).then((DevicesState state) => emit(state));
+    final DevicesState newState = _removeDeviceIfExist(event);
+    emit(newState);
   }
 
-  Future<DevicesState> _addDeviceIfNew(AddDeviceEvent event) async {
+  DevicesState _addDeviceIfNew(AddDeviceEvent event) {
     final List<Device> devices = state.devices;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
     final Device device = event.device;
     if (!devices.contains(device)) {
-      _addDevice(
+      return _addDevice(
         device,
         devices,
         deviceInstances,
@@ -60,7 +75,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     );
   }
 
-  void _addDevice(
+  DevicesState _addDevice(
     Device device,
     List<Device> devices,
     List<DeviceInterface> deviceInstances,
@@ -76,15 +91,22 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     );
     deviceInterface.init();
     deviceInstances.add(deviceInterface);
-    _devicesCubit.addDeviceData(deviceData);
+    final List<DeviceData> devicesData = state.devicesData;
+    devicesData.add(deviceData);
+
+    return state.copyWith(
+      devicesData: devicesData,
+      devices: devices,
+      deviceInstances: deviceInstances,
+    );
   }
 
-  Future<DevicesState> _removeDeviceIfExist(RemoveDeviceEvent event) async {
+  DevicesState _removeDeviceIfExist(RemoveDeviceEvent event) {
     final List<Device> devices = state.devices;
     final Device device = event.device;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
     if (devices.contains(device)) {
-      _removeDevice(device, devices, deviceInstances);
+      return _removeDevice(device, devices, deviceInstances);
     }
 
     return state.copyWith(
@@ -93,7 +115,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     );
   }
 
-  void _removeDevice(
+  DevicesState _removeDevice(
     Device device,
     List<Device> devices,
     List<DeviceInterface> deviceInstances,
@@ -108,7 +130,14 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     deviceInterface.dispose();
     devices.remove(device);
     deviceInstances.remove(deviceInterface);
-    _devicesCubit.removeDeviceData(deviceData);
+    final List<DeviceData> devicesData = state.devicesData;
+    devicesData.remove(deviceData);
+
+    return state.copyWith(
+      devicesData: devicesData,
+      devices: devices,
+      deviceInstances: deviceInstances,
+    );
   }
 
   Future<void> _onRestoreDevices(
@@ -128,7 +157,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   void _addDeviceToRestore(Device device, List<Device> devices) {
     final DeviceProductVendor deviceProductVendor = device.deviceProductVendor;
-    final List<DeviceData> devicesData = _devicesCubit.state.devicesData;
+    final List<DeviceData> devicesData = state.devicesData;
     final bool hasAny = devicesData.any((DeviceData deviceData) =>
         deviceData.deviceProductVendor.productVendor ==
         deviceProductVendor.productVendor);
@@ -136,5 +165,16 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       final AddDeviceEvent event = AddDeviceEvent(device: device);
       add(event);
     }
+  }
+
+  Future<void> _onLoadAvailableDevicesEvent(
+    LoadAvailableDevicesEvent event,
+    Emitter<DevicesState> emit,
+  ) async {
+    final QuickUsb quickUsb = QuickUsb();
+    final List<Device> deviceProductInfo = quickUsb.getDeviceProductInfo();
+    final newState = state.copyWith(availableDevices: deviceProductInfo);
+
+    emit(newState);
   }
 }

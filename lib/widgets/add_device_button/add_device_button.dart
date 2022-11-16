@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
@@ -19,7 +20,7 @@ class _AddDeviceButtonState extends State<AddDeviceButton> {
   @override
   void initState() {
     super.initState();
-    bloc = context.read();
+    bloc = GetIt.instance.get();
   }
 
   @override
@@ -47,8 +48,7 @@ class _AddDeviceButtonState extends State<AddDeviceButton> {
     final DevicesState state = bloc.state;
     List<Device> availableDevices = state.availableDevices;
     availableDevices = availableDevices
-        .where((Device device) =>
-            device.deviceProductVendor.productVendor != DeviceProductVendor.unknown)
+        .where((Device device) => device.deviceProductVendor.productVendor != DeviceProductVendor.unknown)
         .toList();
     Navigator.of(context).push(
       Dialogs.showAddDeviceDialog(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/widgets/add_device_button/add_device_button.dart';
 import 'package:rgb_app/widgets/device_tile/device_tile.dart';
@@ -21,7 +22,7 @@ class _DevicesListContainer extends State<DevicesListContainer> {
   @override
   void initState() {
     super.initState();
-    bloc = context.read();
+    bloc = GetIt.instance.get();
     devices = bloc.state.devices;
   }
 

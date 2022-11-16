@@ -3,7 +3,10 @@ import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 
 import '../../devices/device.dart';
 
-abstract class DevicesEvent extends Equatable {}
+abstract class DevicesEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class AddDeviceEvent extends DevicesEvent {
   final Device device;
@@ -30,7 +33,6 @@ class RemoveDeviceEvent extends DevicesEvent {
   List<Object> get props => <Object>[device];
 }
 
-class RestoreDevicesEvent extends DevicesEvent {
-  @override
-  List<Object?> get props => [];
-}
+class RestoreDevicesEvent extends DevicesEvent {}
+
+class LoadAvailableDevicesEvent extends DevicesEvent {}
