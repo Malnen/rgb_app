@@ -5,12 +5,22 @@ import 'package:rgb_app/models/effect_grid_data.dart';
 import 'effect.dart';
 
 class RainbowWaveEffect extends Effect {
-  double size = 15;
-  double speed = 2.5;
+  double size;
+  double speed;
   double value = 1;
   int direction = -1;
 
-  RainbowWaveEffect();
+  RainbowWaveEffect({
+    this.size = 15,
+    this.speed = 2.5,
+  });
+
+  factory RainbowWaveEffect.fromJson(Map<String, dynamic> json) {
+    return RainbowWaveEffect(
+      size: json['size'] as double,
+      speed: json['speed'] as double,
+    );
+  }
 
   @override
   void update() {
@@ -27,6 +37,14 @@ class RainbowWaveEffect extends Effect {
     value = value % 360;
   }
 
+  @override
+  Map<String, dynamic> getData() {
+    return <String, dynamic>{
+      'size': size,
+      'speed': speed,
+    };
+  }
+
   void _setColors(int sizeX, int sizeY, List<List<Color>> colors) {
     for (int i = 0; i < sizeX; i++) {
       _setColor(i, sizeY, colors);
@@ -39,7 +57,7 @@ class RainbowWaveEffect extends Effect {
     for (int j = 0; j < sizeY; j++) {
       try {
         colors[j][i] = hsv.toColor();
-      } finally {}
+      } catch (_) {}
     }
   }
 }

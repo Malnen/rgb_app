@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
 abstract class EffectEvent extends Equatable {}
@@ -24,4 +25,22 @@ class ColorsUpdatedEvent extends EffectEvent {
         colors,
         key,
       ];
+}
+
+class AddEffectEvent extends EffectEvent {
+  final Effect effect;
+
+  AddEffectEvent({required this.effect});
+
+  @override
+  List<Object> get props => <Object>[effect];
+}
+
+class RemoveEffectEvent extends EffectEvent {
+  final Effect effect;
+
+  RemoveEffectEvent({required this.effect});
+
+  @override
+  List<Object> get props => <Object>[effect];
 }

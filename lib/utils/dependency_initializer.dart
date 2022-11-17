@@ -18,7 +18,7 @@ class DependencyInitializer {
     _initKeyBloc();
   }
 
-  static void _initEffectBloc() {
+  static void _initEffectBloc() async {
     EffectBloc effectBloc = EffectBloc();
     instance.registerSingleton(effectBloc);
   }

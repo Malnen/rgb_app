@@ -57,12 +57,14 @@ class KeyStrokeSpread {
 
   void _setNewColor(KeyStrokeData data) {
     final CellCoords cellCoords = data.cellCoords;
-    final Color currentColor = colors[cellCoords.y][cellCoords.x];
-    colors[cellCoords.y][cellCoords.x] = ColorExtension.mix(
-      data.color,
-      currentColor,
-      data.opacity,
-    );
+    try {
+      final Color currentColor = colors[cellCoords.y][cellCoords.x];
+      colors[cellCoords.y][cellCoords.x] = ColorExtension.mix(
+        data.color,
+        currentColor,
+        data.opacity,
+      );
+    } catch (_) {}
   }
 
   KeyStrokeData _getNewData(
@@ -78,13 +80,12 @@ class KeyStrokeSpread {
     );
   }
 
-  bool _getIncrement(double duration){
+  bool _getIncrement(double duration) {
     return duration > _startDecreasing;
   }
 
   double _getOpacity(bool increment, double opacity) {
-    final double targetOpacitySpeed =
-        increment ? opacitySpeed : opacitySpeed * -1;
+    final double targetOpacitySpeed = increment ? opacitySpeed : opacitySpeed * -1;
     final double targetOpacity = opacity + targetOpacitySpeed;
     if (targetOpacity > 1) {
       return 1;
@@ -95,8 +96,7 @@ class KeyStrokeSpread {
     return targetOpacity;
   }
 
-  void _propagateAfterDelay(
-      double duration, KeyStrokeData newData, List<KeyStrokeData> newSpread) {
+  void _propagateAfterDelay(double duration, KeyStrokeData newData, List<KeyStrokeData> newSpread) {
     final bool canPropagate = this.duration - duration >= spreadDelay;
     if (canPropagate) {
       _tryToPropagate(newData, newSpread);

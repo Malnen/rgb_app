@@ -7,4 +7,18 @@ abstract class Effect {
   Effect() : effectBloc = GetIt.instance.get();
 
   void update();
+
+  String get className => runtimeType.toString();
+
+  Map<String, dynamic> getData();
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{
+      'className': className,
+    };
+    final Map<String, dynamic> data = getData();
+    json.addAll(data);
+
+    return json;
+  }
 }

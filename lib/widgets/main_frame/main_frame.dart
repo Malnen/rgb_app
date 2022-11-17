@@ -35,9 +35,6 @@ class _MainFrameState extends State<MainFrame> {
       title: 'RGB App',
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 30, 30, 30),
-        appBar: AppBar(
-          title: const Text('¯\\_(ツ)_/¯'),
-        ),
         body: _body(),
       ),
     );

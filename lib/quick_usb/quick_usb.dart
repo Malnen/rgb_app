@@ -17,7 +17,7 @@ class QuickUsb {
       throw StateError('init error: ${_libusb.describeError(init)}');
     }
 
-    var deviceListPtr = calloc<Pointer<Pointer<libusb_device>>>();
+    final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr = calloc<Pointer<Pointer<libusb_device>>>();
 
     return _processDevices(deviceListPtr);
   }
@@ -25,7 +25,7 @@ class QuickUsb {
   List<Device> _processDevices(
       Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
-      var count = _getDeviceList(deviceListPtr);
+      final int count = _getDeviceList(deviceListPtr);
       if (count < 0) {
         return <Device>[];
       }
@@ -52,13 +52,13 @@ class QuickUsb {
 
   Iterable<Device> _iterateDeviceProduct(
       Pointer<Pointer<libusb_device>> deviceList) sync* {
-    var descPtr = calloc<libusb_device_descriptor>();
-    var devHandlePtr = calloc<Pointer<libusb_device_handle>>();
+    final Pointer<libusb_device_descriptor> descPtr = calloc<libusb_device_descriptor>();
+    final Pointer<Pointer<libusb_device_handle>> devHandlePtr = calloc<Pointer<libusb_device_handle>>();
     const int strDescLength = 42;
-    var strDescPtr = calloc<Uint8>(strDescLength);
+    final Pointer<Uint8> strDescPtr = calloc<Uint8>(strDescLength);
 
-    for (var i = 0; deviceList[i] != nullptr; i++) {
-      var deviceProduct = _getDeviceProduct(
+    for (int i = 0; deviceList[i] != nullptr; i++) {
+      final Device deviceProduct = _getDeviceProduct(
         deviceList[i],
         descPtr,
         devHandlePtr,
@@ -80,21 +80,22 @@ class QuickUsb {
     Pointer<Uint8> strDescPtr,
     int strDescLength,
   ) {
-    var devDesc = _libusb.libusb_get_device_descriptor(dev, descPtr);
+    final int devDesc = _libusb.libusb_get_device_descriptor(dev, descPtr);
     if (devDesc != libusb_error.LIBUSB_SUCCESS) {
       print('devDesc error: ${_libusb.describeError(devDesc)}');
       return Device.empty();
     }
-    var idVendor = descPtr.ref.idVendor.toRadixString(16).padLeft(4, '0');
-    var idProduct = descPtr.ref.idProduct.toRadixString(16).padLeft(4, '0');
-    var idDevice = '$idVendor:$idProduct';
+
+    final String idVendor = descPtr.ref.idVendor.toRadixString(16).padLeft(4, '0');
+    final String idProduct = descPtr.ref.idProduct.toRadixString(16).padLeft(4, '0');
+    final String idDevice = '$idVendor:$idProduct';
 
     if (descPtr.ref.iProduct == 0) {
       print('$idDevice iProduct empty');
       return Device.empty();
     }
 
-    var open = _libusb.libusb_open(dev, devHandlePtr);
+    final int open = _libusb.libusb_open(dev, devHandlePtr);
     if (open != libusb_error.LIBUSB_SUCCESS) {
       print('$idDevice open error: ${_libusb.describeError(open)}');
       return Device.empty();
@@ -102,7 +103,7 @@ class QuickUsb {
     final Pointer<libusb_device_handle> devHandle = devHandlePtr.value;
 
     try {
-      var langDesc = _libusb.inlineLibusbGetStringDescriptor(
+      final int langDesc = _libusb.inlineLibusbGetStringDescriptor(
           devHandle, 0, 0, strDescPtr, strDescLength);
       if (langDesc < 0) {
         print('$idDevice langDesc error: ${_libusb.describeError(langDesc)}');

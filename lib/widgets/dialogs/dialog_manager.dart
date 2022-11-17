@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../devices/device.dart';
-import '../device_tile/device_tile.dart';
-
 class DialogManager {
   static DialogRoute<void> showDialog({
     required BuildContext context,

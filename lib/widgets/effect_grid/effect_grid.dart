@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
+import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_apply_button.dart';
+import 'package:rgb_app/widgets/effect_grid/effect_grid_wrapper.dart';
 import 'package:rgb_app/widgets/numeric_field/numeric_field.dart';
-
-import '../../blocs/effects_bloc/effect_bloc.dart';
-import 'effect_grid_container.dart';
 
 class EffectGrid extends StatefulWidget {
   @override
@@ -19,28 +17,23 @@ class _EffectGridState extends State<EffectGrid> {
   final TextEditingController controllerX = TextEditingController();
   final TextEditingController controllerY = TextEditingController();
 
-  late EffectGridData effectGridData;
   late EffectBloc bloc;
 
   @override
   void initState() {
     super.initState();
     bloc = context.read();
-    effectGridData = bloc.state.effectGridData;
     setControllersValue();
   }
 
   @override
   Widget build(BuildContext context) {
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeX);
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeY);
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.minSizeY);
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.minSizeX);
-
+    setGridSize();
+    setControllersValue();
     return Column(
       children: <Widget>[
         top(),
-        EffectGridContainer(),
+        EffectGridWrapper(),
       ],
     );
   }

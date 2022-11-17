@@ -25,7 +25,7 @@ class EffectGridData extends Equatable {
       sizeY: 20,
       colors: [],
       minSizeX: 20,
-      minSizeY: 20,
+      minSizeY: 9,
     );
   }
 

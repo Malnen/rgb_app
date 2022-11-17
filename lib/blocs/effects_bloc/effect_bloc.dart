@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
+import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/effects/effect_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
@@ -14,15 +16,20 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   EffectBloc() : super(EffectState.initial()) {
     on<SetGridSizeEvent>(_onSetGridSizeEvent);
     on<ColorsUpdatedEvent>(_onColorsUpdatedEvent);
+    on<AddEffectEvent>(_onAddEffectEvent);
+    on<RemoveEffectEvent>(_onRemoveEffectEvent);
   }
 
   @override
   EffectState fromJson(Map<String, dynamic> json) {
+    final List<Map<String, dynamic>> effectsJson = List<Map<String, dynamic>>.from(json['effects'] as List<dynamic>);
+    final List<Effect> effects = effectsJson.map(EffectFactory.getEffect).toList();
+
     return EffectState(
       effectGridData: EffectGridData.fromJson(
         json['effectGridData'] as Map<String, dynamic>,
       ),
-      forceUpdate: false,
+      effects: [],
     );
   }
 
@@ -30,13 +37,13 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   Map<String, dynamic> toJson(EffectState state) {
     return {
       'effectGridData': state.effectGridData,
+      'effects': state.effects.map((Effect effect) => effect.toJson()).toList(),
     };
   }
 
   Future<void> _onSetGridSizeEvent(SetGridSizeEvent event, Emitter<EffectState> emit) async {
     final EffectState newState = state.copyWith(
       effectGridData: event.effectGridData,
-      forceUpdate: true,
     );
 
     emit(newState);
@@ -47,6 +54,30 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     final EffectGridData data = currentData.copyWith(colors: event.colors);
     final EffectState newState = state.copyWith(effectGridData: data);
 
+    emit(newState);
+  }
+
+  Future<void> _onAddEffectEvent(AddEffectEvent event, Emitter<EffectState> emit) async {
+    final Effect effect = event.effect;
+    final List<Effect> effects = state.effects;
+    final bool hasEffect = effects.contains(effect);
+    if (!hasEffect) {
+      effects.add(effect);
+    }
+
+    final EffectState newState = state.copyWith(effects: effects);
+    emit(newState);
+  }
+
+  Future<void> _onRemoveEffectEvent(RemoveEffectEvent event, Emitter<EffectState> emit) async {
+    final Effect effect = event.effect;
+    final List<Effect> effects = state.effects;
+    final bool hasEffect = effects.contains(effect);
+    if (hasEffect) {
+      effects.remove(effect);
+    }
+
+    final EffectState newState = state.copyWith(effects: effects);
     emit(newState);
   }
 }

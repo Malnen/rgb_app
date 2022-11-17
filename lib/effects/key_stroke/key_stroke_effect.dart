@@ -12,19 +12,26 @@ import 'package:rgb_app/enums/key_code.dart';
 
 class KeyStrokeEffect extends Effect {
   final KeyBloc keyBloc;
-  final double duration = 15;
-  final List<Color> colors = [
-    Colors.white,
-    Colors.black,
-  ];
+  final double duration;
+  final List<Color> colors;
 
   late List<KeyStrokeSpread> _spreads;
 
   int colorIndex = 0;
 
-  KeyStrokeEffect() : keyBloc = GetIt.instance.get() {
+  KeyStrokeEffect({this.duration = 15, List<Color>? colors})
+      : keyBloc = GetIt.instance.get(),
+        colors = colors ?? [Colors.white, Colors.black] {
     _spreads = [];
     keyBloc.stream.listen(_onKeyEvent);
+  }
+
+  factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {
+    final List<int> colors = json['colors'] as List<int>;
+    return KeyStrokeEffect(
+      duration: json['duration'] as double,
+      colors: colors.map((int value) => Color(value)).toList(),
+    );
   }
 
   @override
@@ -32,6 +39,14 @@ class KeyStrokeEffect extends Effect {
     for (KeyStrokeSpread spread in _spreads) {
       spread.spread();
     }
+  }
+
+  @override
+  Map<String, dynamic> getData() {
+    return <String, dynamic>{
+      'duration': duration,
+      'colors': colors.map((Color color) => color.value).toList(),
+    };
   }
 
   void _onKeyEvent(KeyState state) {

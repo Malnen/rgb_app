@@ -1,39 +1,50 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rgb_app/effects/effect.dart';
 
 import '../../models/effect_grid_data.dart';
 
 class EffectState extends Equatable {
   final Key key;
   final EffectGridData effectGridData;
-  final bool forceUpdate;
+  final List<Effect> effects;
 
   EffectState({
     required this.effectGridData,
-    required this.forceUpdate,
+    required this.effects,
   }) : key = UniqueKey();
 
   @override
   List<Object> get props => <Object>[
         effectGridData,
-        forceUpdate,
+        effects,
         key,
       ];
 
   factory EffectState.initial() {
     return EffectState(
       effectGridData: EffectGridData.initial(),
-      forceUpdate: false,
+      effects: [],
     );
   }
 
   EffectState copyWith({
     EffectGridData? effectGridData,
-    bool? forceUpdate,
+    List<Effect>? effects,
   }) {
     return EffectState(
       effectGridData: effectGridData ?? this.effectGridData,
-      forceUpdate: forceUpdate ?? false,
+      effects: effects ?? this.effects,
     );
+  }
+
+  bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
+    final EffectGridData effectGridData = state.effectGridData;
+    final bool hasDifferentSizeX = effectGridData.sizeX != this.effectGridData.sizeX;
+    final bool hasDifferentSizeY = effectGridData.sizeY != this.effectGridData.sizeY;
+    final bool hasDifferentMinX = effectGridData.minSizeX != this.effectGridData.minSizeX;
+    final bool hasDifferentMinY = effectGridData.minSizeY != this.effectGridData.minSizeY;
+
+    return hasDifferentSizeX || hasDifferentSizeY || hasDifferentMinX || hasDifferentMinY;
   }
 }
