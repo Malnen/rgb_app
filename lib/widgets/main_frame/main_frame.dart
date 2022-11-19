@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:rgb_app/widgets/left_panel/left_panel.dart';
-import 'package:rgb_app/widgets/right_panel/right_panel.dart';
+import 'package:rgb_app/widgets/main_frame/main_scaffold.dart';
 
 import '../../blocs/devices_bloc/devices_bloc.dart';
 import '../../devices/device.dart';
@@ -33,25 +32,13 @@ class _MainFrameState extends State<MainFrame> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RGB App',
-      home: Scaffold(
+      theme: ThemeData(
         backgroundColor: Color.fromARGB(255, 30, 30, 30),
-        body: _body(),
-      ),
-    );
-  }
-
-  Column _body() {
-    return Column(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              LeftPanel(),
-              RightPanel(),
-            ],
-          ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 25, 25, 25),
         ),
-      ],
+      ),
+      home: MainScaffold(),
     );
   }
 }

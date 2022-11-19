@@ -13,14 +13,9 @@ class DependencyInitializer {
   static final GetIt instance = GetIt.instance;
 
   static void init() {
-    _initEffectBloc();
     _initDevicesBloc();
     _initKeyBloc();
-  }
-
-  static void _initEffectBloc() async {
-    EffectBloc effectBloc = EffectBloc();
-    instance.registerSingleton(effectBloc);
+    _initEffectBloc();
   }
 
   static void _initDevicesBloc() {
@@ -48,5 +43,11 @@ class DependencyInitializer {
       offsetY: firstKeyboard?.offsetY ?? 0,
     );
     keyBloc.add(setOffsetEvent);
+  }
+
+  static void _initEffectBloc() async {
+    EffectBloc effectBloc = EffectBloc();
+    instance.registerSingleton(effectBloc);
+    effectBloc.setBlocInExistingEffects();
   }
 }

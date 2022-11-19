@@ -29,12 +29,15 @@ class EffectGridData extends Equatable {
     );
   }
 
-  EffectGridData.fromJson(Map<String, dynamic> json)
-      : sizeX = json['sizeX'] as int,
-        sizeY = json['sizeY'] as int,
-        colors = [],
-        minSizeY = 10,
-        minSizeX = 20;
+  factory EffectGridData.fromJson(Map<String, dynamic> json) {
+    return EffectGridData(
+      sizeX: json['sizeX'] as int,
+      sizeY: json['sizeY'] as int,
+      colors: [],
+      minSizeY: 10,
+      minSizeX: 20,
+    );
+  }
 
   Map<String, dynamic>? toJson() {
     return {'sizeX': sizeX, 'sizeY': sizeY};

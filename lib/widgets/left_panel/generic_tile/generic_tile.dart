@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/enums/device_product_vendor.dart';
 
-import '../../devices/device.dart';
+class GenericTile<T> extends StatelessWidget {
+  final T value;
+  final IconData iconData;
+  final String name;
+  final void Function(T value) onTap;
 
-class DeviceTile extends StatelessWidget {
-  final Device device;
-  final void Function(Device device) onTap;
-
-  const DeviceTile({
-    required this.device,
+  const GenericTile({
+    required this.value,
+    required this.iconData,
+    required this.name,
     required this.onTap,
   });
-
-  DeviceProductVendor get _deviceProductVendor => device.deviceProductVendor;
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +43,14 @@ class DeviceTile extends StatelessWidget {
   }
 
   void _onTap(BuildContext context) {
-    onTap(device);
+    onTap(value);
   }
 
   Widget _icon() {
     return Container(
       margin: EdgeInsets.only(left: 10),
       child: Icon(
-        _deviceProductVendor.icon,
+        iconData,
         color: Colors.white,
       ),
     );
@@ -62,7 +61,7 @@ class DeviceTile extends StatelessWidget {
       margin: EdgeInsets.only(left: 10),
       alignment: Alignment.centerLeft,
       child: Text(
-        _deviceProductVendor.name,
+        name,
         style: TextStyle(
           color: Colors.white,
           fontSize: 20,

@@ -8,8 +8,6 @@ import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/effects/key_stroke/key_stroke_effect.dart';
-import 'package:rgb_app/effects/rainbow_wave_effect.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_cell.dart';
 
 class EffectGridContainer extends StatefulWidget {
@@ -33,8 +31,6 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     super.initState();
     effectBloc = context.read();
     devicesBloc = GetIt.instance.get();
-    effectBloc.add(AddEffectEvent(effect: RainbowWaveEffect()));
-    effectBloc.add(AddEffectEvent(effect: KeyStrokeEffect()));
 
     Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
       final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);

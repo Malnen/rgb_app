@@ -3,6 +3,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/effect_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
@@ -23,13 +24,15 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   @override
   EffectState fromJson(Map<String, dynamic> json) {
     final List<Map<String, dynamic>> effectsJson = List<Map<String, dynamic>>.from(json['effects'] as List<dynamic>);
-    final List<Effect> effects = effectsJson.map(EffectFactory.getEffect).toList();
+    final EffectGridData effectGridData = EffectGridData.fromJson(
+      json['effectGridData'] as Map<String, dynamic>,
+    );
+    final List<Effect> effects = effectsJson.map(EffectFactory.getEffectFromJson).toList();
 
     return EffectState(
-      effectGridData: EffectGridData.fromJson(
-        json['effectGridData'] as Map<String, dynamic>,
-      ),
-      effects: [],
+      effectGridData: effectGridData,
+      effects: effects,
+      availableEffects: EffectDictionary.availableEffects,
     );
   }
 
@@ -40,6 +43,12 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       'effects': state.effects.map((Effect effect) => effect.toJson()).toList(),
     };
   }
+
+  void setBlocInExistingEffects() {
+    state.effects.forEach(_setEffectBloc);
+  }
+
+  void _setEffectBloc(Effect effect) => effect.setEffectBloc();
 
   Future<void> _onSetGridSizeEvent(SetGridSizeEvent event, Emitter<EffectState> emit) async {
     final EffectState newState = state.copyWith(

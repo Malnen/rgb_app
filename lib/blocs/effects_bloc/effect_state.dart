@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/effects/effect_data.dart';
+import 'package:rgb_app/effects/effect_dictionary.dart';
 
 import '../../models/effect_grid_data.dart';
 
@@ -8,15 +10,17 @@ class EffectState extends Equatable {
   final Key key;
   final EffectGridData effectGridData;
   final List<Effect> effects;
+  final List<EffectData> availableEffects;
 
   EffectState({
     required this.effectGridData,
+    required this.availableEffects,
     required this.effects,
   }) : key = UniqueKey();
 
   @override
   List<Object> get props => <Object>[
-        effectGridData,
+        effectGridData,availableEffects,
         effects,
         key,
       ];
@@ -25,16 +29,19 @@ class EffectState extends Equatable {
     return EffectState(
       effectGridData: EffectGridData.initial(),
       effects: [],
+      availableEffects: EffectDictionary.availableEffects,
     );
   }
 
   EffectState copyWith({
     EffectGridData? effectGridData,
     List<Effect>? effects,
+    List<EffectData>? availableEffects,
   }) {
     return EffectState(
       effectGridData: effectGridData ?? this.effectGridData,
       effects: effects ?? this.effects,
+      availableEffects: availableEffects ?? this.availableEffects,
     );
   }
 

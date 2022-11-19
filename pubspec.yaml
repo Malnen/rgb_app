@@ -29,4 +29,4 @@ ffigen:
   output: 'generated_bindings.dart'
   headers:
     entry-points:
-      - 'libusb.h'
+      - 'assets/libusb.h'

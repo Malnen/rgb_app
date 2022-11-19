@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
-import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 
-import '../../devices/device.dart';
+class RemoveGenericButton<T> extends StatefulWidget {
+  final T value;
+  final void Function(T value) onTap;
 
-class RemoveDeviceButton extends StatefulWidget {
-  final Device device;
-
-  const RemoveDeviceButton({required this.device});
+  const RemoveGenericButton({required this.value, required this.onTap});
 
   @override
-  State<RemoveDeviceButton> createState() => _RemoveDeviceButtonState();
+  State<RemoveGenericButton<T>> createState() => _RemoveGenericButtonState<T>();
 }
 
-class _RemoveDeviceButtonState extends State<RemoveDeviceButton> {
+class _RemoveGenericButtonState<T> extends State<RemoveGenericButton<T>> {
   late DevicesBloc bloc;
 
   @override
@@ -40,15 +38,7 @@ class _RemoveDeviceButtonState extends State<RemoveDeviceButton> {
           color: Colors.white,
         ),
       ),
-      onTap: _onTap,
+      onTap: () => widget.onTap(widget.value),
     );
   }
-
-  void _onTap() {
-    RemoveDeviceEvent event = RemoveDeviceEvent(
-      device: widget.device,
-    );
-    bloc.add(event);
-  }
-
 }

@@ -6,6 +6,8 @@ import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/effects/effect_data.dart';
+import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_spread.dart';
 import 'package:rgb_app/enums/key_code.dart';
@@ -19,7 +21,7 @@ class KeyStrokeEffect extends Effect {
 
   int colorIndex = 0;
 
-  KeyStrokeEffect({this.duration = 15, List<Color>? colors})
+  KeyStrokeEffect({required super.effectData, this.duration = 15, List<Color>? colors})
       : keyBloc = GetIt.instance.get(),
         colors = colors ?? [Colors.white, Colors.black] {
     _spreads = [];
@@ -29,6 +31,7 @@ class KeyStrokeEffect extends Effect {
   factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {
     final List<int> colors = json['colors'] as List<int>;
     return KeyStrokeEffect(
+      effectData: EffectDictionary.keyStrokeEffect.getWithNewKey(),
       duration: json['duration'] as double,
       colors: colors.map((int value) => Color(value)).toList(),
     );
