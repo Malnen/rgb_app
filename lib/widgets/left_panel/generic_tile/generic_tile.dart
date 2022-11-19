@@ -6,7 +6,7 @@ class GenericTile<T> extends StatelessWidget {
   final String name;
   final void Function(T value) onTap;
 
-  const GenericTile({
+  GenericTile({
     required this.value,
     required this.iconData,
     required this.name,
@@ -16,7 +16,7 @@ class GenericTile<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: 250,
       height: 40,
       margin: EdgeInsets.only(top: 6),
       child: _content(context),

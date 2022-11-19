@@ -19,6 +19,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     on<ColorsUpdatedEvent>(_onColorsUpdatedEvent);
     on<AddEffectEvent>(_onAddEffectEvent);
     on<RemoveEffectEvent>(_onRemoveEffectEvent);
+    on<UpdateEffects>(_onUpdateEffects);
   }
 
   @override
@@ -87,6 +88,11 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     }
 
     final EffectState newState = state.copyWith(effects: effects);
+    emit(newState);
+  }
+
+  Future<void> _onUpdateEffects(UpdateEffects event, Emitter<EffectState> emit) async {
+    final EffectState newState = state.copyWith(effects: event.effects);
     emit(newState);
   }
 }

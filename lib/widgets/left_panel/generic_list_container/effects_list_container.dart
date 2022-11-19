@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
@@ -5,7 +6,6 @@ import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_data.dart';
-import 'package:collection/collection.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/effect_factory.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
@@ -14,6 +14,8 @@ class EffectsListContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.effects.length);
+    context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.availableEffects.length);
+
     final EffectBloc effectBloc = context.read();
     final EffectState state = effectBloc.state;
 
@@ -21,6 +23,7 @@ class EffectsListContainer extends StatelessWidget {
       dialogLabel: 'Choose effect',
       getIcon: (EffectData effectData) => effectData.iconData,
       onAdd: (EffectData effectData) => _onAdd(effectBloc, effectData),
+      onReorder: (List<EffectData> values) {},
       availableValues: EffectDictionary.availableEffects,
       getName: (EffectData effectData) => effectData.name,
       onRemove: (EffectData effectData) => _onRemove(effectBloc, effectData),

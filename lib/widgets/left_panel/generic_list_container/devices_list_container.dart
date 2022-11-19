@@ -15,12 +15,13 @@ class DevicesListContainer extends StatelessWidget {
 
     final DevicesBloc devicesBloc = context.read();
     final DevicesState state = devicesBloc.state;
-    final availableDevices = state.availableDevices.where(_isKnownDevice).toList();
+    final List<Device> availableDevices = state.availableDevices.where(_isKnownDevice).toList();
 
     return GenericListContainer<Device>(
       getIcon: _getIcon,
       getName: _getName,
       values: state.devices,
+      onReorder: (List<Device> values) {},
       dialogLabel: 'Choose devices',
       onAdd: (Device device) => _addDevice(devicesBloc, device),
       onRemove: (Device device) => _removeDevice(devicesBloc, device),

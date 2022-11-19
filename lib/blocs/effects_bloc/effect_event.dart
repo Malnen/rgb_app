@@ -44,3 +44,12 @@ class RemoveEffectEvent extends EffectEvent {
   @override
   List<Object> get props => <Object>[effect];
 }
+
+class UpdateEffects extends EffectEvent {
+  final List<Effect> effects;
+
+  UpdateEffects({required this.effects});
+
+  @override
+  List<Object> get props => <Object>[effects];
+}

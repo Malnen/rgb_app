@@ -11,6 +11,7 @@ class GenericListContainer<T> extends StatefulWidget {
   final IconData Function(T value) getIcon;
   final void Function(T value) onAdd;
   final void Function(T value) onRemove;
+  final void Function(List<T> values) onReorder;
 
   const GenericListContainer({
     required this.values,
@@ -18,7 +19,9 @@ class GenericListContainer<T> extends StatefulWidget {
     required this.getIcon,
     required this.onAdd,
     required this.onRemove,
-    required this.availableValues, required this.dialogLabel,
+    required this.onReorder,
+    required this.availableValues,
+    required this.dialogLabel,
   });
 
   @override
@@ -38,16 +41,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     return Column(
       children: <Widget>[
         top(),
-        Container(
-          width: double.infinity,
-          alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(left: 10, right: 20),
-          child: Column(
-            children: [
-              ...getValues(),
-            ],
-          ),
-        )
+        list(),
       ],
     );
   }
@@ -56,7 +50,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(
-        right: 25,
+        right: 40,
         top: 5,
       ),
       child: Row(
@@ -74,20 +68,57 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     );
   }
 
+  Expanded list() {
+    return Expanded(
+      child: Container(
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        margin: EdgeInsets.only(left: 10, right: 20),
+        child: ReorderableListView(
+          buildDefaultDragHandles: false,
+          onReorder: (int oldIndex, int newIndex) {
+            if (newIndex > oldIndex) {
+              newIndex -= 1;
+            }
+
+            final List<T> values = widget.values;
+            final T value = values.removeAt(oldIndex);
+            values.insert(newIndex, value);
+            widget.onReorder(values);
+          },
+          children: [
+            ...getValues(),
+          ],
+        ),
+      ),
+    );
+  }
+
   List<Widget> getValues() {
     return widget.values.map(_buildDeviceRow).toList();
   }
 
   Row _buildDeviceRow(T value) {
     return Row(
+      key: UniqueKey(),
       children: [
+        ReorderableDragStartListener(
+          index: 0,
+          child: const Icon(
+            Icons.drag_handle,
+            color: Colors.orange,
+          ),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
         GenericTile<T>(
           value: value,
           onTap: (_) {},
           name: widget.getName(value),
           iconData: widget.getIcon(value),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Container(

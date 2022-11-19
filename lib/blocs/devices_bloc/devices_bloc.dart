@@ -144,8 +144,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   void _addDeviceToRestore(Device device, List<Device> devices) {
     final DeviceProductVendor deviceProductVendor = device.deviceProductVendor;
     final List<DeviceData> devicesData = state.devicesData;
-    final bool hasAny = devicesData.any(
-        (DeviceData deviceData) => deviceData.deviceProductVendor.productVendor == deviceProductVendor.productVendor);
+    final bool hasAny = devicesData.any((DeviceData deviceData) =>
+        deviceData.deviceProductVendor.productVendor == deviceProductVendor.productVendor &&
+        deviceData.deviceProductVendor is! UnknownProductVendor);
     if (hasAny) {
       final AddDeviceEvent event = AddDeviceEvent(device: device);
       add(event);

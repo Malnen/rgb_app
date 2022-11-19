@@ -34,6 +34,7 @@ class _MainFrameState extends State<MainFrame> {
       title: 'RGB App',
       theme: ThemeData(
         backgroundColor: Color.fromARGB(255, 30, 30, 30),
+        canvasColor: Colors.transparent,
         appBarTheme: AppBarTheme(
           backgroundColor: Color.fromARGB(255, 25, 25, 25),
         ),
