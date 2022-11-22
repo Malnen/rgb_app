@@ -18,6 +18,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     on<RemoveDeviceEvent>(_onRemoveDeviceEvent);
     on<RestoreDevicesEvent>(_onRestoreDevices);
     on<LoadAvailableDevicesEvent>(_onLoadAvailableDevicesEvent);
+    on<ReorderDevicesEvent>(_onReorderDevicesEvent);
   }
 
   @override
@@ -162,5 +163,38 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final newState = state.copyWith(availableDevices: deviceProductInfo);
 
     emit(newState);
+  }
+
+  Future<void> _onReorderDevicesEvent(
+    ReorderDevicesEvent event,
+    Emitter<DevicesState> emit,
+  ) async {
+    final int oldIndex = event.oldIndex;
+    final int newIndex = event.newIndex;
+    final List<Device> devices = _replaceDevice(oldIndex, newIndex);
+    List<DeviceData> devicesData = _replaceDeviceData(oldIndex, newIndex);
+
+    final newState = state.copyWith(
+      devices: devices,
+      devicesData: devicesData,
+    );
+
+    emit(newState);
+  }
+
+  List<Device> _replaceDevice(int oldIndex, int newIndex) {
+    final List<Device> devices = state.devices;
+    Device device = devices.removeAt(oldIndex);
+    devices.insert(newIndex, device);
+
+    return devices;
+  }
+
+  List<DeviceData> _replaceDeviceData(int oldIndex, int newIndex) {
+    final List<DeviceData> devicesData = state.devicesData;
+    final DeviceData deviceData = devicesData.removeAt(oldIndex);
+    devicesData.insert(newIndex, deviceData);
+
+    return devicesData;
   }
 }

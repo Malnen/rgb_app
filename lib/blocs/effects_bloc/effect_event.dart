@@ -45,11 +45,18 @@ class RemoveEffectEvent extends EffectEvent {
   List<Object> get props => <Object>[effect];
 }
 
-class UpdateEffects extends EffectEvent {
-  final List<Effect> effects;
+class ReorderEffectsEvent extends EffectEvent {
+  final int oldIndex;
+  final int newIndex;
 
-  UpdateEffects({required this.effects});
+  ReorderEffectsEvent({
+    required this.oldIndex,
+    required this.newIndex,
+  });
 
   @override
-  List<Object> get props => <Object>[effects];
+  List<Object> get props => <Object>[
+        oldIndex,
+        newIndex,
+      ];
 }

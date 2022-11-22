@@ -10,7 +10,12 @@ import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/effect_factory.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
 
-class EffectsListContainer extends StatelessWidget {
+class EffectsListContainer extends StatefulWidget {
+  @override
+  State<EffectsListContainer> createState() => _EffectsListContainerState();
+}
+
+class _EffectsListContainerState extends State<EffectsListContainer> {
   @override
   Widget build(BuildContext context) {
     context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.effects.length);
@@ -23,7 +28,7 @@ class EffectsListContainer extends StatelessWidget {
       dialogLabel: 'Choose effect',
       getIcon: (EffectData effectData) => effectData.iconData,
       onAdd: (EffectData effectData) => _onAdd(effectBloc, effectData),
-      onReorder: (List<EffectData> values) {},
+      onReorder: (int oldIndex, int newIndex) => _onReorder(effectBloc, oldIndex, newIndex),
       availableValues: EffectDictionary.availableEffects,
       getName: (EffectData effectData) => effectData.name,
       onRemove: (EffectData effectData) => _onRemove(effectBloc, effectData),
@@ -48,5 +53,12 @@ class EffectsListContainer extends StatelessWidget {
 
     final AddEffectEvent event = AddEffectEvent(effect: effect);
     bloc.add(event);
+  }
+
+  void _onReorder(EffectBloc effectBloc, int oldIndex, int newIndex) {
+    setState(() {
+      final ReorderEffectsEvent reorderEffects = ReorderEffectsEvent(oldIndex: oldIndex, newIndex: newIndex);
+      effectBloc.add(reorderEffects);
+    });
   }
 }

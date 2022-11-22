@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rgb_app/widgets/dialogs/dialog_manager.dart';
 import 'package:rgb_app/widgets/left_panel/generic_tile/generic_tile.dart';
-
-import '../dialogs/dialog_manager.dart';
 
 class AddGenericButton<T> extends StatefulWidget {
   final void Function(T value) onTap;

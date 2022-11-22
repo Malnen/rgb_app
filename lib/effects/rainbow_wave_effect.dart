@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
-import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 

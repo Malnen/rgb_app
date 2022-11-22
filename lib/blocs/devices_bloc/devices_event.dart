@@ -28,3 +28,19 @@ class RemoveDeviceEvent extends DevicesEvent {
 class RestoreDevicesEvent extends DevicesEvent {}
 
 class LoadAvailableDevicesEvent extends DevicesEvent {}
+
+class ReorderDevicesEvent extends DevicesEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  ReorderDevicesEvent({
+    required this.oldIndex,
+    required this.newIndex,
+  });
+
+  @override
+  List<Object> get props => <Object>[
+        oldIndex,
+        newIndex,
+      ];
+}

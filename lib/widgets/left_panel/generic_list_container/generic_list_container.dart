@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/widgets/add_generic_button/add_generic_button.dart';
+import 'package:rgb_app/widgets/left_panel/add_generic_button/add_generic_button.dart';
 import 'package:rgb_app/widgets/left_panel/generic_tile/generic_tile.dart';
-import 'package:rgb_app/widgets/remove_generic_button/remove_generic_button.dart';
+import 'package:rgb_app/widgets/left_panel/remove_generic_button/remove_generic_button.dart';
 
 class GenericListContainer<T> extends StatefulWidget {
   final List<T> values;
@@ -11,7 +11,7 @@ class GenericListContainer<T> extends StatefulWidget {
   final IconData Function(T value) getIcon;
   final void Function(T value) onAdd;
   final void Function(T value) onRemove;
-  final void Function(List<T> values) onReorder;
+  final void Function(int oldIndex, int newIndex) onReorder;
 
   const GenericListContainer({
     required this.values,
@@ -76,22 +76,23 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
         margin: EdgeInsets.only(left: 10, right: 20),
         child: ReorderableListView(
           buildDefaultDragHandles: false,
-          onReorder: (int oldIndex, int newIndex) {
-            if (newIndex > oldIndex) {
-              newIndex -= 1;
-            }
-
-            final List<T> values = widget.values;
-            final T value = values.removeAt(oldIndex);
-            values.insert(newIndex, value);
-            widget.onReorder(values);
-          },
+          onReorder: onReorder,
           children: [
             ...getValues(),
           ],
         ),
       ),
     );
+  }
+
+  void onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+
+      widget.onReorder(oldIndex, newIndex);
+    });
   }
 
   List<Widget> getValues() {

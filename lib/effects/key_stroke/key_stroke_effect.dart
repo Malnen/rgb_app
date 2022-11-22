@@ -6,7 +6,6 @@ import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_spread.dart';

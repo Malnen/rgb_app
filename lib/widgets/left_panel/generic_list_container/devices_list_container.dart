@@ -21,7 +21,7 @@ class DevicesListContainer extends StatelessWidget {
       getIcon: _getIcon,
       getName: _getName,
       values: state.devices,
-      onReorder: (List<Device> values) {},
+      onReorder: (int oldIndex, int newIndex) => _onReorder(devicesBloc, oldIndex, newIndex),
       dialogLabel: 'Choose devices',
       onAdd: (Device device) => _addDevice(devicesBloc, device),
       onRemove: (Device device) => _removeDevice(devicesBloc, device),
@@ -42,6 +42,11 @@ class DevicesListContainer extends StatelessWidget {
   String _getName(Device value) {
     final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
     return deviceProductVendor.name;
+  }
+
+  void _onReorder(DevicesBloc devicesBloc, int oldIndex, int newIndex) {
+    final ReorderDevicesEvent reorderDevices = ReorderDevicesEvent(oldIndex: oldIndex, newIndex: newIndex);
+    devicesBloc.add(reorderDevices);
   }
 
   void _addDevice(DevicesBloc devicesBloc, Device device) {
