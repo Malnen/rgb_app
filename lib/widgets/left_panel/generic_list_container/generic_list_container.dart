@@ -11,6 +11,7 @@ class GenericListContainer<T> extends StatefulWidget {
   final IconData Function(T value) getIcon;
   final void Function(T value) onAdd;
   final void Function(T value) onRemove;
+  final bool Function(T value) isDisabled;
   final void Function(int oldIndex, int newIndex) onReorder;
 
   const GenericListContainer({
@@ -19,6 +20,7 @@ class GenericListContainer<T> extends StatefulWidget {
     required this.getIcon,
     required this.onAdd,
     required this.onRemove,
+    required this.isDisabled,
     required this.onReorder,
     required this.availableValues,
     required this.dialogLabel,
@@ -30,7 +32,7 @@ class GenericListContainer<T> extends StatefulWidget {
 
 class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       child: child(),
       color: Color.fromARGB(255, 26, 26, 26),
@@ -56,7 +58,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          AddGenericButton(
+          AddGenericButton<T>(
             onTap: widget.onAdd,
             dialogLabel: widget.dialogLabel,
             getIcon: widget.getIcon,
@@ -77,7 +79,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
         child: ReorderableListView(
           buildDefaultDragHandles: false,
           onReorder: onReorder,
-          children: [
+          children: <Widget>[
             ...getValues(),
           ],
         ),
@@ -85,7 +87,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     );
   }
 
-  void onReorder(int oldIndex, int newIndex) {
+  void onReorder(final int oldIndex, int newIndex) {
     setState(() {
       if (newIndex > oldIndex) {
         newIndex -= 1;
@@ -99,37 +101,27 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     return widget.values.map(_buildDeviceRow).toList();
   }
 
-  Row _buildDeviceRow(T value) {
-    return Row(
-      key: UniqueKey(),
-      children: [
-        ReorderableDragStartListener(
-          index: 0,
-          child: const Icon(
-            Icons.drag_handle,
-            color: Colors.orange,
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        GenericTile<T>(
-          value: value,
-          onTap: (_) {},
-          name: widget.getName(value),
-          iconData: widget.getIcon(value),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 6),
-          child: RemoveGenericButton(
-            value: value,
-            onTap: widget.onRemove,
-          ),
-        )
-      ],
-    );
+  Widget _buildDeviceRow(final T value) {
+    return ReorderableDragStartListener(
+        key: Key(value.toString()),
+        index: 0,
+        child: Row(
+          children: <Widget>[
+            GenericTile<T>(
+              disabled: widget.isDisabled(value),
+              value: value,
+              onTap: (final _) {},
+              name: widget.getName(value),
+              iconData: widget.getIcon(value),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            RemoveGenericButton<T>(
+              value: value,
+              onTap: widget.onRemove,
+            )
+          ],
+        ));
   }
 }

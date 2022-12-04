@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -7,27 +6,23 @@ import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
+import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
+import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/extensions/int_iterable_extension.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/packet_managers/corsair_k70_packet_manager.dart';
 import 'package:rgb_app/testers/corsair_k70_tester.dart';
 
-import '../device.dart';
-import '../keyboard_key.dart';
-import 'corsair_k_70_packets.dart';
-
 class CorsairK70 extends KeyboardInterface {
   final KeyBloc keyBloc;
 
   late CorsairK70Tester tester;
 
-  CorsairK70({required Device device})
-      : keyBloc = GetIt.instance.get(),
-        super(device: device);
+  CorsairK70({required super.device}) : keyBloc = GetIt.instance.get();
 
   late Uint8List dataPkt1;
   late Uint8List rPkt1;
@@ -45,7 +40,7 @@ class CorsairK70 extends KeyboardInterface {
   late Uint8List bPkt3;
   late CorsairK70PacketManager packetManager;
 
-  List<List<KeyboardKey>> keys = [];
+  List<List<KeyboardKey>> keys = <List<KeyboardKey>>[];
 
   @override
   void init() {
@@ -53,12 +48,7 @@ class CorsairK70 extends KeyboardInterface {
     tester = CorsairK70Tester(
       corsairK70: this,
     );
-    libusb.libusb_init(nullptr);
-    devHandle = DeviceInterface.initDeviceHandler(
-      device: device,
-      configuration: 1,
-      interface: 1,
-    );
+    super.init();
     packetManager = CorsairK70PacketManager(this);
     packetManager.fill();
     //test();
@@ -94,7 +84,16 @@ class CorsairK70 extends KeyboardInterface {
       print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
     }
 
-    sendData();
+    super.update();
+  }
+
+  @override
+  void initDevHandle() {
+    devHandle = DeviceInterface.initDeviceHandler(
+      device: device,
+      configuration: 1,
+      interface: 1,
+    );
   }
 
   void _updateKeys() {
@@ -104,7 +103,7 @@ class CorsairK70 extends KeyboardInterface {
     }
   }
 
-  void _updateKeyRow(List<KeyboardKey> keys, int i) {
+  void _updateKeyRow(final List<KeyboardKey> keys, final int i) {
     for (int j = 0; j < keys.length; j++) {
       final KeyboardKey key = keys[j];
       if (key.keyCode == KeyCode.unknown) continue;
@@ -113,7 +112,7 @@ class CorsairK70 extends KeyboardInterface {
     }
   }
 
-  void _updateKey(KeyboardKey key, int i, int j) {
+  void _updateKey(final KeyboardKey key, final int i, final int j) {
     final int packetIndex = key.packetIndex;
     final int index = key.index;
     final Color color = effectBloc.colors[i][j];
@@ -127,7 +126,7 @@ class CorsairK70 extends KeyboardInterface {
     corsairK70Packets.bPkt[index] = b;
   }
 
-  CorsairK70Packets getPacket(int index) {
+  CorsairK70Packets getPacket(final int index) {
     switch (index) {
       case 0:
         return CorsairK70Packets(
@@ -157,12 +156,12 @@ class CorsairK70 extends KeyboardInterface {
     final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries = keys.entries;
     _setMinMax(keyEntries);
     _setKeysDimensions(keyEntries);
-    for (MapEntry<CellCoords, KeyboardKey> entry in keyEntries) {
+    for (final MapEntry<CellCoords, KeyboardKey> entry in keyEntries) {
       _setKey(entry);
     }
   }
 
-  void _setMinMax(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+  void _setMinMax(final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries) + 1;
     final int maxX = _getMaxX(keyEntries) + 1;
     final EffectState state = effectBloc.state;
@@ -178,25 +177,25 @@ class CorsairK70 extends KeyboardInterface {
     effectBloc.add(event);
   }
 
-  void _setKeysDimensions(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+  void _setKeysDimensions(final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries);
     final int maxX = _getMaxX(keyEntries);
 
-    keys = List.generate(
+    keys = List<List<KeyboardKey>> .generate(
       lastY + 1,
-      (_) => List.generate(maxX + 1, (_) => KeyDictionary.emptyKey, growable: false),
+      (final _) => List<KeyboardKey> .generate(maxX + 1, (final _) => KeyDictionary.emptyKey, growable: false),
       growable: false,
     );
   }
 
-  int _getLastKeyY(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+  int _getLastKeyY(final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
     final MapEntry<CellCoords, KeyboardKey> lastKeyEntry = keyEntries.last;
     final CellCoords lastKey = lastKeyEntry.key;
 
     return lastKey.y;
   }
 
-  void _setKey(MapEntry<CellCoords, KeyboardKey> entry) {
+  void _setKey(final MapEntry<CellCoords, KeyboardKey> entry) {
     final CellCoords key = entry.key;
     final KeyboardKey value = entry.value;
     final int y = key.y;
@@ -205,8 +204,8 @@ class CorsairK70 extends KeyboardInterface {
     keys[y][x] = value;
   }
 
-  int _getMaxX(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
-    final List<int> xValues = keyEntries.map((MapEntry<CellCoords, KeyboardKey> entry) => entry.key.x).toList();
+  int _getMaxX(final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+    final List<int> xValues = keyEntries.map((final MapEntry<CellCoords, KeyboardKey> entry) => entry.key.x).toList();
 
     return xValues.max;
   }

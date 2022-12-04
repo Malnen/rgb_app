@@ -8,9 +8,9 @@ import 'package:rgb_app/widgets/left_panel/generic_list_container/effects_list_c
 
 class LeftPanel extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return MultiBlocProvider(
-      providers: [
+      providers: <BlocProvider<BlocBase<Object>>>[
         BlocProvider<DevicesBloc>.value(
           value: GetIt.instance.get(),
         ),
@@ -24,18 +24,20 @@ class LeftPanel extends StatelessWidget {
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
-            backgroundColor: Theme.of(context).backgroundColor,
+            backgroundColor: Theme
+                .of(context)
+                .backgroundColor,
             appBar: AppBar(
               flexibleSpace: const TabBar(
                 indicatorColor: Colors.orange,
-                tabs: [
+                tabs: <Tab>[
                   Tab(icon: Icon(Icons.devices), text: 'Devices'),
                   Tab(icon: Icon(Icons.blur_linear), text: 'Effects'),
                 ],
               ),
             ),
             body: TabBarView(
-              children: [
+              children: <Widget>[
                 DevicesListContainer(),
                 EffectsListContainer(),
               ],
@@ -48,7 +50,7 @@ class LeftPanel extends StatelessWidget {
 
   BoxDecoration _getBoxDecoration() {
     return BoxDecoration(
-      boxShadow: [
+      boxShadow: <BoxShadow>[
         BoxShadow(
           color: Colors.black12,
           spreadRadius: 1,

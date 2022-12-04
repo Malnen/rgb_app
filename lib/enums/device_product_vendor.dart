@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-abstract class DeviceProductVendor {
+abstract class DeviceProductVendor extends Equatable {
   static const String corsairK70 = '1b1c:1b33';
   static const String corsairVirtuoso = '1b1c:0a40';
   static const String steelSeriesRival100 = '1038:1702';
@@ -16,6 +17,10 @@ abstract class DeviceProductVendor {
   final String productVendor;
   final IconData icon;
 
+  String get productId => productVendor.substring(5);
+
+  String get vendorId => productVendor.substring(0, 4);
+
   static DeviceProductVendor getType(String deviceId) {
     deviceId = deviceId.toLowerCase();
     switch (deviceId) {
@@ -30,33 +35,40 @@ abstract class DeviceProductVendor {
     }
   }
 
-  static DeviceProductVendor fromJson(Map<String, dynamic> json) {
+  static DeviceProductVendor fromJson(final Map<String, dynamic> json) {
     return getType(json['productVendor'] as String);
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       'productVendor': productVendor,
     };
   }
+
+  @override
+  List<Object> get props => <Object>[
+        name,
+        productVendor,
+        icon,
+      ];
 }
 
 class CorsairK70ProductVendor extends DeviceProductVendor {
   CorsairK70ProductVendor()
       : super(
-    name: 'Corsair k70',
-    productVendor: DeviceProductVendor.corsairK70,
-    icon: Icons.keyboard,
-  );
+          name: 'Corsair k70',
+          productVendor: DeviceProductVendor.corsairK70,
+          icon: Icons.keyboard,
+        );
 }
 
 class CorsairVirtuosoProductVendor extends DeviceProductVendor {
   CorsairVirtuosoProductVendor()
       : super(
-    name: 'Corsair Virtuoso',
-    productVendor: DeviceProductVendor.corsairVirtuoso,
-    icon: Icons.headphones,
-  );
+          name: 'Corsair Virtuoso',
+          productVendor: DeviceProductVendor.corsairVirtuoso,
+          icon: Icons.headphones,
+        );
 }
 
 class SteelSeriesRival100ProductVendor extends DeviceProductVendor {

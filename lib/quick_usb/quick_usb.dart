@@ -19,11 +19,10 @@ class QuickUsb {
 
     final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr = calloc<Pointer<Pointer<libusb_device>>>();
 
-    return _processDevices(deviceListPtr);
+    return _processDevices(deviceListPtr).where((final Device device) => device.isKnownDevice).toList();
   }
 
-  List<Device> _processDevices(
-      Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  List<Device> _processDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
       final int count = _getDeviceList(deviceListPtr);
       if (count < 0) {
@@ -37,12 +36,11 @@ class QuickUsb {
     }
   }
 
-  int _getDeviceList(Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  int _getDeviceList(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     return _libusb.libusb_get_device_list(nullptr, deviceListPtr);
   }
 
-  List<Device> _tryMapDevices(
-      Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  List<Device> _tryMapDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
       return _iterateDeviceProduct(deviceListPtr.value).toList();
     } finally {
@@ -50,8 +48,7 @@ class QuickUsb {
     }
   }
 
-  Iterable<Device> _iterateDeviceProduct(
-      Pointer<Pointer<libusb_device>> deviceList) sync* {
+  Iterable<Device> _iterateDeviceProduct(final Pointer<Pointer<libusb_device>> deviceList) sync* {
     final Pointer<libusb_device_descriptor> descPtr = calloc<libusb_device_descriptor>();
     final Pointer<Pointer<libusb_device_handle>> devHandlePtr = calloc<Pointer<libusb_device_handle>>();
     const int strDescLength = 42;
@@ -74,11 +71,11 @@ class QuickUsb {
   }
 
   Device _getDeviceProduct(
-    Pointer<libusb_device> dev,
-    Pointer<libusb_device_descriptor> descPtr,
-    Pointer<Pointer<libusb_device_handle>> devHandlePtr,
-    Pointer<Uint8> strDescPtr,
-    int strDescLength,
+    final Pointer<libusb_device> dev,
+    final Pointer<libusb_device_descriptor> descPtr,
+    final Pointer<Pointer<libusb_device_handle>> devHandlePtr,
+    final Pointer<Uint8> strDescPtr,
+    final int strDescLength,
   ) {
     final int devDesc = _libusb.libusb_get_device_descriptor(dev, descPtr);
     if (devDesc != libusb_error.LIBUSB_SUCCESS) {
@@ -91,30 +88,23 @@ class QuickUsb {
     final String idDevice = '$idVendor:$idProduct';
 
     if (descPtr.ref.iProduct == 0) {
-      print('$idDevice iProduct empty');
       return Device.empty();
     }
 
     final int open = _libusb.libusb_open(dev, devHandlePtr);
     if (open != libusb_error.LIBUSB_SUCCESS) {
-      print('$idDevice open error: ${_libusb.describeError(open)}');
       return Device.empty();
     }
     final Pointer<libusb_device_handle> devHandle = devHandlePtr.value;
 
     try {
-      final int langDesc = _libusb.inlineLibusbGetStringDescriptor(
-          devHandle, 0, 0, strDescPtr, strDescLength);
+      final int langDesc = _libusb.inlineLibusbGetStringDescriptor(devHandle, 0, 0, strDescPtr, strDescLength);
       if (langDesc < 0) {
-        print('$idDevice langDesc error: ${_libusb.describeError(langDesc)}');
         return Device.empty();
       }
-      final DeviceProductVendor deviceType =
-          DeviceProductVendor.getType(idDevice);
+      final DeviceProductVendor deviceType = DeviceProductVendor.getType(idDevice);
       return Device.create(
         deviceProductVendor: deviceType,
-        productId: idProduct,
-        vendorId: idVendor,
       );
     } finally {
       _libusb.libusb_close(devHandle);

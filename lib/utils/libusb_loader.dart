@@ -10,6 +10,7 @@ class LibusbLoader {
 
   static void initLibusb() {
     _instance = Libusb(loadLibrary());
+    _instance.libusb_init(nullptr);
   }
 
   static DynamicLibrary loadLibrary() {
@@ -22,7 +23,7 @@ class LibusbLoader {
       return DynamicLibrary.open('$assetsPath/libusb-1.0.so');
     }
 
-    throw 'libusb dynamic library not found';
+    throw Exception('libusb dynamic library not found');
   }
 
   static String _getAssetsPath() {
@@ -30,7 +31,7 @@ class LibusbLoader {
       return 'assets';
     }
 
-    List<String> folders = [
+    final List<String> folders = <String>[
       'data',
       'flutter_assets',
       'assets',

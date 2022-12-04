@@ -23,7 +23,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   }
 
   @override
-  EffectState fromJson(Map<String, dynamic> json) {
+  EffectState fromJson(final Map<String, dynamic> json) {
     final List<Map<String, dynamic>> effectsJson = List<Map<String, dynamic>>.from(json['effects'] as List<dynamic>);
     final EffectGridData effectGridData = EffectGridData.fromJson(
       json['effectGridData'] as Map<String, dynamic>,
@@ -38,10 +38,10 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   }
 
   @override
-  Map<String, dynamic> toJson(EffectState state) {
-    return {
+  Map<String, dynamic> toJson(final EffectState state) {
+    return <String, dynamic>{
       'effectGridData': state.effectGridData,
-      'effects': state.effects.map((Effect effect) => effect.toJson()).toList(),
+      'effects': state.effects.map((final Effect effect) => effect.toJson()).toList(),
     };
   }
 
@@ -49,9 +49,9 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     state.effects.forEach(_setEffectBloc);
   }
 
-  void _setEffectBloc(Effect effect) => effect.setEffectBloc();
+  void _setEffectBloc(final Effect effect) => effect.setEffectBloc();
 
-  Future<void> _onSetGridSizeEvent(SetGridSizeEvent event, Emitter<EffectState> emit) async {
+  Future<void> _onSetGridSizeEvent(final SetGridSizeEvent event, final Emitter<EffectState> emit) async {
     final EffectState newState = state.copyWith(
       effectGridData: event.effectGridData,
     );
@@ -59,7 +59,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     emit(newState);
   }
 
-  Future<void> _onColorsUpdatedEvent(ColorsUpdatedEvent event, Emitter<EffectState> emit) async {
+  Future<void> _onColorsUpdatedEvent(final ColorsUpdatedEvent event, final Emitter<EffectState> emit) async {
     final EffectGridData currentData = state.effectGridData;
     final EffectGridData data = currentData.copyWith(colors: event.colors);
     final EffectState newState = state.copyWith(effectGridData: data);
@@ -67,7 +67,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     emit(newState);
   }
 
-  Future<void> _onAddEffectEvent(AddEffectEvent event, Emitter<EffectState> emit) async {
+  Future<void> _onAddEffectEvent(final AddEffectEvent event, final Emitter<EffectState> emit) async {
     final Effect effect = event.effect;
     final List<Effect> effects = state.effects;
     final bool hasEffect = effects.contains(effect);
@@ -79,7 +79,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     emit(newState);
   }
 
-  Future<void> _onRemoveEffectEvent(RemoveEffectEvent event, Emitter<EffectState> emit) async {
+  Future<void> _onRemoveEffectEvent(final RemoveEffectEvent event, final Emitter<EffectState> emit) async {
     final Effect effect = event.effect;
     final List<Effect> effects = state.effects;
     final bool hasEffect = effects.contains(effect);
@@ -92,8 +92,8 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   }
 
   Future<void> _onReorderEffectsEvent(
-    ReorderEffectsEvent event,
-    Emitter<EffectState> emit,
+    final ReorderEffectsEvent event,
+    final Emitter<EffectState> emit,
   ) async {
     final int oldIndex = event.oldIndex;
     final int newIndex = event.newIndex;

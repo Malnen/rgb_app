@@ -361,7 +361,7 @@ extension KeyCodeExtension on KeyCode {
     }
   }
 
-  static KeyCode fromKeyCode(int keyCode) {
+  static KeyCode fromKeyCode(final int keyCode) {
     switch (keyCode) {
       case 48:
         return KeyCode.key0;
@@ -602,7 +602,7 @@ extension KeyCodeExtension on KeyCode {
     }
   }
 
-  static String name(int keyCode) {
+  static String name(final int keyCode) {
     switch (keyCode) {
       case 65:
         return 'a';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 
 class EffectDictionary {
-  static final List<EffectData> availableEffects = [
+  static final List<EffectData> availableEffects = <EffectData>[
     rainbowWaveEffect,
     keyStrokeEffect,
   ];

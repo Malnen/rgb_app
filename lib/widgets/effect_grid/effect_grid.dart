@@ -27,7 +27,7 @@ class _EffectGridState extends State<EffectGrid> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     setGridSize();
     setControllersValue();
     return Column(
@@ -45,7 +45,7 @@ class _EffectGridState extends State<EffectGrid> {
           label: 'X',
           controller: controllerX,
         ),
-        Container(
+        SizedBox(
           width: 20,
           height: 20,
           child: Text(
@@ -83,7 +83,7 @@ class _EffectGridState extends State<EffectGrid> {
     bloc.add(event);
   }
 
-  int correctValue(TextEditingController controller, int min) {
+  int correctValue(final TextEditingController controller, final int min) {
     final String text = controller.text;
     final bool hasText = text.isNotEmpty;
     final int parsedValue = hasText ? int.parse(text) : 0;

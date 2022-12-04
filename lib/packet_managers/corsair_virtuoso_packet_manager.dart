@@ -14,7 +14,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
 
   @override
   void fill() {
-    corsairVirtuoso.dataPkt1 = Uint8List.fromList([
+    corsairVirtuoso.dataPkt1 = Uint8List.fromList(<int>[
       0x1b,
       0x00,
       0x20,
@@ -82,7 +82,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x00
     ]);
 
-    corsairVirtuoso.dataPkt2 = Uint8List.fromList([
+    corsairVirtuoso.dataPkt2 = Uint8List.fromList(<int>[
       0x1b,
       0x00,
       0x20,
@@ -150,7 +150,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x00
     ]);
 
-    corsairVirtuoso.rPkt1 = Uint8List.fromList([
+    corsairVirtuoso.rPkt1 = Uint8List.fromList(<int>[
       0x1b,
       0x00,
       0x60,
@@ -217,7 +217,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
       0x00
     ]);
 
-    corsairVirtuoso.lPkt1 = Uint8List.fromList([
+    corsairVirtuoso.lPkt1 = Uint8List.fromList(<int>[
       0x1b,
       0x00,
       0x20,
@@ -290,7 +290,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
     for (int i = 0; i < 256; i++) {
       print('====================================');
       print(i);
-      int interupt = corsairVirtuoso.libusb.libusb_interrupt_transfer(
+      final int interupt = corsairVirtuoso.libusb.libusb_interrupt_transfer(
         corsairVirtuoso.devHandle,
         i,
         corsairVirtuoso.rPkt1.allocatePointer(),
@@ -299,7 +299,7 @@ class CorsairVirtuosoPacketManager extends PacketManager {
         1000,
       );
       print('interupt $interupt');
-      int bulk = corsairVirtuoso.libusb.libusb_bulk_transfer(
+      final int bulk = corsairVirtuoso.libusb.libusb_bulk_transfer(
         corsairVirtuoso.devHandle,
         i,
         corsairVirtuoso.lPkt1.allocatePointer(),

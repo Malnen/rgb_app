@@ -11,7 +11,7 @@ void main() {
 
 Future<void> _run() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final storage = await HydratedStorage.build(
+  final HydratedStorage storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
   HydratedBlocOverrides.runZoned(

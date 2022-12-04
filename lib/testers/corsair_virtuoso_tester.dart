@@ -5,7 +5,7 @@ import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/testers/device_tester.dart';
 
 class CorsairVirtuosoTester implements DeviceTester {
-  final List<Timer> timers = [];
+  final List<Timer> timers = <Timer>[];
   final CorsairVirtuoso corsairVirtuoso;
 
   CorsairVirtuosoTester({required this.corsairVirtuoso});
@@ -14,7 +14,7 @@ class CorsairVirtuosoTester implements DeviceTester {
   void blink() {
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-      (Timer timer) {
+      (final Timer timer) {
         corsairVirtuoso.color = Color.fromARGB(1, 255, 0, 0);
         corsairVirtuoso.sendData();
       },
@@ -24,7 +24,7 @@ class CorsairVirtuosoTester implements DeviceTester {
 
   @override
   void dispose() {
-    for (Timer timer in timers) {
+    for (final Timer timer in timers) {
       timer.cancel();
     }
   }

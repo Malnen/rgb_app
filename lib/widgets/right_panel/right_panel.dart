@@ -6,7 +6,7 @@ import 'package:rgb_app/widgets/effect_grid/effect_grid.dart';
 
 class RightPanel extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return BlocProvider<EffectBloc>.value(
       value: GetIt.instance.get(),
       child: _body(),
@@ -15,17 +15,15 @@ class RightPanel extends StatelessWidget {
 
   Flexible _body() {
     return Flexible(
-      child: Container(
-        child: ListView(
-          controller: ScrollController(),
-          children: [
-            Column(
-              children: <Widget>[
-                EffectGrid(),
-              ],
-            ),
-          ],
-        ),
+      child: ListView(
+        controller: ScrollController(),
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              EffectGrid(),
+            ],
+          ),
+        ],
       ),
     );
   }

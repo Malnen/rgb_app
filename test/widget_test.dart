@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rgb_app/widgets/main_frame/main_frame.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Counter increments smoke test', (final WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MainFrame());
 

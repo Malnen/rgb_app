@@ -3,7 +3,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
-import 'effect.dart';
+import 'package:rgb_app/effects/effect.dart';
 
 class RainbowWaveEffect extends Effect {
   double size;
@@ -17,7 +17,7 @@ class RainbowWaveEffect extends Effect {
     this.speed = 2.5,
   });
 
-  factory RainbowWaveEffect.fromJson(Map<String, dynamic> json) {
+  factory RainbowWaveEffect.fromJson(final Map<String, dynamic> json) {
     return RainbowWaveEffect(
       effectData: EffectDictionary.rainbowWaveEffect.getWithNewKey(),
       size: json['size'] as double,
@@ -48,13 +48,13 @@ class RainbowWaveEffect extends Effect {
     };
   }
 
-  void _setColors(int sizeX, int sizeY, List<List<Color>> colors) {
+  void _setColors(final int sizeX, final int sizeY, final List<List<Color>> colors) {
     for (int i = 0; i < sizeX; i++) {
       _setColor(i, sizeY, colors);
     }
   }
 
-  void _setColor(int i, int sizeY, List<List<Color>> colors) {
+  void _setColor(final int i, final int sizeY, final List<List<Color>> colors) {
     final double hue = (i * size + value) % 360;
     final HSVColor hsv = HSVColor.fromAHSV(1, hue, 1, 1);
     for (int j = 0; j < sizeY; j++) {

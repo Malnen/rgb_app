@@ -1,30 +1,22 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/mouse_interface.dart';
-import 'package:rgb_app/testers/steel_series_rival_100_tester.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
-
-import '../device.dart';
+import 'package:rgb_app/testers/steel_series_rival_100_tester.dart';
 
 class SteelSeriesRival100 extends MouseInterface {
   late SteelSeriesRival100Tester tester;
 
   Color color = Color.fromARGB(1, 0, 0, 0);
 
-  SteelSeriesRival100({required Device device}) : super(device: device);
+  SteelSeriesRival100({required super.device});
 
   @override
   void init() {
+    super.init();
     tester = SteelSeriesRival100Tester(steelSeriesRival100: this);
-    libusb.libusb_init(nullptr);
-    devHandle = DeviceInterface.initDeviceHandler(
-      device: device,
-      configuration: 1,
-      interface: 0,
-    );
     offsetX = 22;
     offsetY = 3;
     //test();
@@ -33,7 +25,7 @@ class SteelSeriesRival100 extends MouseInterface {
 
   @override
   void sendData() {
-    final Uint8List data = Uint8List.fromList([
+    final Uint8List data = Uint8List.fromList(<int>[
       0x05,
       0x00,
       color.red,
@@ -67,6 +59,7 @@ class SteelSeriesRival100 extends MouseInterface {
       0x00,
       0x00
     ]);
+
     libusb.libusb_control_transfer(
       devHandle,
       0x21,
@@ -103,6 +96,15 @@ class SteelSeriesRival100 extends MouseInterface {
       print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
     }
 
-    sendData();
+    super.update();
+  }
+
+  @override
+  void initDevHandle() {
+    devHandle = DeviceInterface.initDeviceHandler(
+      device: device,
+      configuration: 1,
+      interface: 0,
+    );
   }
 }

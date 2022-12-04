@@ -11,7 +11,7 @@ class NumericField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       width: 50,
       margin: EdgeInsets.all(10),

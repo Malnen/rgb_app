@@ -9,11 +9,11 @@ class DeviceData extends Equatable {
   @override
   List<Object> get props => <Object>[deviceProductVendor];
 
-  DeviceData.fromJson(Map<String, dynamic> json)
+  DeviceData.fromJson(final Map<String, dynamic> json)
       : deviceProductVendor = DeviceProductVendor.fromJson(json['deviceProductVendor'] as Map<String, dynamic>);
 
   Map<String, dynamic> toJson() {
-    return {
+    return <String,dynamic>{
       'deviceProductVendor': deviceProductVendor,
     };
   }

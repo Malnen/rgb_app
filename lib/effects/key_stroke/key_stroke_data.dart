@@ -18,11 +18,11 @@ class KeyStrokeData extends Equatable {
   });
 
   KeyStrokeData copyWith({
-    CellCoords? cellCoords,
-    Color? color,
-    double? duration,
-    bool? increment,
-    double? opacity,
+    final CellCoords? cellCoords,
+    final Color? color,
+    final double? duration,
+    final bool? increment,
+    final double? opacity,
   }) {
     return KeyStrokeData(
       cellCoords: cellCoords ?? this.cellCoords,
@@ -34,7 +34,7 @@ class KeyStrokeData extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => <Object>[
         cellCoords,
         color,
         duration,

@@ -19,7 +19,7 @@ class DependencyInitializer {
   }
 
   static void _initDevicesBloc() {
-    DevicesBloc devicesBloc = DevicesBloc();
+    final DevicesBloc devicesBloc = DevicesBloc();
     instance.registerSingleton(devicesBloc);
 
     final LoadAvailableDevicesEvent loadAvailableDevicesEvent = LoadAvailableDevicesEvent();
@@ -30,15 +30,15 @@ class DependencyInitializer {
   }
 
   static void _initKeyBloc() {
-    KeyBloc keyBloc = KeyBloc();
+    final KeyBloc keyBloc = KeyBloc();
     instance.registerSingleton(keyBloc);
 
     final DevicesBloc devicesBloc = GetIt.instance.get();
     final DevicesState state = devicesBloc.state;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
     final DeviceInterface? firstKeyboard =
-        deviceInstances.firstWhereOrNull((DeviceInterface element) => element is KeyboardInterface);
-    SetOffsetEvent setOffsetEvent = SetOffsetEvent(
+        deviceInstances.firstWhereOrNull((final DeviceInterface element) => element is KeyboardInterface);
+    final SetOffsetEvent setOffsetEvent = SetOffsetEvent(
       offsetX: firstKeyboard?.offsetX ?? 0,
       offsetY: firstKeyboard?.offsetY ?? 0,
     );
@@ -46,7 +46,7 @@ class DependencyInitializer {
   }
 
   static void _initEffectBloc() async {
-    EffectBloc effectBloc = EffectBloc();
+    final EffectBloc effectBloc = EffectBloc();
     instance.registerSingleton(effectBloc);
     effectBloc.setBlocInExistingEffects();
   }

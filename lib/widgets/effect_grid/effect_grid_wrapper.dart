@@ -23,9 +23,9 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeX);
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeY);
+  Widget build(final BuildContext context) {
+    context.select<EffectBloc, int>((final EffectBloc value) => value.state.effectGridData.sizeX);
+    context.select<EffectBloc, int>((final EffectBloc value) => value.state.effectGridData.sizeY);
     colors = buildColors();
 
     return EffectGridContainer(

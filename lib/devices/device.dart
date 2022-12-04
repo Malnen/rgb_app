@@ -1,45 +1,62 @@
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rgb_app/models/device_data.dart';
 
 class Device extends Equatable {
   final DeviceProductVendor deviceProductVendor;
-  final String vendorId;
-  final String productId;
   final int offsetX;
   final int offsetY;
+  final bool connected;
+
+  bool get isKnownDevice => deviceProductVendor is! UnknownProductVendor;
 
   const Device({
     required this.deviceProductVendor,
-    required this.vendorId,
-    required this.productId,
     this.offsetX = 0,
     this.offsetY = 0,
+    this.connected = false,
   });
 
   factory Device.empty() {
     return Device(
       deviceProductVendor: UnknownProductVendor(),
-      vendorId: '',
-      productId: '',
+    );
+  }
+
+  factory Device.fromDeviceData(final DeviceData deviceData) {
+    final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
+    return Device(
+      deviceProductVendor: deviceProductVendor,
     );
   }
 
   factory Device.create({
-    required DeviceProductVendor deviceProductVendor,
-    required String vendorId,
-    required String productId,
+    required final DeviceProductVendor deviceProductVendor,
   }) {
     return Device(
       deviceProductVendor: deviceProductVendor,
-      vendorId: vendorId,
-      productId: productId,
+      connected: true,
+    );
+  }
+
+  Device copyWith({
+    final DeviceProductVendor? deviceProductVendor,
+    final String? vendorId,
+    final String? productId,
+    final int? offsetX,
+    final int? offsetY,
+    final bool? connected,
+  }) {
+    return Device(
+      deviceProductVendor: deviceProductVendor ?? this.deviceProductVendor,
+      offsetX: offsetX ?? this.offsetX,
+      offsetY: offsetY ?? this.offsetY,
+      connected: connected ?? this.connected,
     );
   }
 
   @override
   List<Object?> get props => <Object?>[
         deviceProductVendor,
-        vendorId,
-        productId,
       ];
 }

@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
-
-import '../../models/effect_grid_data.dart';
+import 'package:rgb_app/models/effect_grid_data.dart';
 
 class EffectState extends Equatable {
   final Key key;
@@ -28,15 +27,15 @@ class EffectState extends Equatable {
   factory EffectState.initial() {
     return EffectState(
       effectGridData: EffectGridData.initial(),
-      effects: [],
+      effects: <Effect>[],
       availableEffects: EffectDictionary.availableEffects,
     );
   }
 
   EffectState copyWith({
-    EffectGridData? effectGridData,
-    List<Effect>? effects,
-    List<EffectData>? availableEffects,
+    final EffectGridData? effectGridData,
+    final List<Effect>? effects,
+    final List<EffectData>? availableEffects,
   }) {
     return EffectState(
       effectGridData: effectGridData ?? this.effectGridData,
@@ -45,7 +44,7 @@ class EffectState extends Equatable {
     );
   }
 
-  bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
+  bool hasEffectGridDataSizeOrMinChanged(final EffectState state) {
     final EffectGridData effectGridData = state.effectGridData;
     final bool hasDifferentSizeX = effectGridData.sizeX != this.effectGridData.sizeX;
     final bool hasDifferentSizeY = effectGridData.sizeY != this.effectGridData.sizeY;

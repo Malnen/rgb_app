@@ -32,52 +32,38 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     effectBloc = context.read();
     devicesBloc = GetIt.instance.get();
 
-    Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
+    Timer.periodic(Duration(milliseconds: 25), (final Timer timer) {
       final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);
       effectBloc.add(event);
-      for (Effect effect in effectBloc.state.effects) {
+      for (final Effect effect in effectBloc.state.effects) {
         effect.update();
       }
-      for (DeviceInterface device in devicesBloc.deviceInstances) {
+      for (final DeviceInterface device in devicesBloc.deviceInstances) {
         device.update();
       }
+      setState(() {});
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: <Widget>[
-        ...buildRows(),
+        ...List<Widget>.generate(
+            effectBloc.sizeY,
+            (final int yIndex) => Row(
+                  children: <Widget>[
+                    ...List<Widget>.generate(
+                      effectBloc.sizeX,
+                      (final int xIndex) => EffectGridCell(
+                        x: xIndex,
+                        y: yIndex,
+                        bloc: effectBloc,
+                      ),
+                    )
+                  ],
+                )),
       ],
     );
-  }
-
-  List<Widget> buildRows() {
-    final List<Widget> rows = <Widget>[];
-    for (int i = 0; i < effectBloc.sizeY; i++) {
-      final List<Widget> cells = buildCells(i);
-      final Widget row = Row(
-        children: <Widget>[
-          ...cells,
-        ],
-      );
-      rows.add(row);
-    }
-
-    return rows;
-  }
-
-  List<Widget> buildCells(int i) {
-    final List<Widget> cells = <Widget>[];
-    for (int j = 0; j < effectBloc.sizeX; j++) {
-      final Widget cell = EffectGridCell(
-        x: j,
-        y: i,
-      );
-      cells.add(cell);
-    }
-
-    return cells;
   }
 }

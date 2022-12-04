@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
+import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/widgets/main_frame/main_scaffold.dart';
 
-import '../../blocs/devices_bloc/devices_bloc.dart';
-import '../../devices/device.dart';
-
 class MainFrame extends StatefulWidget {
-  const MainFrame({Key? key}) : super(key: key);
+  const MainFrame({final Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MainFrameState();
 }
 
 class _MainFrameState extends State<MainFrame> {
-  List<Device> deviceProductInfo = [];
+  List<Device> deviceProductInfo = <Device>[];
 
   late DevicesBloc devicesBloc;
 
@@ -29,7 +28,7 @@ class _MainFrameState extends State<MainFrame> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return MaterialApp(
       title: 'RGB App',
       theme: ThemeData(

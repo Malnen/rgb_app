@@ -9,7 +9,7 @@ class CellCoords extends Equatable {
     required this.y,
   });
 
-  CellCoords getWithOffset({int offsetX = 0, int offsetY = 0}) {
+  CellCoords getWithOffset({final int offsetX = 0, final int offsetY = 0}) {
     return CellCoords(
       x: x + offsetX,
       y: y + offsetY,

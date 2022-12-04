@@ -9,52 +9,51 @@ import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_c
 
 class DevicesListContainer extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.devices.length);
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
+  Widget build(final BuildContext context) {
+    context.select<DevicesBloc, int>((final DevicesBloc devicesBloc) => devicesBloc.state.devices.length);
+    context.select<DevicesBloc, List<Device>>((final DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices);
+    context.select<DevicesBloc, int>((final DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
 
     final DevicesBloc devicesBloc = context.read();
     final DevicesState state = devicesBloc.state;
-    final List<Device> availableDevices = state.availableDevices.where(_isKnownDevice).toList();
+    final List<Device> availableDevices = state.availableDevices;
 
     return GenericListContainer<Device>(
       getIcon: _getIcon,
       getName: _getName,
+      isDisabled: _isDisabled,
       values: state.devices,
-      onReorder: (int oldIndex, int newIndex) => _onReorder(devicesBloc, oldIndex, newIndex),
+      onReorder: (final int oldIndex, final int newIndex) => _onReorder(devicesBloc, oldIndex, newIndex),
       dialogLabel: 'Choose devices',
-      onAdd: (Device device) => _addDevice(devicesBloc, device),
-      onRemove: (Device device) => _removeDevice(devicesBloc, device),
+      onAdd: (final Device device) => _addDevice(devicesBloc, device),
+      onRemove: (final Device device) => _removeDevice(devicesBloc, device),
       availableValues: availableDevices,
     );
   }
 
-  bool _isKnownDevice(Device device) {
-    final DeviceProductVendor deviceProductVendor = device.deviceProductVendor;
-    return deviceProductVendor.productVendor != DeviceProductVendor.unknown;
-  }
-
-  IconData _getIcon(Device value) {
+  IconData _getIcon(final Device value) {
     final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
     return deviceProductVendor.icon;
   }
 
-  String _getName(Device value) {
+  String _getName(final Device value) {
     final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
     return deviceProductVendor.name;
   }
 
-  void _onReorder(DevicesBloc devicesBloc, int oldIndex, int newIndex) {
+  bool _isDisabled(final Device value) => !value.connected;
+
+  void _onReorder(final DevicesBloc devicesBloc, final int oldIndex, final int newIndex) {
     final ReorderDevicesEvent reorderDevices = ReorderDevicesEvent(oldIndex: oldIndex, newIndex: newIndex);
     devicesBloc.add(reorderDevices);
   }
 
-  void _addDevice(DevicesBloc devicesBloc, Device device) {
+  void _addDevice(final DevicesBloc devicesBloc, final Device device) {
     final AddDeviceEvent addDeviceEvent = AddDeviceEvent(device: device);
     devicesBloc.add(addDeviceEvent);
   }
 
-  void _removeDevice(DevicesBloc devicesBloc, Device device) {
+  void _removeDevice(final DevicesBloc devicesBloc, final Device device) {
     final RemoveDeviceEvent removeDeviceEvent = RemoveDeviceEvent(device: device);
     devicesBloc.add(removeDeviceEvent);
   }

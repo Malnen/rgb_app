@@ -730,12 +730,12 @@ class KeyDictionary {
     return _reverseKeyCodes;
   }
 
-  static Map<KeyCode, CellCoords> _reverseKeyCodes = {};
+  static Map<KeyCode, CellCoords> _reverseKeyCodes = <KeyCode, CellCoords>{};
 
   static void _initReverseKeyCodes() {
     _reverseKeyCodes = Map<KeyCode, CellCoords>.fromEntries(
       keys.entries.map(
-        (MapEntry<CellCoords, KeyboardKey> entry) => MapEntry<KeyCode, CellCoords>(
+        (final MapEntry<CellCoords, KeyboardKey> entry) => MapEntry<KeyCode, CellCoords>(
           entry.value.keyCode,
           entry.key,
         ),

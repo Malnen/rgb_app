@@ -11,7 +11,7 @@ class EffectData extends Equatable {
     required this.name,
     required this.className,
     required this.iconData,
-    Key? key,
+    final Key? key,
   }) : key = key ?? UniqueKey();
 
   EffectData getWithNewKey() {
@@ -19,10 +19,10 @@ class EffectData extends Equatable {
   }
 
   EffectData copyWith({
-    String? name,
-    String? className,
-    IconData? iconData,
-    Key? key,
+    final String? name,
+    final String? className,
+    final IconData? iconData,
+    final Key? key,
   }) {
     return EffectData(
       name: name ?? this.name,
@@ -33,7 +33,7 @@ class EffectData extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
         name,
         className,
         iconData,

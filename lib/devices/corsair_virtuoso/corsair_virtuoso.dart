@@ -1,11 +1,9 @@
-    import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/packet_managers/corsair_virtuoso_packet_manager.dart';
 import 'package:rgb_app/testers/corsair_virtuoso_tester.dart';
-
-import '../device_interface.dart';
 
 class CorsairVirtuoso extends DeviceInterface {
   Color color = Color.fromARGB(1, 0, 0, 0);
@@ -23,13 +21,8 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void init() {
+    super.init();
     tester = CorsairVirtuosoTester(corsairVirtuoso: this);
-    libusb.libusb_init(nullptr);
-    devHandle = DeviceInterface.initDeviceHandler(
-      device: device,
-      configuration: 1,
-      interface: 3,
-    );
     packetManager = CorsairVirtuosoPacketManager(this);
     packetManager.fill();
     sendData();
@@ -42,7 +35,7 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void sendData() {
-    packetManager.sendData();
+  // packetManager.sendData();
   }
 
   @override
@@ -53,5 +46,14 @@ class CorsairVirtuoso extends DeviceInterface {
   @override
   void update() {
     // TODO: implement update
+  }
+
+  @override
+  void initDevHandle() {
+    devHandle = DeviceInterface.initDeviceHandler(
+      device: device,
+      configuration: 1,
+      interface: 3,
+    );
   }
 }

@@ -1,40 +1,20 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 
-class EffectGridCell extends StatefulWidget {
+class EffectGridCell extends StatelessWidget {
   final int x;
   final int y;
+  final EffectBloc bloc;
 
   const EffectGridCell({
     required this.x,
     required this.y,
+    required this.bloc,
   });
 
   @override
-  State<EffectGridCell> createState() => _EffectGridCellState();
-}
-
-class _EffectGridCellState extends State<EffectGridCell> {
-  late EffectBloc bloc;
-
-  Color color = Colors.black;
-
-  @override
-  void initState() {
-    super.initState();
-    bloc = context.read();
-    Timer.periodic(Duration(milliseconds: 25), (timer) {
-      setState(() {
-        setColor();
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
+    final Color color = getColor();
     return Container(
       color: color,
       width: 20,
@@ -43,11 +23,12 @@ class _EffectGridCellState extends State<EffectGridCell> {
     );
   }
 
-  void setColor() {
+  Color getColor() {
     try {
-      color = bloc.colors[widget.y][widget.x];
+      return bloc.colors[y][x];
     } catch (e) {
-      print(widget.x.toString() + ', ' + widget.y.toString() + ' out of range');
+      print(x.toString() + ', ' + y.toString() + ' out of range');
+      return Colors.black;
     }
   }
 }

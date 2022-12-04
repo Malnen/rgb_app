@@ -20,25 +20,25 @@ class KeyStrokeEffect extends Effect {
 
   int colorIndex = 0;
 
-  KeyStrokeEffect({required super.effectData, this.duration = 15, List<Color>? colors})
+  KeyStrokeEffect({required super.effectData, this.duration = 15, final List<Color>? colors})
       : keyBloc = GetIt.instance.get(),
-        colors = colors ?? [Colors.white, Colors.black] {
-    _spreads = [];
+        colors = colors ?? <Color>[Colors.white, Colors.black] {
+    _spreads = <KeyStrokeSpread>[];
     keyBloc.stream.listen(_onKeyEvent);
   }
 
-  factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {
+  factory KeyStrokeEffect.fromJson(final Map<String, dynamic> json) {
     final List<int> colors = json['colors'] as List<int>;
     return KeyStrokeEffect(
       effectData: EffectDictionary.keyStrokeEffect.getWithNewKey(),
       duration: json['duration'] as double,
-      colors: colors.map((int value) => Color(value)).toList(),
+      colors: colors.map(Color.new).toList(),
     );
   }
 
   @override
   void update() {
-    for (KeyStrokeSpread spread in _spreads) {
+    for (final KeyStrokeSpread spread in _spreads) {
       spread.spread();
     }
   }
@@ -47,17 +47,17 @@ class KeyStrokeEffect extends Effect {
   Map<String, dynamic> getData() {
     return <String, dynamic>{
       'duration': duration,
-      'colors': colors.map((Color color) => color.value).toList(),
+      'colors': colors.map((final Color color) => color.value).toList(),
     };
   }
 
-  void _onKeyEvent(KeyState state) {
+  void _onKeyEvent(final KeyState state) {
     if (state.type == KeyStateType.pressed) {
       _onKeyPressed(state);
     }
   }
 
-  void _onKeyPressed(KeyState state) {
+  void _onKeyPressed(final KeyState state) {
     final Color color = _getColor();
     final CellCoords coords = _getCoords(state);
     final KeyStrokeData data = KeyStrokeData(
@@ -72,7 +72,7 @@ class KeyStrokeEffect extends Effect {
     _spreads.add(spread);
   }
 
-  CellCoords _getCoords(KeyState state) {
+  CellCoords _getCoords(final KeyState state) {
     final KeyCode keycode = KeyCodeExtension.fromKeyCode(state.keyCode);
     final Map<KeyCode, CellCoords> reverseKeys = KeyDictionary.reverseKeyCodes;
     final CellCoords? coords = reverseKeys[keycode];

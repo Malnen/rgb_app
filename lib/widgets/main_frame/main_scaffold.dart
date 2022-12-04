@@ -4,7 +4,7 @@ import 'package:rgb_app/widgets/right_panel/right_panel.dart';
 
 class MainScaffold extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: _body(),
@@ -13,10 +13,10 @@ class MainScaffold extends StatelessWidget {
 
   Column _body() {
     return Column(
-      children: [
+      children: <Widget>[
         Expanded(
           child: Row(
-            children: [
+            children: <Widget>[
               LeftPanel(),
               RightPanel(),
             ],

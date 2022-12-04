@@ -5,7 +5,7 @@ import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.da
 import 'package:rgb_app/testers/device_tester.dart';
 
 class SteelSeriesRival100Tester implements DeviceTester {
-  final List<Timer> timers = [];
+  final List<Timer> timers = <Timer>[];
   final SteelSeriesRival100 steelSeriesRival100;
 
   double value = 0;
@@ -26,7 +26,7 @@ class SteelSeriesRival100Tester implements DeviceTester {
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-      (Timer timer) {
+      (final Timer timer) {
         steelSeriesRival100.color =
             Color.fromARGB(1, value.toInt(), value.toInt(), value.toInt());
         steelSeriesRival100.sendData();
@@ -35,11 +35,11 @@ class SteelSeriesRival100Tester implements DeviceTester {
     timers.add(timer);
   }
 
-  void _updateColor([Duration? duration, double? speed]) {
+  void _updateColor([final Duration? duration, final double? speed]) {
     final double updateSpeed = speed ?? 5;
     final Timer timer = Timer.periodic(
       duration ?? Duration(microseconds: 2000),
-      (Timer timer) {
+      (final Timer timer) {
         if (inc) {
           value += updateSpeed;
         } else {
@@ -61,7 +61,7 @@ class SteelSeriesRival100Tester implements DeviceTester {
 
   @override
   void dispose() {
-    for (Timer timer in timers) {
+    for (final Timer timer in timers) {
       timer.cancel();
     }
   }

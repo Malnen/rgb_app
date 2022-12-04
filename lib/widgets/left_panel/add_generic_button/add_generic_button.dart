@@ -28,7 +28,7 @@ class _AddGenericButtonState<T> extends State<AddGenericButton<T>> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return InkWell(
       child: Container(
         height: 36,
@@ -54,9 +54,10 @@ class _AddGenericButtonState<T> extends State<AddGenericButton<T>> {
         context: context,
         title: widget.dialogLabel,
         child: Column(
-          children: [
+          children: <Widget>[
             ...widget.values.map(
-              (T value) => GenericTile<T>(
+              (final T value) => GenericTile<T>(
+                disabled: false,
                 value: value,
                 onTap: _addEvent,
                 iconData: widget.getIcon(value),
@@ -69,7 +70,7 @@ class _AddGenericButtonState<T> extends State<AddGenericButton<T>> {
     );
   }
 
-  void _addEvent(T value) {
+  void _addEvent(final T value) {
     widget.onTap(value);
     Navigator.of(context).pop();
   }

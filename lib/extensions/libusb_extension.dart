@@ -11,10 +11,10 @@ extension LibusbExtension on Libusb {
   static final int _maxSize = sizeOf<IntPtr>() == 8 ? _kMaxSmi64 : _kMaxSmi32;
   static final Libusb _libusb = LibusbLoader.getInstance;
 
-  String describeError(int error) {
+  String describeError(final int error) {
     final Pointer<Int8> array = _libusb.libusb_error_name(error);
     final Uint8List nativeString = array.cast<Uint8>().asTypedList(_maxSize);
-    final int length = nativeString.indexWhere((char) => char == 0);
+    final int length = nativeString.indexWhere((final int char) => char == 0);
     final Uint8List typedList = array.cast<Uint8>().asTypedList(length);
 
     return utf8.decode(typedList);

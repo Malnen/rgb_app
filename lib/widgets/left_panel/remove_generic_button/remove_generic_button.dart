@@ -22,7 +22,7 @@ class _RemoveGenericButtonState<T> extends State<RemoveGenericButton<T>> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return InkWell(
       child: Container(
         height: 36,

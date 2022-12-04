@@ -1,8 +1,7 @@
-import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 
 class UnknownDevice extends DeviceInterface {
-  UnknownDevice({required Device device}) : super(device: device);
+  UnknownDevice({required super.device});
 
   @override
   void init() {}
@@ -17,6 +16,8 @@ class UnknownDevice extends DeviceInterface {
   void blink() {}
 
   @override
-  void update() {
-  }
+  void update() {}
+
+  @override
+  void initDevHandle() {}
 }

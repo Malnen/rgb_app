@@ -4,11 +4,11 @@ import 'package:libusb/libusb64.dart';
 
 extension LibusbInline on Libusb {
   int inlineLibusbGetStringDescriptor(
-    Pointer<libusb_device_handle> devHandle,
-    int descIndex,
-    int langid,
-    Pointer<Uint8> data,
-    int length,
+    final Pointer<libusb_device_handle> devHandle,
+    final int descIndex,
+    final int langid,
+    final Pointer<Uint8> data,
+    final int length,
   ) {
     return libusb_control_transfer(
       devHandle,

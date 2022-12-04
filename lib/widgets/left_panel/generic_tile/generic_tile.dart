@@ -5,16 +5,18 @@ class GenericTile<T> extends StatelessWidget {
   final IconData iconData;
   final String name;
   final void Function(T value) onTap;
+  final bool disabled;
 
   GenericTile({
     required this.value,
     required this.iconData,
     required this.name,
     required this.onTap,
+    required this.disabled,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       width: 250,
       height: 40,
@@ -23,9 +25,9 @@ class GenericTile<T> extends StatelessWidget {
     );
   }
 
-  Widget _content(BuildContext context) {
+  Widget _content(final BuildContext context) {
     return Material(
-      color: Color.fromARGB(255, 70, 70, 70),
+      color: disabled ? Color.fromARGB(255, 50, 50, 50) : Color.fromARGB(255, 70, 70, 70),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: () => _onTap(context),
@@ -42,7 +44,7 @@ class GenericTile<T> extends StatelessWidget {
     );
   }
 
-  void _onTap(BuildContext context) {
+  void _onTap(final BuildContext context) {
     onTap(value);
   }
 

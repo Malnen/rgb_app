@@ -16,7 +16,7 @@ class _EffectGridApplyButtonState extends State<EffectGridApplyButton> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return InkWell(
       child: Container(
         height: 36,

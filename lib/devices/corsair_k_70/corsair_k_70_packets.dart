@@ -12,7 +12,7 @@ class CorsairK70Packets {
   });
 
   CorsairK70Packets.empty()
-      : rPkt = Uint8List.fromList([]),
-        gPkt = Uint8List.fromList([]),
-        bPkt = Uint8List.fromList([]);
+      : rPkt = Uint8List.fromList(<int>[]),
+        gPkt = Uint8List.fromList(<int>[]),
+        bPkt = Uint8List.fromList(<int>[]);
 }

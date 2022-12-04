@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class DialogManager {
   static DialogRoute<void> showDialog({
-    required BuildContext context,
-    required Widget child,
-    required String title,
+    required final BuildContext context,
+    required final Widget child,
+    required final String title,
   }) {
     return DialogRoute<void>(
       context: context,
-      builder: (BuildContext context) => Dialog(
+      builder: (final BuildContext context) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         backgroundColor: Color.fromARGB(255, 50, 50, 50),
-        child: Container(
+        child: SizedBox(
           width: 500,
           height: 400,
           child: Column(
@@ -28,7 +28,7 @@ class DialogManager {
   }
 
   static Widget _title(
-    String title,
+    final String title,
   ) {
     return Container(
       width: double.infinity,

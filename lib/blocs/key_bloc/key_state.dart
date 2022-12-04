@@ -16,7 +16,7 @@ class KeyState extends Equatable {
     required this.type,
     this.offsetX = 0,
     this.offsetY = 0,
-    UniqueKey? key,
+    final UniqueKey? key,
   }) : key = key ?? UniqueKey();
 
   factory KeyState.empty() {
@@ -28,12 +28,12 @@ class KeyState extends Equatable {
   }
 
   KeyState copyWith({
-    int? keyCode,
-    String? keyName,
-    UniqueKey? key,
-    KeyStateType? type,
-    int? offsetX,
-    int? offsetY,
+    final int? keyCode,
+    final String? keyName,
+    final UniqueKey? key,
+    final KeyStateType? type,
+    final int? offsetX,
+    final int? offsetY,
   }) {
     return KeyState(
       keyCode: keyCode ?? this.keyCode,
