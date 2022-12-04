@@ -21,10 +21,12 @@ class EffectGridCell extends StatefulWidget {
 }
 
 class _EffectGridCellState extends State<EffectGridCell> {
+  late StreamSubscription<Object> subscription;
+
   @override
   void initState() {
     super.initState();
-    widget.rebuildNotifier.stream.listen(onRebuild);
+    subscription = widget.rebuildNotifier.stream.listen(onRebuild);
   }
 
   @override
@@ -36,6 +38,12 @@ class _EffectGridCellState extends State<EffectGridCell> {
       height: 20,
       margin: EdgeInsets.all(2),
     );
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   void onRebuild(final Object _) {
