@@ -18,7 +18,7 @@ class GenericTile<T> extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Container(
-      width: 250,
+      width: 300,
       height: 40,
       margin: EdgeInsets.only(top: 6),
       child: _content(context),

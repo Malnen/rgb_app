@@ -98,13 +98,16 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
   }
 
   List<Widget> getValues() {
-    return widget.values.map(_buildDeviceRow).toList();
+    return widget.values.asMap().entries.map(_buildDeviceRow).toList();
   }
 
-  Widget _buildDeviceRow(final T value) {
+  Widget _buildDeviceRow(final MapEntry<int, T> entry) {
+    final T value = entry.value;
+    final int index = entry.key;
+
     return ReorderableDragStartListener(
-        key: Key(value.toString()),
-        index: 0,
+        key: UniqueKey(),
+        index: index,
         child: Row(
           children: <Widget>[
             GenericTile<T>(
