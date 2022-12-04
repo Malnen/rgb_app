@@ -22,7 +22,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     on<ReorderDevicesEvent>(_onReorderDevicesEvent);
     on<UpdateDevices>(_onUpdateDevicesEvent);
 
-    Timer.periodic(Duration(seconds: 5), _checkDevicesState);
+    _checkDevicesState();
+    Timer.periodic(Duration(seconds: 5), (final Timer timer) => _checkDevicesState());
   }
 
   @override
@@ -200,7 +201,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     }
   }
 
-  void _checkDevicesState(final Timer timer) {
+  void _checkDevicesState() {
     final QuickUsb quickUsb = QuickUsb();
     final List<Device> availableDevices = quickUsb.getDeviceProductInfo();
     final List<Device> devices = <Device>[];
