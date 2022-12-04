@@ -23,6 +23,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   late EffectBloc effectBloc;
   late DevicesBloc devicesBloc;
   late List<Effect> effects;
+  late StreamController<Object> rebuildNotifier;
 
   List<List<Color>> get colors => widget.colors;
 
@@ -31,6 +32,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     super.initState();
     effectBloc = context.read();
     devicesBloc = GetIt.instance.get();
+    rebuildNotifier = StreamController<Object>.broadcast();
 
     Timer.periodic(Duration(milliseconds: 25), (final Timer timer) {
       final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);
@@ -41,7 +43,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
       for (final DeviceInterface device in devicesBloc.deviceInstances) {
         device.update();
       }
-      setState(() {});
+      rebuildNotifier.add(Object());
     });
   }
 
@@ -59,11 +61,18 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
                         x: xIndex,
                         y: yIndex,
                         bloc: effectBloc,
+                        rebuildNotifier: rebuildNotifier,
                       ),
                     )
                   ],
                 )),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    rebuildNotifier.close();
+    super.dispose();
   }
 }
