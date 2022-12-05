@@ -122,7 +122,7 @@ class CorsairK70 extends KeyboardInterface {
   void _updateKey(final KeyboardKey key, final int i, final int j) {
     final int packetIndex = key.packetIndex;
     final int index = key.index;
-    final Color color = effectBloc.colors[i][j];
+    final Color color = effectBloc.colors[i + offsetX][j + offsetY];
     final int r = color.red;
     final int g = color.green;
     final int b = color.blue;
