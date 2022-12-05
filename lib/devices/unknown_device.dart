@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 
 class UnknownDevice extends DeviceInterface {
@@ -20,4 +21,9 @@ class UnknownDevice extends DeviceInterface {
 
   @override
   void initDevHandle() {}
+
+  @override
+  Size getSize() {
+    return Size(0, 0);
+  }
 }

@@ -11,16 +11,21 @@ class SteelSeriesRival100 extends MouseInterface {
 
   Color color = Color.fromARGB(1, 0, 0, 0);
 
-  SteelSeriesRival100({required super.device});
+  SteelSeriesRival100({
+    required super.device,
+  });
 
   @override
   void init() {
     super.init();
     tester = SteelSeriesRival100Tester(steelSeriesRival100: this);
-    offsetX = 22;
-    offsetY = 3;
     //test();
     //blink();
+  }
+
+  @override
+  Size getSize() {
+    return Size(1, 1);
   }
 
   @override

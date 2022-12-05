@@ -1,5 +1,5 @@
-import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
 
 class Device extends Equatable {
@@ -27,6 +27,8 @@ class Device extends Equatable {
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     return Device(
       deviceProductVendor: deviceProductVendor,
+      offsetY: deviceData.offsetY,
+      offsetX: deviceData.offsetX,
     );
   }
 
@@ -58,5 +60,7 @@ class Device extends Equatable {
   @override
   List<Object?> get props => <Object?>[
         deviceProductVendor,
+        offsetX,
+        offsetY,
       ];
 }

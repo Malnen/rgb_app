@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:rgb_app/devices/device.dart';
+import 'package:rgb_app/devices/device_interface.dart';
 
 abstract class DevicesEvent extends Equatable {
   @override
@@ -60,5 +61,24 @@ class ReorderDevicesEvent extends DevicesEvent {
   List<Object> get props => <Object>[
         oldIndex,
         newIndex,
+      ];
+}
+
+class UpdateDeviceOffsetEvent extends DevicesEvent {
+  final int offsetX;
+  final int offsetY;
+  final DeviceInterface deviceInterface;
+
+  UpdateDeviceOffsetEvent({
+    required this.offsetX,
+    required this.offsetY,
+    required this.deviceInterface,
+  });
+
+  @override
+  List<Object> get props => <Object>[
+        offsetX,
+        offsetY,
+        deviceInterface,
       ];
 }

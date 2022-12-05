@@ -8,12 +8,16 @@ class EffectGridCell extends StatefulWidget {
   final int y;
   final EffectBloc bloc;
   final StreamController<Object> rebuildNotifier;
+  final double size;
+  final double margin;
 
   const EffectGridCell({
     required this.x,
     required this.y,
     required this.bloc,
     required this.rebuildNotifier,
+    required this.size,
+    required this.margin,
   });
 
   @override
@@ -34,9 +38,9 @@ class _EffectGridCellState extends State<EffectGridCell> {
     final Color color = getColor();
     return Container(
       color: color,
-      width: 20,
-      height: 20,
-      margin: EdgeInsets.all(2),
+      width: widget.size,
+      height: widget.size,
+      margin: EdgeInsets.all(widget.margin),
     );
   }
 

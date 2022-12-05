@@ -10,19 +10,22 @@ import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.da
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/utils/libusb_loader.dart';
+import 'package:flutter/material.dart' as material;
 
 abstract class DeviceInterface {
-  final Device device;
-
   late EffectBloc effectBloc;
   late Pointer<libusb_device_handle> devHandle;
+  late Device device;
 
   bool get isReady => devHandle.address > 0;
 
-  int offsetX = 0;
-  int offsetY = 0;
+  int get offsetX => device.offsetX;
 
-  DeviceInterface({required this.device}) {
+  int get offsetY => device.offsetY;
+
+  DeviceInterface({
+    required this.device,
+  }) {
     effectBloc = GetIt.instance.get();
   }
 
@@ -33,11 +36,17 @@ abstract class DeviceInterface {
     final String productVendor = deviceProductVendor.productVendor;
     switch (productVendor) {
       case DeviceProductVendor.corsairK70:
-        return CorsairK70(device: device);
+        return CorsairK70(
+          device: device,
+        );
       case DeviceProductVendor.corsairVirtuoso:
-        return CorsairVirtuoso(device: device);
+        return CorsairVirtuoso(
+          device: device,
+        );
       case DeviceProductVendor.steelSeriesRival100:
-        return SteelSeriesRival100(device: device);
+        return SteelSeriesRival100(
+          device: device,
+        );
       default:
         return UnknownDevice(device: device);
     }
@@ -89,4 +98,6 @@ abstract class DeviceInterface {
   }
 
   void initDevHandle();
+
+  material.Size getSize();
 }

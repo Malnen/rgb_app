@@ -35,7 +35,7 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void sendData() {
-  // packetManager.sendData();
+    // packetManager.sendData();
   }
 
   @override
@@ -46,6 +46,11 @@ class CorsairVirtuoso extends DeviceInterface {
   @override
   void update() {
     // TODO: implement update
+  }
+
+  @override
+  Size getSize() {
+    return Size(1, 1);
   }
 
   @override

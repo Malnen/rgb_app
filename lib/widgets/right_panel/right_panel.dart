@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid.dart';
 
 class RightPanel extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
-    return BlocProvider<EffectBloc>.value(
-      value: GetIt.instance.get(),
+    return MultiBlocProvider(
+      providers: <BlocProvider<BlocBase<Object>>>[
+        BlocProvider<EffectBloc>.value(
+          value: GetIt.instance.get(),
+        ),
+        BlocProvider<DevicesBloc>.value(
+          value: GetIt.instance.get(),
+        ),
+      ],
       child: _body(),
     );
   }

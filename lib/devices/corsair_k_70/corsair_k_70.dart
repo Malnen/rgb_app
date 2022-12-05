@@ -22,7 +22,9 @@ class CorsairK70 extends KeyboardInterface {
 
   late CorsairK70Tester tester;
 
-  CorsairK70({required super.device}) : keyBloc = GetIt.instance.get();
+  CorsairK70({
+    required super.device,
+  }) : keyBloc = GetIt.instance.get();
 
   late Uint8List dataPkt1;
   late Uint8List rPkt1;
@@ -85,6 +87,11 @@ class CorsairK70 extends KeyboardInterface {
     }
 
     super.update();
+  }
+
+  @override
+  Size getSize() {
+    return Size(22, 7);
   }
 
   @override
@@ -170,10 +177,11 @@ class CorsairK70 extends KeyboardInterface {
     final int currentMinY = effectGridData.minSizeY;
 
     final SetGridSizeEvent event = SetGridSizeEvent(
-        effectGridData: effectGridData.copyWith(
-      minSizeX: currentMinX < maxX ? maxX : currentMinX,
-      minSizeY: currentMinY < lastY ? lastY : currentMinY,
-    ));
+      effectGridData: effectGridData.copyWith(
+        minSizeX: currentMinX < maxX ? maxX : currentMinX,
+        minSizeY: currentMinY < lastY ? lastY : currentMinY,
+      ),
+    );
     effectBloc.add(event);
   }
 
@@ -181,9 +189,9 @@ class CorsairK70 extends KeyboardInterface {
     final int lastY = _getLastKeyY(keyEntries);
     final int maxX = _getMaxX(keyEntries);
 
-    keys = List<List<KeyboardKey>> .generate(
+    keys = List<List<KeyboardKey>>.generate(
       lastY + 1,
-      (final _) => List<KeyboardKey> .generate(maxX + 1, (final _) => KeyDictionary.emptyKey, growable: false),
+      (final _) => List<KeyboardKey>.generate(maxX + 1, (final _) => KeyDictionary.emptyKey, growable: false),
       growable: false,
     );
   }

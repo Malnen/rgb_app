@@ -106,25 +106,26 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     final int index = entry.key;
 
     return ReorderableDragStartListener(
-        key: UniqueKey(),
-        index: index,
-        child: Row(
-          children: <Widget>[
-            GenericTile<T>(
-              disabled: widget.isDisabled(value),
-              value: value,
-              onTap: (final _) {},
-              name: widget.getName(value),
-              iconData: widget.getIcon(value),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            RemoveGenericButton<T>(
-              value: value,
-              onTap: widget.onRemove,
-            )
-          ],
-        ));
+      key: UniqueKey(),
+      index: index,
+      child: Row(
+        children: <Widget>[
+          GenericTile<T>(
+            disabled: widget.isDisabled(value),
+            value: value,
+            onTap: (final _) {},
+            name: widget.getName(value),
+            iconData: widget.getIcon(value),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          RemoveGenericButton<T>(
+            value: value,
+            onTap: widget.onRemove,
+          )
+        ],
+      ),
+    );
   }
 }

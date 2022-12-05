@@ -12,13 +12,13 @@ class DevicesState extends Equatable {
   final List<DeviceInterface> deviceInstances;
   final Key key;
 
-  DevicesState(
-      {required this.devices,
-      required this.devicesData,
-      required this.deviceInstances,
-      required this.availableDevices,
-      final List<Device>? connectedDevices})
-      : connectedDevices = connectedDevices ?? <Device>[],
+  DevicesState({
+    required this.devices,
+    required this.devicesData,
+    required this.deviceInstances,
+    required this.availableDevices,
+    final List<Device>? connectedDevices,
+  })  : connectedDevices = connectedDevices ?? <Device>[],
         key = UniqueKey();
 
   factory DevicesState.empty() {
