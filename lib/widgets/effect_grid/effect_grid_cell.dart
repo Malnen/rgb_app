@@ -37,10 +37,13 @@ class _EffectGridCellState extends State<EffectGridCell> {
   Widget build(final BuildContext context) {
     final Color color = getColor();
     return Container(
-      color: color,
       width: widget.size,
       height: widget.size,
       margin: EdgeInsets.all(widget.margin),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+        color: color,
+      ),
     );
   }
 

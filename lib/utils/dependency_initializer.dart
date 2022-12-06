@@ -32,17 +32,6 @@ class DependencyInitializer {
   static void _initKeyBloc() {
     final KeyBloc keyBloc = KeyBloc();
     instance.registerSingleton(keyBloc);
-
-    final DevicesBloc devicesBloc = GetIt.instance.get();
-    final DevicesState state = devicesBloc.state;
-    final List<DeviceInterface> deviceInstances = state.deviceInstances;
-    final DeviceInterface? firstKeyboard =
-        deviceInstances.firstWhereOrNull((final DeviceInterface element) => element is KeyboardInterface);
-    final SetOffsetEvent setOffsetEvent = SetOffsetEvent(
-      offsetX: firstKeyboard?.offsetX ?? 0,
-      offsetY: firstKeyboard?.offsetY ?? 0,
-    );
-    keyBloc.add(setOffsetEvent);
   }
 
   static void _initEffectBloc() async {

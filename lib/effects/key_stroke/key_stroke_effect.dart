@@ -5,6 +5,7 @@ import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
+import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
@@ -77,9 +78,10 @@ class KeyStrokeEffect extends Effect {
     final Map<KeyCode, CellCoords> reverseKeys = KeyDictionary.reverseKeyCodes;
     final CellCoords? coords = reverseKeys[keycode];
     if (coords != null) {
+      final KeyboardInterface? keyboardInterface = state.keyboardInterface;
       return coords.getWithOffset(
-        offsetY: state.offsetY,
-        offsetX: state.offsetX,
+        offsetY: keyboardInterface?.offsetY ?? 0,
+        offsetX: keyboardInterface?.offsetX ?? 0,
       );
     }
 

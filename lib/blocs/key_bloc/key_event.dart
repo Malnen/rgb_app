@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rgb_app/devices/keyboard_interface.dart';
 
 abstract class KeyEvent extends Equatable {}
 
@@ -39,18 +40,15 @@ class KeyReleasedEvent extends KeyEvent {
       ];
 }
 
-class SetOffsetEvent extends KeyEvent {
-  final int offsetX;
-  final int offsetY;
+class SetKeyboardDeviceEvent extends KeyEvent {
+  final KeyboardInterface? keyboardInterface;
 
-  SetOffsetEvent({
-    required this.offsetX,
-    required this.offsetY,
+  SetKeyboardDeviceEvent({
+    required this.keyboardInterface,
   });
 
   @override
-  List<Object> get props => <Object>[
-        offsetX,
-        offsetY,
+  List<Object?> get props => <Object?>[
+        keyboardInterface,
       ];
 }

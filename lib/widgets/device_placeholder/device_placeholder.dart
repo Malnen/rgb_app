@@ -67,7 +67,10 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
         child: Container(
           width: width,
           height: height,
-          color: Colors.black.withAlpha(200),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            color: Colors.black.withAlpha(200),
+          ),
         ),
       ),
     );

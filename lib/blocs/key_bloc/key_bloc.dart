@@ -14,7 +14,7 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
 
     on<KeyPressedEvent>(_onKeyPressedEvent);
     on<KeyReleasedEvent>(_onKeyReleasedEvent);
-    on<SetOffsetEvent>(_onSetOffsetEvent);
+    on<SetKeyboardDeviceEvent>(_onSetKeyboardDeviceEvent);
   }
 
   void _startListening(final ke.KeyEvent keyEvent) {
@@ -65,13 +65,12 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
     emit(newState);
   }
 
-  Future<void> _onSetOffsetEvent(
-    final SetOffsetEvent event,
+  Future<void> _onSetKeyboardDeviceEvent(
+    final SetKeyboardDeviceEvent event,
     final Emitter<KeyState> emit,
   ) async {
-    final KeyState newState = state.copyWith(
-      offsetX: event.offsetX,
-      offsetY: event.offsetY,
+    final KeyState newState = state.setKeyboard(
+      keyboardInterface: event.keyboardInterface,
     );
     emit(newState);
   }
