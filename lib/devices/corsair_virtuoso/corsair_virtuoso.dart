@@ -16,7 +16,7 @@ class CorsairVirtuoso extends DeviceInterface {
   late CorsairVirtuosoTester tester;
 
   CorsairVirtuoso({
-    required super.device,
+    required super.deviceData,
   });
 
   @override
@@ -56,7 +56,7 @@ class CorsairVirtuoso extends DeviceInterface {
   @override
   void initDevHandle() {
     devHandle = DeviceInterface.initDeviceHandler(
-      device: device,
+      deviceData: deviceData,
       configuration: 1,
       interface: 3,
     );

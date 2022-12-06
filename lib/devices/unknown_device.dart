@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 
 class UnknownDevice extends DeviceInterface {
-  UnknownDevice({required super.device});
+  UnknownDevice({required super.deviceData});
 
   @override
   void init() {}

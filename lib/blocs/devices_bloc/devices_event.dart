@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/models/device_data.dart';
 
 abstract class DevicesEvent extends Equatable {
   @override
@@ -8,21 +8,21 @@ abstract class DevicesEvent extends Equatable {
 }
 
 class AddDeviceEvent extends DevicesEvent {
-  final Device device;
+  final DeviceData deviceData;
 
-  AddDeviceEvent({required this.device});
+  AddDeviceEvent({required this.deviceData});
 
   @override
-  List<Object?> get props => <Object>[device];
+  List<Object?> get props => <Object>[deviceData];
 }
 
 class RemoveDeviceEvent extends DevicesEvent {
-  final Device device;
+  final DeviceData deviceData;
 
-  RemoveDeviceEvent({required this.device});
+  RemoveDeviceEvent({required this.deviceData});
 
   @override
-  List<Object> get props => <Object>[device];
+  List<Object> get props => <Object>[deviceData];
 }
 
 class RestoreDevicesEvent extends DevicesEvent {}
@@ -30,19 +30,19 @@ class RestoreDevicesEvent extends DevicesEvent {}
 class LoadAvailableDevicesEvent extends DevicesEvent {}
 
 class UpdateDevices extends DevicesEvent {
-  final List<Device> devices;
-  final List<Device> connectedDevices;
-  final List<Device> availableDevices;
+  final List<DeviceData> devicesData;
+  final List<DeviceData> connectedDevices;
+  final List<DeviceData> availableDevices;
 
   UpdateDevices({
-    required this.devices,
+    required this.devicesData,
     required this.connectedDevices,
     required this.availableDevices,
   });
 
   @override
   List<Object> get props => <Object>[
-        devices,
+        devicesData,
         connectedDevices,
         availableDevices,
       ];

@@ -23,7 +23,7 @@ class CorsairK70 extends KeyboardInterface {
   late CorsairK70Tester tester;
 
   CorsairK70({
-    required super.device,
+    required super.deviceData,
   }) : keyBloc = GetIt.instance.get();
 
   late Uint8List dataPkt1;
@@ -83,7 +83,7 @@ class CorsairK70 extends KeyboardInterface {
     try {
       _updateKeys();
     } catch (e) {
-      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
+      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
     }
 
     super.update();
@@ -97,7 +97,7 @@ class CorsairK70 extends KeyboardInterface {
   @override
   void initDevHandle() {
     devHandle = DeviceInterface.initDeviceHandler(
-      device: device,
+      deviceData: deviceData,
       configuration: 1,
       interface: 1,
     );

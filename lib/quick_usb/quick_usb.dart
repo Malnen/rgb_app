@@ -2,16 +2,16 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart' show calloc;
 import 'package:libusb/libusb64.dart';
-import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/extensions/libusb_extension.dart';
 import 'package:rgb_app/extensions/libusb_in_line_extension.dart';
+import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/utils/libusb_loader.dart';
 
 class QuickUsb {
   final Libusb _libusb = LibusbLoader.getInstance;
 
-  List<Device> getDeviceProductInfo() {
+  List<DeviceData> getDeviceProductInfo() {
     final int init = _libusb.libusb_init(nullptr);
     if (init != libusb_error.LIBUSB_SUCCESS) {
       throw StateError('init error: ${_libusb.describeError(init)}');
@@ -19,14 +19,14 @@ class QuickUsb {
 
     final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr = calloc<Pointer<Pointer<libusb_device>>>();
 
-    return _processDevices(deviceListPtr).where((final Device device) => device.isKnownDevice).toList();
+    return _processDevices(deviceListPtr).where((final DeviceData deviceData) => deviceData.isKnownDevice).toList();
   }
 
-  List<Device> _processDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  List<DeviceData> _processDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
       final int count = _getDeviceList(deviceListPtr);
       if (count < 0) {
-        return <Device>[];
+        return <DeviceData>[];
       }
 
       return _tryMapDevices(deviceListPtr);
@@ -40,7 +40,7 @@ class QuickUsb {
     return _libusb.libusb_get_device_list(nullptr, deviceListPtr);
   }
 
-  List<Device> _tryMapDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  List<DeviceData> _tryMapDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
       return _iterateDeviceProduct(deviceListPtr.value).toList();
     } finally {
@@ -48,14 +48,14 @@ class QuickUsb {
     }
   }
 
-  Iterable<Device> _iterateDeviceProduct(final Pointer<Pointer<libusb_device>> deviceList) sync* {
+  Iterable<DeviceData> _iterateDeviceProduct(final Pointer<Pointer<libusb_device>> deviceList) sync* {
     final Pointer<libusb_device_descriptor> descPtr = calloc<libusb_device_descriptor>();
     final Pointer<Pointer<libusb_device_handle>> devHandlePtr = calloc<Pointer<libusb_device_handle>>();
     const int strDescLength = 42;
     final Pointer<Uint8> strDescPtr = calloc<Uint8>(strDescLength);
 
     for (int i = 0; deviceList[i] != nullptr; i++) {
-      final Device deviceProduct = _getDeviceProduct(
+      final DeviceData deviceProduct = _getDeviceProduct(
         deviceList[i],
         descPtr,
         devHandlePtr,
@@ -70,7 +70,7 @@ class QuickUsb {
     calloc.free(strDescPtr);
   }
 
-  Device _getDeviceProduct(
+  DeviceData _getDeviceProduct(
     final Pointer<libusb_device> dev,
     final Pointer<libusb_device_descriptor> descPtr,
     final Pointer<Pointer<libusb_device_handle>> devHandlePtr,
@@ -80,7 +80,7 @@ class QuickUsb {
     final int devDesc = _libusb.libusb_get_device_descriptor(dev, descPtr);
     if (devDesc != libusb_error.LIBUSB_SUCCESS) {
       print('devDesc error: ${_libusb.describeError(devDesc)}');
-      return Device.empty();
+      return DeviceData.empty();
     }
 
     final String idVendor = descPtr.ref.idVendor.toRadixString(16).padLeft(4, '0');
@@ -88,22 +88,22 @@ class QuickUsb {
     final String idDevice = '$idVendor:$idProduct';
 
     if (descPtr.ref.iProduct == 0) {
-      return Device.empty();
+      return DeviceData.empty();
     }
 
     final int open = _libusb.libusb_open(dev, devHandlePtr);
     if (open != libusb_error.LIBUSB_SUCCESS) {
-      return Device.empty();
+      return DeviceData.empty();
     }
     final Pointer<libusb_device_handle> devHandle = devHandlePtr.value;
 
     try {
       final int langDesc = _libusb.inlineLibusbGetStringDescriptor(devHandle, 0, 0, strDescPtr, strDescLength);
       if (langDesc < 0) {
-        return Device.empty();
+        return DeviceData.empty();
       }
       final DeviceProductVendor deviceType = DeviceProductVendor.getType(idDevice);
-      return Device.create(
+      return DeviceData(
         deviceProductVendor: deviceType,
       );
     } finally {

@@ -12,7 +12,7 @@ class SteelSeriesRival100 extends MouseInterface {
   Color color = Color.fromARGB(1, 0, 0, 0);
 
   SteelSeriesRival100({
-    required super.device,
+    required super.deviceData,
   });
 
   @override
@@ -98,7 +98,7 @@ class SteelSeriesRival100 extends MouseInterface {
     try {
       color = effectBloc.colors[offsetY][offsetX];
     } catch (e) {
-      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + device.deviceProductVendor.name);
+      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
     }
 
     super.update();
@@ -107,7 +107,7 @@ class SteelSeriesRival100 extends MouseInterface {
   @override
   void initDevHandle() {
     devHandle = DeviceInterface.initDeviceHandler(
-      device: device,
+      deviceData: deviceData,
       configuration: 1,
       interface: 0,
     );

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
-import 'package:rgb_app/devices/device.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/quick_usb/quick_usb.dart';
@@ -31,9 +30,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     );
     final List<DeviceData> devicesData = state.devicesData;
     return DevicesState(
-      availableDevices: <Device>[],
+      availableDevices: <DeviceData>[],
       deviceInstances: <DeviceInterface>[],
-      devices: <Device>[],
       devicesData: devicesData,
     );
   }
@@ -53,13 +51,15 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   DevicesState _addDeviceIfNew(final AddDeviceEvent event) {
-    final List<Device> devices = state.devices;
+    final List<DeviceData> devicesData = state.devicesData;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
-    final Device device = event.device;
-    if (!devices.contains(device)) {
+    final DeviceData deviceData = event.deviceData;
+    final List<DeviceData> existingDevices =
+        deviceInstances.map((final DeviceInterface existingDeviceData) => existingDeviceData.deviceData).toList();
+    if (!existingDevices.contains(deviceData)) {
       return _addDevice(
-        device: device,
-        devices: devices,
+        deviceData: deviceData,
+        devicesData: devicesData,
         deviceInstances: deviceInstances,
       );
     }
@@ -68,28 +68,20 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   DevicesState _addDevice({
-    required final Device device,
-    required final List<Device> devices,
+    required final DeviceData deviceData,
+    required final List<DeviceData> devicesData,
     required final List<DeviceInterface> deviceInstances,
   }) {
-    final List<Device> devices = state.devices;
-    devices.add(device);
-    final DeviceInterface deviceInterface = DeviceInterface.fromDevice(device: device);
+    final List<DeviceData> devicesData = state.devicesData;
+    final DeviceInterface deviceInterface = DeviceInterface.fromDeviceData(deviceData: deviceData);
     deviceInterface.init();
     deviceInstances.add(deviceInterface);
-    final List<DeviceData> devicesData = state.devicesData;
-    final DeviceData deviceData = DeviceData(
-      deviceProductVendor: device.deviceProductVendor,
-      offsetX: device.offsetX,
-      offsetY: device.offsetY,
-    );
     if (!devicesData.contains(deviceData)) {
       devicesData.add(deviceData);
     }
 
     return state.copyWith(
       devicesData: devicesData,
-      devices: devices,
       deviceInstances: deviceInstances,
     );
   }
@@ -100,40 +92,34 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   DevicesState _removeDeviceIfExist(final RemoveDeviceEvent event) {
-    final List<Device> devices = state.devices;
-    final Device device = event.device;
+    final List<DeviceData> devicesData = state.devicesData;
+    final DeviceData deviceData = event.deviceData;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
-    if (devices.contains(device)) {
-      return _removeDevice(device, devices, deviceInstances);
+    if (devicesData.contains(deviceData)) {
+      return _removeDevice(deviceData, devicesData, deviceInstances);
     }
 
     return state.copyWith(
-      devices: devices,
+      devicesData: devicesData,
       deviceInstances: deviceInstances,
     );
   }
 
   DevicesState _removeDevice(
-    final Device device,
-    final List<Device> devices,
+    final DeviceData deviceData,
+    final List<DeviceData> devicesData,
     final List<DeviceInterface> deviceInstances,
   ) {
     final DeviceInterface deviceInterface = state.deviceInstances.firstWhere(
       (final DeviceInterface deviceInterface) =>
-          deviceInterface.device.deviceProductVendor == device.deviceProductVendor,
-    );
-    final DeviceData deviceData = DeviceData(
-      deviceProductVendor: device.deviceProductVendor,
+          deviceInterface.deviceData.deviceProductVendor == deviceData.deviceProductVendor,
     );
     deviceInterface.dispose();
-    devices.remove(device);
     deviceInstances.remove(deviceInterface);
-    final List<DeviceData> devicesData = state.devicesData;
     devicesData.remove(deviceData);
 
     return state.copyWith(
       devicesData: devicesData,
-      devices: devices,
       deviceInstances: deviceInstances,
     );
   }
@@ -144,8 +130,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   ) async {
     final List<DeviceData> devicesData = state.devicesData;
     for (final DeviceData deviceData in devicesData) {
-      final Device device = Device.fromDeviceData(deviceData);
-      final AddDeviceEvent event = AddDeviceEvent(device: device);
+      final AddDeviceEvent event = AddDeviceEvent(deviceData: deviceData);
       add(event);
     }
   }
@@ -155,7 +140,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final Emitter<DevicesState> emit,
   ) async {
     final QuickUsb quickUsb = QuickUsb();
-    final List<Device> deviceProductInfo = quickUsb.getDeviceProductInfo();
+    final List<DeviceData> deviceProductInfo = quickUsb.getDeviceProductInfo();
     final DevicesState newState = state.copyWith(availableDevices: deviceProductInfo);
 
     emit(newState);
@@ -167,23 +152,13 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   ) async {
     final int oldIndex = event.oldIndex;
     final int newIndex = event.newIndex;
-    final List<Device> devices = _replaceDevice(oldIndex, newIndex);
     final List<DeviceData> devicesData = _replaceDeviceData(oldIndex, newIndex);
 
     final DevicesState newState = state.copyWith(
-      devices: devices,
       devicesData: devicesData,
     );
 
     emit(newState);
-  }
-
-  List<Device> _replaceDevice(final int oldIndex, final int newIndex) {
-    final List<Device> devices = state.devices;
-    final Device device = devices.removeAt(oldIndex);
-    devices.insert(newIndex, device);
-
-    return devices;
   }
 
   List<DeviceData> _replaceDeviceData(final int oldIndex, final int newIndex) {
@@ -195,12 +170,12 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   Future<void> _onUpdateDevicesEvent(final UpdateDevices event, final Emitter<DevicesState> emit) async {
-    final List<Device> currentConnectedDevices = state.connectedDevices;
-    final List<Device> connectedDevices = event.connectedDevices;
+    final List<DeviceData> currentConnectedDevices = state.connectedDevices;
+    final List<DeviceData> connectedDevices = event.connectedDevices;
     final bool connectedDevicesChanged = listEquals(currentConnectedDevices, connectedDevices);
     if (!connectedDevicesChanged) {
       final DevicesState newState = state.copyWith(
-        devices: event.devices,
+        devicesData: event.devicesData,
         connectedDevices: connectedDevices,
         availableDevices: event.availableDevices,
       );
@@ -211,20 +186,20 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
   void _checkDevicesState() {
     final QuickUsb quickUsb = QuickUsb();
-    final List<Device> availableDevices = quickUsb.getDeviceProductInfo();
-    final List<Device> devices = <Device>[];
-    final List<Device> connectedDevices = <Device>[];
-    for (final Device device in state.devices) {
+    final List<DeviceData> availableDevices = quickUsb.getDeviceProductInfo();
+    final List<DeviceData> devicesData = <DeviceData>[];
+    final List<DeviceData> connectedDevices = <DeviceData>[];
+    for (final DeviceData deviceData in state.devicesData) {
       _processDeviceConnectivity(
         availableDevices: availableDevices,
-        devices: devices,
-        device: device,
+        devicesData: devicesData,
+        deviceData: deviceData,
         connectedDevices: connectedDevices,
       );
     }
 
     final UpdateDevices updateDevices = UpdateDevices(
-      devices: devices,
+      devicesData: devicesData,
       connectedDevices: connectedDevices,
       availableDevices: availableDevices,
     );
@@ -232,17 +207,17 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   void _processDeviceConnectivity({
-    required final List<Device> availableDevices,
-    required final List<Device> devices,
-    required final Device device,
-    required final List<Device> connectedDevices,
+    required final List<DeviceData> availableDevices,
+    required final List<DeviceData> devicesData,
+    required final DeviceData deviceData,
+    required final List<DeviceData> connectedDevices,
   }) {
-    final bool isDeviceConnected = availableDevices.contains(device);
-    final Device updatedDevice = device.copyWith(connected: isDeviceConnected);
-    devices.add(updatedDevice);
+    final bool isDeviceConnected = availableDevices.contains(deviceData);
+    final DeviceData updatedDevice = deviceData.copyWith(connected: isDeviceConnected);
+    devicesData.add(updatedDevice);
     if (isDeviceConnected) {
       _processConnectedDevice(
-        device: device,
+        deviceData: deviceData,
         updatedDevice: updatedDevice,
         connectedDevices: connectedDevices,
       );
@@ -250,53 +225,46 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   void _processConnectedDevice({
-    required final Device device,
-    required final Device updatedDevice,
-    required final List<Device> connectedDevices,
+    required final DeviceData deviceData,
+    required final DeviceData updatedDevice,
+    required final List<DeviceData> connectedDevices,
   }) {
     connectedDevices.add(updatedDevice);
     final DeviceInterface deviceInterface = state.deviceInstances.firstWhere(
       (final DeviceInterface connectedDevice) =>
-          connectedDevice.device.deviceProductVendor == updatedDevice.deviceProductVendor,
+          connectedDevice.deviceData.deviceProductVendor == updatedDevice.deviceProductVendor,
     );
     _reInitDevHandle(
       deviceInterface: deviceInterface,
-      device: device,
+      deviceData: deviceData,
     );
   }
 
-  void _reInitDevHandle({required final DeviceInterface deviceInterface, required final Device device}) {
-    if (!device.connected) {
+  void _reInitDevHandle({required final DeviceInterface deviceInterface, required final DeviceData deviceData}) {
+    if (!deviceData.connected) {
       deviceInterface.initDevHandle();
     }
   }
 
   Future<void> _onUpdateDeviceOffsetEvent(final UpdateDeviceOffsetEvent event, final Emitter<DevicesState> emit) async {
     final DeviceInterface deviceInterface = event.deviceInterface;
-    final Device device = deviceInterface.device;
+    final DeviceData deviceData = deviceInterface.deviceData;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
-    final List<Device> devices = state.devices;
     final List<DeviceData> devicesData = state.devicesData;
     final int index = deviceInstances.indexOf(deviceInterface);
     final int offsetX = event.offsetX;
     final int offsetY = event.offsetY;
-    final DeviceData deviceData = DeviceData(
-      deviceProductVendor: device.deviceProductVendor,
-      offsetX: offsetX,
-      offsetY: offsetY,
-    );
-    final Device updatedDevice = device.copyWith(
+    final DeviceData updatedDeviceData = DeviceData(
+      deviceProductVendor: deviceData.deviceProductVendor,
       offsetX: offsetX,
       offsetY: offsetY,
     );
 
-    deviceInterface.device = updatedDevice;
-    devices[index] = updatedDevice;
-    devicesData[index] = deviceData;
+    deviceInterface.deviceData = updatedDeviceData;
+    devicesData[index] = updatedDeviceData;
 
     final DevicesState newState = state.copyWith(
       deviceInstances: deviceInstances,
-      devices: devices,
       devicesData: devicesData,
     );
     emit(newState);
