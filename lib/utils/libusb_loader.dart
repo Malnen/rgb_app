@@ -1,6 +1,5 @@
 import 'dart:ffi';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/utils/library_loader.dart';
 
