@@ -3,6 +3,7 @@ import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
+import 'package:rgb_app/utils/hot_plug/hot_plug_handler_factory.dart';
 import 'package:rgb_app/utils/windows_usb_hot_plug_handler.dart';
 
 class DependencyInitializer {
@@ -39,6 +40,6 @@ class DependencyInitializer {
 
   static void _initUsbHotPlugHandler() {
     WindowsUsbHotPlugHandler.init();
-    WindowsUsbHotPlugHandler.tryRegisterUsbConnectedCallback();
+    HotPlugHandlerFactory.createHandlers();
   }
 }

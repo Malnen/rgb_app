@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:libusb/libusb64.dart';
+import 'package:rgb_app/utils/library_loader.dart';
 
 class LibusbLoader {
   static late Libusb _instance;
@@ -9,34 +10,8 @@ class LibusbLoader {
   static Libusb get getInstance => _instance;
 
   static void initLibusb() {
-    _instance = Libusb(loadLibrary());
+    final DynamicLibrary library = LibraryLoader.loadLibrary('libusb-1.0');
+    _instance = Libusb(library);
     _instance.libusb_init(nullptr);
-  }
-
-  static DynamicLibrary loadLibrary() {
-    final String assetsPath = _getAssetsPath();
-    if (Platform.isWindows) {
-      return DynamicLibrary.open('$assetsPath/libusb-1.0.dll');
-    } else if (Platform.isMacOS) {
-      return DynamicLibrary.open('$assetsPath/libusb-1.0.dylib');
-    } else if (Platform.isLinux) {
-      return DynamicLibrary.open('$assetsPath/libusb-1.0.so');
-    }
-
-    throw Exception('libusb dynamic library not found');
-  }
-
-  static String _getAssetsPath() {
-    if (kDebugMode) {
-      return 'assets';
-    }
-
-    final List<String> folders = <String>[
-      'data',
-      'flutter_assets',
-      'assets',
-    ];
-
-    return folders.join('/');
   }
 }
