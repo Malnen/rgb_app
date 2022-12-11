@@ -31,3 +31,4 @@ ffigen:
   headers:
     entry-points:
       - 'assets/libusb.h'
+      - 'assets/UsbHotPlug.h'
