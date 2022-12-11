@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'package:rgb_app/utils/library_loader.dart';
 
 typedef VoidFunctionPointer = Pointer<NativeFunction<Void Function()>>;
 typedef NativeVoidFunction = NativeFunction<Void Function(VoidFunctionPointer callback)>;
@@ -7,7 +8,7 @@ class WindowsUsbHotPlugHandler {
   static late DynamicLibrary _library;
 
   static void init() {
-    _library = DynamicLibrary.open('assets/USBHotPlug.dll');
+    _library = LibraryLoader.loadLibrary('USBHotPlug');
   }
 
   static void tryRegisterUsbConnectedCallback() {
