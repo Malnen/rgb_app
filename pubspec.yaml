@@ -30,5 +30,5 @@ ffigen:
   output: 'generated_bindings.dart'
   headers:
     entry-points:
-      - 'assets/libusb.h'
+    #  - 'assets/libusb.h'
       - 'assets/UsbHotPlug.h'

@@ -82,3 +82,5 @@ class UpdateDeviceOffsetEvent extends DevicesEvent {
         deviceInterface,
       ];
 }
+
+class CheckDevicesConnectionStateEvent extends DevicesEvent {}
