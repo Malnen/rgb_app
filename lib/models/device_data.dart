@@ -17,8 +17,6 @@ class DeviceData extends Equatable {
   @override
   List<Object> get props => <Object>[
         deviceProductVendor,
-        offsetX,
-        offsetY,
       ];
 
   DeviceData.fromJson(final Map<String, dynamic> json)

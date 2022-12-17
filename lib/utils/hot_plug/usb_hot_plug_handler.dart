@@ -1,11 +1,10 @@
 import 'dart:ffi';
 import 'dart:isolate';
 import 'dart:math';
-import 'package:flutter/material.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
-
 import 'package:rgb_app/utils/library_loader.dart';
 import 'package:win32/win32.dart';
 
@@ -29,15 +28,13 @@ class UsbHotPlugHandler {
   static void _createIsolate() async {
     final ReceivePort receivePort = ReceivePort();
     await Isolate.spawn(_sendIsolate, receivePort.sendPort);
-    await for (final Object? message in receivePort) {
-      print(message);
-    }
+    receivePort.listen((final _) => _onMessage());
   }
 
   static void _sendIsolate(final SendPort sendPort) {
-    _sendPort = Isolate.current.controlPort;
+    _sendPort = sendPort;
     _init();
-    _registerUsbConnectedCallback();
+    _registerUsbConnectedCallback(sendPort);
     _registerTestMessageCallback();
     _startListening();
   }
@@ -46,7 +43,7 @@ class UsbHotPlugHandler {
     _library = LibraryLoader.loadLibrary('USBHotPlug');
   }
 
-  static void _registerUsbConnectedCallback() {
+  static void _registerUsbConnectedCallback(final SendPort sendPort) {
     final String functionName = 'registerUsbConnectionCallback';
     final Pointer<NativeVoidFunction> pointer =
         _library.lookup<NativeFunction<Void Function(VoidFunctionPointer)>>(functionName);
@@ -56,7 +53,7 @@ class UsbHotPlugHandler {
 
   static void _registerTestMessageCallback() {
     final String functionName = 'registerTestMessageCallback';
-    final Pointer<NativeFunction<Void Function(Pointer<NativeFunction<Void Function(Uint32)>> p1)>> pointer =
+    final Pointer<NativeFunction<Void Function(Pointer<NativeFunction<Void Function(Uint32)>>)>> pointer =
         _library.lookup<NativeFunction<Void Function(VoidFunctionIntPointer)>>(functionName);
     final void Function(VoidFunctionIntPointer) register = pointer.asFunction<void Function(VoidFunctionIntPointer)>();
     register(Pointer.fromFunction(_testMessageHandler));
@@ -67,7 +64,7 @@ class UsbHotPlugHandler {
   }
 
   static void _notify() {
-    _sendPort.send(Random().nextInt(100));
+    _sendPort.send(null);
   }
 
   static void _startListening() {

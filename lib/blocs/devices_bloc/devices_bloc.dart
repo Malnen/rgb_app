@@ -20,6 +20,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     on<UpdateDevices>(_onUpdateDevicesEvent);
     on<UpdateDeviceOffsetEvent>(_onUpdateDeviceOffsetEvent);
     on<CheckDevicesConnectionStateEvent>(_onCheckDevicesConnectionStateEvent);
+
+    final CheckDevicesConnectionStateEvent checkDevicesConnectionStateEvent = CheckDevicesConnectionStateEvent();
+    add(checkDevicesConnectionStateEvent);
   }
 
   @override

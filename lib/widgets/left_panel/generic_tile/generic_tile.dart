@@ -27,7 +27,7 @@ class GenericTile<T> extends StatelessWidget {
 
   Widget _content(final BuildContext context) {
     return Material(
-      color: disabled ? Color.fromARGB(255, 50, 50, 50) : Color.fromARGB(255, 70, 70, 70),
+      color: disabled ? Color.fromARGB(255, 31, 31, 31) : Color.fromARGB(255, 70, 70, 70),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: () => _onTap(context),
