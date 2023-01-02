@@ -39,6 +39,7 @@ class DevicesListContainer extends StatelessWidget {
         devicesBloc: devicesBloc,
         deviceData: deviceData,
       ),
+      onTap: (final _) {},
       onRemove: (final DeviceData deviceData) => _removeDevice(
         devicesBloc: devicesBloc,
         deviceData: deviceData,

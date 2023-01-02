@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
+import 'package:rgb_app/widgets/effect_configurator/effect_configurator.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid.dart';
 
 class RightPanel extends StatelessWidget {
@@ -29,6 +30,7 @@ class RightPanel extends StatelessWidget {
           Column(
             children: <Widget>[
               EffectGrid(),
+              EffectConfigurator()
             ],
           ),
         ],

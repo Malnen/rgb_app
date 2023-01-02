@@ -6,13 +6,14 @@ import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
+import 'package:rgb_app/models/numeric_property.dart';
 
 class KeyStrokeSpread {
   final KeyStrokeData data;
-  final double fadeSpeed = 1;
-  final double spreadDelay = 0;
-  final double opacitySpeed = 0.15;
-  final double duration;
+  final NumericProperty fadeSpeed;
+  final NumericProperty spreadDelay;
+  final NumericProperty opacitySpeed;
+  final NumericProperty duration;
   late HashSet<CellCoords> _visitedCells;
   late double _startDecreasing;
   late EffectBloc _effectBloc;
@@ -27,11 +28,14 @@ class KeyStrokeSpread {
   KeyStrokeSpread({
     required this.data,
     required this.duration,
+    required this.fadeSpeed,
+    required this.spreadDelay,
+    required this.opacitySpeed,
   }) {
     _effectBloc = GetIt.instance.get();
     _spread.add(data);
     _visitedCells = HashSet<CellCoords>();
-    _startDecreasing = fadeSpeed / opacitySpeed;
+    _startDecreasing = fadeSpeed.value / opacitySpeed.value;
   }
 
   void spread() {
@@ -45,10 +49,10 @@ class KeyStrokeSpread {
 
   void _spreadData(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
     _setNewColor(data);
-    final double duration = data.duration;
+    final NumericProperty duration = data.duration;
     final double opacity = data.opacity;
     final KeyStrokeData newData = _getNewData(data, duration, opacity);
-    final bool hasDuration = duration >= 0;
+    final bool hasDuration = duration.value >= 0;
     if (hasDuration) {
       newSpread.add(newData);
       _propagateAfterDelay(duration, newData, newSpread);
@@ -69,23 +73,23 @@ class KeyStrokeSpread {
 
   KeyStrokeData _getNewData(
     final KeyStrokeData data,
-    final double duration,
+    final NumericProperty duration,
     final double opacity,
   ) {
     final bool increment = data.increment;
     return data.copyWith(
-      duration: duration - fadeSpeed,
+      duration: duration.copyWith(value: duration.value - fadeSpeed.value),
       increment: _getIncrement(duration),
       opacity: _getOpacity(increment, opacity),
     );
   }
 
-  bool _getIncrement(final double duration) {
-    return duration > _startDecreasing;
+  bool _getIncrement(final NumericProperty duration) {
+    return duration.value > _startDecreasing;
   }
 
   double _getOpacity(final bool increment, final double opacity) {
-    final double targetOpacitySpeed = increment ? opacitySpeed : opacitySpeed * -1;
+    final double targetOpacitySpeed = increment ? opacitySpeed.value : opacitySpeed.value * -1;
     final double targetOpacity = opacity + targetOpacitySpeed;
     if (targetOpacity > 1) {
       return 1;
@@ -96,8 +100,9 @@ class KeyStrokeSpread {
     return targetOpacity;
   }
 
-  void _propagateAfterDelay(final double duration, final KeyStrokeData newData, final List<KeyStrokeData> newSpread) {
-    final bool canPropagate = this.duration - duration >= spreadDelay;
+  void _propagateAfterDelay(
+      final NumericProperty duration, final KeyStrokeData newData, final List<KeyStrokeData> newSpread) {
+    final bool canPropagate = this.duration.value - duration.value >= spreadDelay.value;
     if (canPropagate) {
       _tryToPropagate(newData, newSpread);
     }

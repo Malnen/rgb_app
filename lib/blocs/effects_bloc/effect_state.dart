@@ -10,18 +10,22 @@ class EffectState extends Equatable {
   final EffectGridData effectGridData;
   final List<Effect> effects;
   final List<EffectData> availableEffects;
+  final Effect? selectedEffect;
 
   EffectState({
     required this.effectGridData,
     required this.availableEffects,
     required this.effects,
+    this.selectedEffect,
   }) : key = UniqueKey();
 
   @override
-  List<Object> get props => <Object>[
-        effectGridData,availableEffects,
+  List<Object?> get props => <Object?>[
+        effectGridData,
+        availableEffects,
         effects,
         key,
+        selectedEffect,
       ];
 
   factory EffectState.initial() {
@@ -36,11 +40,13 @@ class EffectState extends Equatable {
     final EffectGridData? effectGridData,
     final List<Effect>? effects,
     final List<EffectData>? availableEffects,
+    final Effect? selectedEffect,
   }) {
     return EffectState(
       effectGridData: effectGridData ?? this.effectGridData,
       effects: effects ?? this.effects,
       availableEffects: availableEffects ?? this.availableEffects,
+      selectedEffect: selectedEffect ?? this.selectedEffect,
     );
   }
 

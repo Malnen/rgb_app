@@ -4,7 +4,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
-import 'package:rgb_app/effects/effect_factory.dart';
+import 'package:rgb_app/factories/effect_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
@@ -20,6 +20,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     on<AddEffectEvent>(_onAddEffectEvent);
     on<RemoveEffectEvent>(_onRemoveEffectEvent);
     on<ReorderEffectsEvent>(_onReorderEffectsEvent);
+    on<SelectEffectEvent>(_onSelectEffectEvent);
   }
 
   @override
@@ -105,6 +106,16 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       effects: effects,
     );
 
+    emit(newState);
+  }
+
+  Future<void> _onSelectEffectEvent(
+    final SelectEffectEvent event,
+    final Emitter<EffectState> emit,
+  ) async {
+    final EffectState newState = state.copyWith(
+      selectedEffect: event.effect,
+    );
     emit(newState);
   }
 }

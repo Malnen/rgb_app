@@ -31,6 +31,7 @@ class _EffectGridState extends State<EffectGrid> {
     setGridSize();
     setControllersValue();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         top(),
         EffectGridWrapper(),

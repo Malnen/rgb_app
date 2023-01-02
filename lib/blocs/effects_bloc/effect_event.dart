@@ -60,3 +60,12 @@ class ReorderEffectsEvent extends EffectEvent {
         newIndex,
       ];
 }
+
+class SelectEffectEvent extends EffectEvent {
+  final Effect effect;
+
+  SelectEffectEvent(this.effect);
+
+  @override
+  List<Object> get props => <Object>[effect];
+}

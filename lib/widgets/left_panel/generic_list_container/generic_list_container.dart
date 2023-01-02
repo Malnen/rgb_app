@@ -12,6 +12,7 @@ class GenericListContainer<T> extends StatefulWidget {
   final void Function(T value) onAdd;
   final void Function(T value) onRemove;
   final bool Function(T value) isDisabled;
+  final void Function(T value) onTap;
   final void Function(int oldIndex, int newIndex) onReorder;
 
   const GenericListContainer({
@@ -21,6 +22,7 @@ class GenericListContainer<T> extends StatefulWidget {
     required this.onAdd,
     required this.onRemove,
     required this.isDisabled,
+    required this.onTap,
     required this.onReorder,
     required this.availableValues,
     required this.dialogLabel,
@@ -113,7 +115,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
           GenericTile<T>(
             disabled: widget.isDisabled(value),
             value: value,
-            onTap: (final _) {},
+            onTap: widget.onTap,
             name: widget.getName(value),
             iconData: widget.getIcon(value),
           ),

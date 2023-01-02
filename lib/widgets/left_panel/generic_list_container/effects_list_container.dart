@@ -7,7 +7,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
-import 'package:rgb_app/effects/effect_factory.dart';
+import 'package:rgb_app/factories/effect_factory.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
 
 class EffectsListContainer extends StatefulWidget {
@@ -29,6 +29,7 @@ class _EffectsListContainerState extends State<EffectsListContainer> {
       isDisabled: (final _) => false,
       getIcon: (final EffectData effectData) => effectData.iconData,
       onAdd: (final EffectData effectData) => _onAdd(effectBloc, effectData),
+      onTap: (final EffectData effectData)=> _onSelect(effectBloc, effectData),
       onReorder: (final int oldIndex, final int newIndex) => _onReorder(effectBloc, oldIndex, newIndex),
       availableValues: EffectDictionary.availableEffects,
       getName: (final EffectData effectData) => effectData.name,
@@ -53,6 +54,15 @@ class _EffectsListContainerState extends State<EffectsListContainer> {
     effect.setEffectBloc();
 
     final AddEffectEvent event = AddEffectEvent(effect: effect);
+    bloc.add(event);
+  }
+
+  void _onSelect(final EffectBloc bloc, final EffectData effectData){
+    final EffectState state = bloc.state;
+    final List<Effect> effects = state.effects;
+    final Effect effect = effects.firstWhere((final Effect element) => element.effectData == effectData);
+    final SelectEffectEvent event = SelectEffectEvent(effect);
+
     bloc.add(event);
   }
 

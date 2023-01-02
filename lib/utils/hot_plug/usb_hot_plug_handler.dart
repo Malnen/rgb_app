@@ -1,11 +1,12 @@
 import 'dart:ffi';
 import 'dart:isolate';
-import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/utils/library_loader.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:win32/win32.dart';
 
 typedef VoidFunctionPointer = Pointer<NativeFunction<Void Function()>>;
@@ -19,7 +20,9 @@ class UsbHotPlugHandler {
 
   static void tryListen() {
     try {
-      _createIsolate();
+      if(!kDebugMode) {
+        _createIsolate();
+      }
     } catch (_) {
       print(_);
     }
@@ -28,7 +31,10 @@ class UsbHotPlugHandler {
   static void _createIsolate() async {
     final ReceivePort receivePort = ReceivePort();
     await Isolate.spawn(_sendIsolate, receivePort.sendPort);
-    receivePort.listen((final _) => _onMessage());
+    receivePort
+        .asBroadcastStream()
+        .debounce((final _) => TimerStream<bool>(true, Duration(microseconds: 250)))
+        .listen((final _) => _onMessage());
   }
 
   static void _sendIsolate(final SendPort sendPort) {
