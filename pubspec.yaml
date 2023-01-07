@@ -28,6 +28,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/libusb-1.0.dll
+    - assets/USBHotPlug.dll
 ffigen:
   output: 'generated_bindings.dart'
   headers:
