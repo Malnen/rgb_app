@@ -47,7 +47,10 @@ class KeyStrokeSpread {
     _spread = newSpread;
   }
 
-  void _spreadData(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
+  void _spreadData(
+    final KeyStrokeData data,
+    final List<KeyStrokeData> newSpread,
+  ) {
     _setNewColor(data);
     final NumericProperty duration = data.duration;
     final double opacity = data.opacity;
@@ -101,7 +104,10 @@ class KeyStrokeSpread {
   }
 
   void _propagateAfterDelay(
-      final NumericProperty duration, final KeyStrokeData newData, final List<KeyStrokeData> newSpread) {
+    final NumericProperty duration,
+    final KeyStrokeData newData,
+    final List<KeyStrokeData> newSpread,
+  ) {
     final bool canPropagate = this.duration.value - duration.value >= spreadDelay.value;
     if (canPropagate) {
       _tryToPropagate(newData, newSpread);

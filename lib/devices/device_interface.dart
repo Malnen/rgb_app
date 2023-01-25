@@ -6,6 +6,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
+import 'package:rgb_app/devices/steel_series_rival_3/steel_series_rival_3.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
@@ -31,7 +32,9 @@ abstract class DeviceInterface {
 
   Libusb get libusb => LibusbLoader.getInstance;
 
-  static DeviceInterface fromDeviceData({required final DeviceData deviceData}) {
+  static DeviceInterface fromDeviceData({
+    required final DeviceData deviceData,
+  }) {
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     final String productVendor = deviceProductVendor.productVendor;
     switch (productVendor) {
@@ -45,6 +48,10 @@ abstract class DeviceInterface {
         );
       case DeviceProductVendor.steelSeriesRival100:
         return SteelSeriesRival100(
+          deviceData: deviceData,
+        );
+      case DeviceProductVendor.steelSeriesRival3:
+        return SteelSeriesRival3(
           deviceData: deviceData,
         );
       default:

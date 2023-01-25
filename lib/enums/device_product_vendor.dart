@@ -5,6 +5,7 @@ abstract class DeviceProductVendor extends Equatable {
   static const String corsairK70 = '1b1c:1b33';
   static const String corsairVirtuoso = '1b1c:0a40';
   static const String steelSeriesRival100 = '1038:1702';
+  static const String steelSeriesRival3 = '1038:1824';
   static const String unknown = '';
 
   const DeviceProductVendor({
@@ -30,6 +31,8 @@ abstract class DeviceProductVendor extends Equatable {
         return CorsairVirtuosoProductVendor();
       case steelSeriesRival100:
         return SteelSeriesRival100ProductVendor();
+      case steelSeriesRival3:
+        return SteelSeriesRival3ProductVendor();
       default:
         return UnknownProductVendor();
     }
@@ -79,7 +82,14 @@ class SteelSeriesRival100ProductVendor extends DeviceProductVendor {
           icon: Icons.mouse,
         );
 }
-
+class SteelSeriesRival3ProductVendor extends DeviceProductVendor {
+  SteelSeriesRival3ProductVendor()
+      : super(
+    name: 'SteelSeries Rival 3',
+    productVendor: DeviceProductVendor.steelSeriesRival3,
+    icon: Icons.mouse,
+  );
+}
 class UnknownProductVendor extends DeviceProductVendor {
   UnknownProductVendor()
       : super(
