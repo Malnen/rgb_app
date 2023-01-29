@@ -38,7 +38,7 @@ abstract class DeviceProductVendor extends Equatable {
     }
   }
 
-  static DeviceProductVendor fromJson(final Map<String, dynamic> json) {
+  static DeviceProductVendor fromJson(Map<String, dynamic> json) {
     return getType(json['productVendor'] as String);
   }
 

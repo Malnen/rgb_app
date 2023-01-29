@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/material.dart' as material;
 import 'package:get_it/get_it.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
@@ -11,7 +12,6 @@ import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/utils/libusb_loader.dart';
-import 'package:flutter/material.dart' as material;
 
 abstract class DeviceInterface {
   late EffectBloc effectBloc;
@@ -33,7 +33,7 @@ abstract class DeviceInterface {
   Libusb get libusb => LibusbLoader.getInstance;
 
   static DeviceInterface fromDeviceData({
-    required final DeviceData deviceData,
+    required DeviceData deviceData,
   }) {
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     final String productVendor = deviceProductVendor.productVendor;
@@ -60,9 +60,9 @@ abstract class DeviceInterface {
   }
 
   static Pointer<libusb_device_handle> initDeviceHandler({
-    required final DeviceData deviceData,
-    required final int interface,
-    required final int configuration,
+    required DeviceData deviceData,
+    required int interface,
+    required int configuration,
   }) {
     final Libusb libusb = LibusbLoader.getInstance;
     final Pointer<libusb_device_handle> devHandle = libusb.libusb_open_device_with_vid_pid(

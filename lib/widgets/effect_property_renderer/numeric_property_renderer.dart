@@ -14,20 +14,21 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
   NumericProperty get property => widget.property;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Slider(
       value: property.value,
       max: property.max,
       min: property.min,
       onChanged: onChanged,
       activeColor: Colors.orange,
-      inactiveColor: Colors.white ,
+      inactiveColor: Colors.white,
     );
   }
 
-  void onChanged(final double updatedValue) {
+  void onChanged(double updatedValue) {
     setState(() {
       property.value = updatedValue;
+      property.onChange(updatedValue);
     });
   }
 }

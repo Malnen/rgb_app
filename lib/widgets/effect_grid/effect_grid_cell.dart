@@ -34,7 +34,7 @@ class _EffectGridCellState extends State<EffectGridCell> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final Color color = getColor();
     return Container(
       width: widget.size,
@@ -53,7 +53,7 @@ class _EffectGridCellState extends State<EffectGridCell> {
     super.dispose();
   }
 
-  void onRebuild(final Object _) {
+  void onRebuild(Object _) {
     setState(() {});
   }
 

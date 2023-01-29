@@ -4,7 +4,7 @@ import 'package:rgb_app/widgets/right_panel/right_panel.dart';
 
 class MainScaffold extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: _body(),

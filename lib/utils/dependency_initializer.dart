@@ -11,7 +11,7 @@ class DependencyInitializer {
   static void init() {
     _initDevicesBloc();
     _initKeyBloc();
-    _initEffectBloc();
+    _initEffectBlocAndInitEffects();
     _initUsbHotPlugHandler();
   }
 
@@ -31,10 +31,10 @@ class DependencyInitializer {
     instance.registerSingleton(keyBloc);
   }
 
-  static void _initEffectBloc() async {
+  static void _initEffectBlocAndInitEffects() async {
     final EffectBloc effectBloc = EffectBloc();
     instance.registerSingleton(effectBloc);
-    effectBloc.setBlocInExistingEffects();
+    effectBloc.setBlocInExistingEffectsAndInit();
   }
 
   static void _initUsbHotPlugHandler() {

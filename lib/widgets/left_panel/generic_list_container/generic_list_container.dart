@@ -34,7 +34,7 @@ class GenericListContainer<T> extends StatefulWidget {
 
 class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       child: child(),
       color: Color.fromARGB(255, 26, 26, 26),
@@ -89,7 +89,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     );
   }
 
-  void onReorder(final int oldIndex, int newIndex) {
+  void onReorder(int oldIndex, int newIndex) {
     setState(() {
       if (newIndex > oldIndex) {
         newIndex -= 1;
@@ -103,7 +103,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
     return widget.values.asMap().entries.map(_buildDeviceRow).toList();
   }
 
-  Widget _buildDeviceRow(final MapEntry<int, T> entry) {
+  Widget _buildDeviceRow(MapEntry<int, T> entry) {
     final T value = entry.value;
     final int index = entry.key;
 

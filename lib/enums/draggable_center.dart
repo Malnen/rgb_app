@@ -1,0 +1,4 @@
+enum DraggableCenter {
+  topLeft,
+  center,
+}

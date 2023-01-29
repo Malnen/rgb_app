@@ -33,11 +33,11 @@ class UsbHotPlugHandler {
     await Isolate.spawn(_sendIsolate, receivePort.sendPort);
     receivePort
         .asBroadcastStream()
-        .debounce((final _) => TimerStream<bool>(true, Duration(microseconds: 250)))
-        .listen((final _) => _onMessage());
+        .debounce((_) => TimerStream<bool>(true, Duration(microseconds: 250)))
+        .listen((_) => _onMessage());
   }
 
-  static void _sendIsolate(final SendPort sendPort) {
+  static void _sendIsolate(SendPort sendPort) {
     _sendPort = sendPort;
     _init();
     _registerUsbConnectedCallback(sendPort);
@@ -49,7 +49,7 @@ class UsbHotPlugHandler {
     _library = LibraryLoader.loadLibrary('USBHotPlug');
   }
 
-  static void _registerUsbConnectedCallback(final SendPort sendPort) {
+  static void _registerUsbConnectedCallback(SendPort sendPort) {
     final String functionName = 'registerUsbConnectionCallback';
     final Pointer<NativeVoidFunction> pointer =
         _library.lookup<NativeFunction<Void Function(VoidFunctionPointer)>>(functionName);
@@ -65,7 +65,7 @@ class UsbHotPlugHandler {
     register(Pointer.fromFunction(_testMessageHandler));
   }
 
-  static void _testMessageHandler(final int message) {
+  static void _testMessageHandler(int message) {
     print(message);
   }
 

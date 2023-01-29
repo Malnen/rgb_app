@@ -29,7 +29,7 @@ class EffectGridData extends Equatable {
     );
   }
 
-  factory EffectGridData.fromJson(final Map<String, dynamic> json) {
+  factory EffectGridData.fromJson(Map<String, dynamic> json) {
     return EffectGridData(
       sizeX: json['sizeX'] as int,
       sizeY: json['sizeY'] as int,

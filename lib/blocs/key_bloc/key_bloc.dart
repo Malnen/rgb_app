@@ -17,7 +17,7 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
     on<SetKeyboardDeviceEvent>(_onSetKeyboardDeviceEvent);
   }
 
-  void _startListening(final ke.KeyEvent keyEvent) {
+  void _startListening(ke.KeyEvent keyEvent) {
     if (keyEvent.isKeyDown) {
       _onKeyDown(keyEvent);
     } else if (keyEvent.isKeyUP) {
@@ -25,7 +25,7 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
     }
   }
 
-  void _onKeyUp(final ke.KeyEvent keyEvent) {
+  void _onKeyUp(ke.KeyEvent keyEvent) {
     final KeyReleasedEvent keyReleasedEvent = KeyReleasedEvent(
       keyCode: keyEvent.vkCode,
       keyName: KeyCodeExtension.name(keyEvent.vkCode),
@@ -33,7 +33,7 @@ class KeyBloc extends Bloc<KeyEvent, KeyState> {
     add(keyReleasedEvent);
   }
 
-  void _onKeyDown(final ke.KeyEvent keyEvent) {
+  void _onKeyDown(ke.KeyEvent keyEvent) {
     final KeyPressedEvent keyPressedEvent = KeyPressedEvent(
       keyCode: keyEvent.vkCode,
       keyName: KeyCodeExtension.name(keyEvent.vkCode),

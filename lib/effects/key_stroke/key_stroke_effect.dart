@@ -35,7 +35,7 @@ class KeyStrokeEffect extends Effect {
 
   int colorIndex = 0;
 
-  KeyStrokeEffect({required super.effectData, final List<Color>? colors})
+  KeyStrokeEffect({required super.effectData, List<Color>? colors})
       : keyBloc = GetIt.instance.get(),
         duration = NumericProperty(
           min: 1,
@@ -66,7 +66,7 @@ class KeyStrokeEffect extends Effect {
     keyBloc.stream.listen(_onKeyEvent);
   }
 
-  factory KeyStrokeEffect.fromJson(final Map<String, dynamic> json) {
+  factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {
     final List<int> colors = json['colors'] as List<int>;
     final KeyStrokeEffect effect = KeyStrokeEffect(
       effectData: EffectDictionary.keyStrokeEffect.getWithNewKey(),
@@ -79,7 +79,7 @@ class KeyStrokeEffect extends Effect {
 
   @override
   void update() {
-    for (final KeyStrokeSpread spread in _spreads) {
+    for (KeyStrokeSpread spread in _spreads) {
       spread.spread();
     }
   }
@@ -88,17 +88,17 @@ class KeyStrokeEffect extends Effect {
   Map<String, dynamic> getData() {
     return <String, dynamic>{
       'duration': duration.toJson(),
-      'colors': colors.map((final Color color) => color.value).toList(),
+      'colors': colors.map((Color color) => color.value).toList(),
     };
   }
 
-  void _onKeyEvent(final KeyState state) {
+  void _onKeyEvent(KeyState state) {
     if (state.type == KeyStateType.pressed) {
       _onKeyPressed(state);
     }
   }
 
-  void _onKeyPressed(final KeyState state) {
+  void _onKeyPressed(KeyState state) {
     final Color color = _getColor();
     final CellCoords coords = _getCoords(state);
     final KeyStrokeData data = KeyStrokeData(
@@ -116,7 +116,7 @@ class KeyStrokeEffect extends Effect {
     _spreads.add(spread);
   }
 
-  CellCoords _getCoords(final KeyState state) {
+  CellCoords _getCoords(KeyState state) {
     final KeyCode keycode = KeyCodeExtension.fromKeyCode(state.keyCode);
     final Map<KeyCode, CellCoords> reverseKeys = KeyDictionary.reverseKeyCodes;
     final CellCoords? coords = reverseKeys[keycode];

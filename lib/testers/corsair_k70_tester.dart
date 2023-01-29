@@ -36,7 +36,7 @@ class CorsairK70Tester implements DeviceTester {
   @override
   Future<void> test() async {
     _rememberValues();
-    keyBloc.stream.listen((final KeyState state) {
+    keyBloc.stream.listen((KeyState state) {
       if (state.type == KeyStateType.released) {
         _onKeyReleased(state);
       }
@@ -50,7 +50,7 @@ class CorsairK70Tester implements DeviceTester {
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-      (final Timer timer) {
+          (Timer timer) {
         _blink(entries);
         corsairK70.sendData();
       },
@@ -60,13 +60,13 @@ class CorsairK70Tester implements DeviceTester {
 
   @override
   void dispose() {
-    for (final Timer timer in timers) {
+    for (Timer timer in timers) {
       timer.cancel();
     }
   }
 
-  void _blink(final Iterable<MapEntry<CellCoords, KeyboardKey>> entries) {
-    for (final MapEntry<CellCoords, KeyboardKey> entry in entries) {
+  void _blink(Iterable<MapEntry<CellCoords, KeyboardKey>> entries) {
+    for (MapEntry<CellCoords, KeyboardKey> entry in entries) {
       final KeyboardKey key = entry.value;
       final int packetIndex = key.packetIndex;
       if (packetIndex < 0) continue;
@@ -75,7 +75,7 @@ class CorsairK70Tester implements DeviceTester {
     corsairK70.sendData();
   }
 
-  void _setBlinkColor(final int packetIndex, final KeyboardKey key) {
+  void _setBlinkColor(int packetIndex, KeyboardKey key) {
     final CorsairK70Packets packets = corsairK70.getPacket(packetIndex);
     final Uint8List rPkt = packets.rPkt;
     final Uint8List gPkt = packets.gPkt;
@@ -101,7 +101,7 @@ class CorsairK70Tester implements DeviceTester {
     }
   }
 
-  void _onKeyReleased(final KeyState state) {
+  void _onKeyReleased(KeyState state) {
     if (state.keyName == KeyCodeExtension.name(KeyCode.esc.keyCode)) {
       _next();
     }
@@ -132,7 +132,7 @@ class CorsairK70Tester implements DeviceTester {
     _updateColor();
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-      (final Timer timer) {
+          (Timer timer) {
         _setCurrentIndexValue(
           valueR: value.toInt(),
           valueG: 0,
@@ -144,11 +144,11 @@ class CorsairK70Tester implements DeviceTester {
     timers.add(timer);
   }
 
-  void _updateColor([final Duration? duration, final double? speed]) {
+  void _updateColor([final Duration? duration, double? speed]) {
     final double updateSpeed = speed ?? 5;
     final Timer timer = Timer.periodic(
       duration ?? Duration(microseconds: 2000),
-      (final Timer timer) {
+      (Timer timer) {
         if (inc) {
           value += updateSpeed;
         } else {
@@ -169,9 +169,9 @@ class CorsairK70Tester implements DeviceTester {
   }
 
   void _setCurrentIndexValue({
-    required final int valueR,
-    required final int valueG,
-    required final int valueB,
+    required int valueR,
+    required int valueG,
+    required int valueB,
   }) {
     if (currentPacketIndex == 0) {
       corsairK70.rPkt1[currentIndex] = valueR;

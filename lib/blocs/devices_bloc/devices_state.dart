@@ -14,7 +14,7 @@ class DevicesState extends Equatable {
     required this.devicesData,
     required this.deviceInstances,
     required this.availableDevices,
-    final List<DeviceData>? connectedDevices,
+    List<DeviceData>? connectedDevices,
   })  : connectedDevices = connectedDevices ?? <DeviceData>[],
         key = UniqueKey();
 
@@ -27,10 +27,10 @@ class DevicesState extends Equatable {
   }
 
   DevicesState copyWith({
-    final List<DeviceData>? devicesData,
-    final List<DeviceData>? availableDevices,
-    final List<DeviceInterface>? deviceInstances,
-    final List<DeviceData>? connectedDevices,
+    List<DeviceData>? devicesData,
+    List<DeviceData>? availableDevices,
+    List<DeviceInterface>? deviceInstances,
+    List<DeviceData>? connectedDevices,
   }) {
     return DevicesState(
       devicesData: devicesData ?? this.devicesData,
@@ -40,7 +40,7 @@ class DevicesState extends Equatable {
     );
   }
 
-  static DevicesState fromJson(final Map<String, dynamic> json) {
+  static DevicesState fromJson(Map<String, dynamic> json) {
     return DevicesState(
       devicesData: _mapDeviceData(json['devicesData'] as List<dynamic>),
       availableDevices: <DeviceData>[],
@@ -54,10 +54,10 @@ class DevicesState extends Equatable {
     };
   }
 
-  static List<DeviceData> _mapDeviceData(final List<dynamic> json) {
+  static List<DeviceData> _mapDeviceData(List<dynamic> json) {
     return json
         .map(
-          (final Object? element) => DeviceData.fromJson(element as Map<String, dynamic>),
+          (Object? element) => DeviceData.fromJson(element as Map<String, dynamic>),
         )
         .toList();
   }

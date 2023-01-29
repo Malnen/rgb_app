@@ -16,7 +16,7 @@ class GenericTile<T> extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       width: 300,
       height: 40,
@@ -25,7 +25,7 @@ class GenericTile<T> extends StatelessWidget {
     );
   }
 
-  Widget _content(final BuildContext context) {
+  Widget _content(BuildContext context) {
     return Material(
       color: disabled ? Color.fromARGB(255, 31, 31, 31) : Color.fromARGB(255, 70, 70, 70),
       borderRadius: BorderRadius.circular(10),
@@ -44,7 +44,7 @@ class GenericTile<T> extends StatelessWidget {
     );
   }
 
-  void _onTap(final BuildContext context) {
+  void _onTap(BuildContext context) {
     onTap(value);
   }
 

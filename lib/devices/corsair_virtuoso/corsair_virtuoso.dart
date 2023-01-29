@@ -1,18 +1,15 @@
+import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
+import 'package:ffi/ffi.dart' show calloc;
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
-import 'package:rgb_app/packet_managers/corsair_virtuoso_packet_manager.dart';
+import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 import 'package:rgb_app/testers/corsair_virtuoso_tester.dart';
 
 class CorsairVirtuoso extends DeviceInterface {
   Color color = Color.fromARGB(1, 0, 0, 0);
 
-  late Uint8List dataPkt1;
-  late Uint8List lPkt1;
-  late Uint8List dataPkt2;
-  late Uint8List rPkt1;
-  late CorsairVirtuosoPacketManager packetManager;
   late CorsairVirtuosoTester tester;
 
   CorsairVirtuoso({
@@ -23,8 +20,6 @@ class CorsairVirtuoso extends DeviceInterface {
   void init() {
     super.init();
     tester = CorsairVirtuosoTester(corsairVirtuoso: this);
-    packetManager = CorsairVirtuosoPacketManager(this);
-    packetManager.fill();
     sendData();
   }
 
@@ -35,7 +30,80 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void sendData() {
-    // packetManager.sendData();
+    final Uint8List data = Uint8List.fromList(<int>[
+      0x02,
+      0x09,
+      0x06,
+      0x00,
+      0x09,
+      0x00,
+      0x00,
+      0x00,
+      color.red,
+      0xff,
+      0x00,
+      color.green,
+      0xbe,
+      0xff,
+      color.blue,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+    ]);
+    libusb.libusb_bulk_transfer(
+      devHandle,
+      0x02,
+      data.allocatePointer(),
+      64,
+      calloc<ffi.Int32>(),
+      1000,
+    );
   }
 
   @override
@@ -45,7 +113,8 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void update() {
-    // TODO: implement update
+    color = effectBloc.colors[offsetY][offsetX];
+    super.update();
   }
 
   @override
@@ -58,7 +127,7 @@ class CorsairVirtuoso extends DeviceInterface {
     devHandle = DeviceInterface.initDeviceHandler(
       deviceData: deviceData,
       configuration: 1,
-      interface: 3,
+      interface: 4,
     );
   }
 }

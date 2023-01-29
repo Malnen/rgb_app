@@ -37,13 +37,13 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     devicesBloc = context.read();
     rebuildNotifier = StreamController<Object>.broadcast();
 
-    Timer.periodic(Duration(milliseconds: 25), (final Timer timer) {
+    Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
       final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);
       effectBloc.add(event);
-      for (final Effect effect in effectBloc.state.effects) {
+      for (Effect effect in effectBloc.state.effects) {
         effect.update();
       }
-      for (final DeviceInterface device in devicesBloc.deviceInstances) {
+      for (DeviceInterface device in devicesBloc.deviceInstances) {
         device.update();
       }
       rebuildNotifier.add(Object());
@@ -51,8 +51,8 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   }
 
   @override
-  Widget build(final BuildContext context) {
-    context.select<DevicesBloc, int>((final DevicesBloc bloc) => bloc.state.deviceInstances.length);
+  Widget build(BuildContext context) {
+    context.select<DevicesBloc, int>((DevicesBloc bloc) => bloc.state.deviceInstances.length);
 
     final Widget grid = buildGrid();
     final double margin = cellMargin * 2;
@@ -66,7 +66,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
         children: <Widget>[
           grid,
           ...devicesBloc.deviceInstances.map(
-            (final DeviceInterface deviceInterface) => DevicePlaceholder(
+                (DeviceInterface deviceInterface) => DevicePlaceholder(
               fullHeight: fullHeight,
               sizeBase: cellSize + margin,
               fullWidth: fullWidth,
@@ -83,11 +83,11 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
       children: <Widget>[
         ...List<Widget>.generate(
           effectBloc.sizeY,
-          (final int yIndex) => Row(
+              (int yIndex) => Row(
             children: <Widget>[
               ...List<Widget>.generate(
                 effectBloc.sizeX,
-                (final int xIndex) => EffectGridCell(
+                (int xIndex) => EffectGridCell(
                   margin: cellMargin,
                   size: cellSize,
                   x: xIndex,

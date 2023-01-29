@@ -101,11 +101,10 @@ class SteelSeriesRival3 extends MouseInterface {
     try {
       final List<Color> newColors = <Color>[];
       for (int i = 0; i < colors.length; i++) {
-        final Color newColor = effectBloc.colors[offsetY][offsetX + i];
+        final Color newColor = effectBloc.colors[offsetY + i][offsetX];
         newColors.add(newColor);
       }
       colors = newColors;
-      // color = effectBloc.colors[offsetY][offsetX];
     } catch (e) {
       print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
     }

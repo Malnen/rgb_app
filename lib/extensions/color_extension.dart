@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension ColorExtension on Color {
-  static Color mix(final Color color, final Color colorToMix, final double fraction) {
+  static Color mix(Color color, Color colorToMix, double fraction) {
     final int r = color.red;
     final int g = color.green;
     final int b = color.blue;
@@ -17,7 +17,7 @@ extension ColorExtension on Color {
     );
   }
 
-  static int _getMixed(final int value, final int valueToMix, final double fraction) {
+  static int _getMixed(int value, int valueToMix, double fraction) {
     final double mixedValue = (value - valueToMix) * fraction + valueToMix;
     return mixedValue.toInt();
   }

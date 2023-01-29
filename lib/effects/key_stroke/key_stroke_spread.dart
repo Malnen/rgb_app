@@ -40,7 +40,7 @@ class KeyStrokeSpread {
 
   void spread() {
     final List<KeyStrokeData> newSpread = <KeyStrokeData>[];
-    for (final KeyStrokeData data in _spread) {
+    for (KeyStrokeData data in _spread) {
       _spreadData(data, newSpread);
     }
 
@@ -62,7 +62,7 @@ class KeyStrokeSpread {
     }
   }
 
-  void _setNewColor(final KeyStrokeData data) {
+  void _setNewColor(KeyStrokeData data) {
     final CellCoords cellCoords = data.cellCoords;
     try {
       final Color currentColor = colors[cellCoords.y][cellCoords.x];
@@ -87,11 +87,11 @@ class KeyStrokeSpread {
     );
   }
 
-  bool _getIncrement(final NumericProperty duration) {
+  bool _getIncrement(NumericProperty duration) {
     return duration.value > _startDecreasing;
   }
 
-  double _getOpacity(final bool increment, final double opacity) {
+  double _getOpacity(bool increment, double opacity) {
     final double targetOpacitySpeed = increment ? opacitySpeed.value : opacitySpeed.value * -1;
     final double targetOpacity = opacity + targetOpacitySpeed;
     if (targetOpacity > 1) {
@@ -114,7 +114,7 @@ class KeyStrokeSpread {
     }
   }
 
-  void _tryToPropagate(final KeyStrokeData newData, final List<KeyStrokeData> newSpread) {
+  void _tryToPropagate(KeyStrokeData newData, List<KeyStrokeData> newSpread) {
     final CellCoords cellCoords = newData.cellCoords;
     final bool newKey = !_visitedCells.contains(cellCoords);
     if (newKey) {
@@ -122,14 +122,14 @@ class KeyStrokeSpread {
     }
   }
 
-  void _propagateSpread(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
+  void _propagateSpread(KeyStrokeData data, List<KeyStrokeData> newSpread) {
     _propagateToRight(data, newSpread);
     _propagateToLeft(data, newSpread);
     _propagateToTop(data, newSpread);
     _propagateToDown(data, newSpread);
   }
 
-  void _propagateToRight(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
+  void _propagateToRight(KeyStrokeData data, List<KeyStrokeData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetX: 1);
     _propagateToNext(
@@ -140,7 +140,7 @@ class KeyStrokeSpread {
     );
   }
 
-  void _propagateToLeft(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
+  void _propagateToLeft(KeyStrokeData data, List<KeyStrokeData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetX: -1);
     _propagateToNext(
@@ -151,7 +151,7 @@ class KeyStrokeSpread {
     );
   }
 
-  void _propagateToTop(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
+  void _propagateToTop(KeyStrokeData data, List<KeyStrokeData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetY: 1);
     _propagateToNext(
@@ -162,7 +162,7 @@ class KeyStrokeSpread {
     );
   }
 
-  void _propagateToDown(final KeyStrokeData data, final List<KeyStrokeData> newSpread) {
+  void _propagateToDown(KeyStrokeData data, List<KeyStrokeData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetY: -1);
     _propagateToNext(
@@ -174,10 +174,10 @@ class KeyStrokeSpread {
   }
 
   void _propagateToNext({
-    required final CellCoords newCoords,
-    required final CellCoords coords,
-    required final KeyStrokeData data,
-    required final List<KeyStrokeData> newSpread,
+    required CellCoords newCoords,
+    required CellCoords coords,
+    required KeyStrokeData data,
+    required List<KeyStrokeData> newSpread,
   }) {
     final bool canPropagate = _canPropagate(newCoords);
     if (canPropagate) {
@@ -191,7 +191,7 @@ class KeyStrokeSpread {
     }
   }
 
-  bool _canPropagate(final CellCoords newCoords) {
+  bool _canPropagate(CellCoords newCoords) {
     final int x = newCoords.x;
     final int y = newCoords.y;
 

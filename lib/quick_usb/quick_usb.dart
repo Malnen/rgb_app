@@ -19,10 +19,10 @@ class QuickUsb {
 
     final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr = calloc<Pointer<Pointer<libusb_device>>>();
 
-    return _processDevices(deviceListPtr).where((final DeviceData deviceData) => deviceData.isKnownDevice).toList();
+    return _processDevices(deviceListPtr).where((DeviceData deviceData) => deviceData.isKnownDevice).toList();
   }
 
-  List<DeviceData> _processDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  List<DeviceData> _processDevices(Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
       final int count = _getDeviceList(deviceListPtr);
       if (count < 0) {
@@ -36,11 +36,11 @@ class QuickUsb {
     }
   }
 
-  int _getDeviceList(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  int _getDeviceList(Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     return _libusb.libusb_get_device_list(nullptr, deviceListPtr);
   }
 
-  List<DeviceData> _tryMapDevices(final Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
+  List<DeviceData> _tryMapDevices(Pointer<Pointer<Pointer<libusb_device>>> deviceListPtr) {
     try {
       return _iterateDeviceProduct(deviceListPtr.value).toList();
     } finally {
@@ -48,7 +48,7 @@ class QuickUsb {
     }
   }
 
-  Iterable<DeviceData> _iterateDeviceProduct(final Pointer<Pointer<libusb_device>> deviceList) sync* {
+  Iterable<DeviceData> _iterateDeviceProduct(Pointer<Pointer<libusb_device>> deviceList) sync* {
     final Pointer<libusb_device_descriptor> descPtr = calloc<libusb_device_descriptor>();
     final Pointer<Pointer<libusb_device_handle>> devHandlePtr = calloc<Pointer<libusb_device_handle>>();
     const int strDescLength = 42;

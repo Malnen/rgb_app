@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class LibraryLoader{
-  static DynamicLibrary loadLibrary(final String name) {
+  static DynamicLibrary loadLibrary(String name) {
     final String assetsPath = _getAssetsPath();
     if (Platform.isWindows) {
       return DynamicLibrary.open('$assetsPath/$name.dll');

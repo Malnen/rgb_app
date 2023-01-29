@@ -11,21 +11,25 @@ class EffectState extends Equatable {
   final List<Effect> effects;
   final List<EffectData> availableEffects;
   final Effect? selectedEffect;
+  final bool sizeChanged;
 
   EffectState({
     required this.effectGridData,
     required this.availableEffects,
     required this.effects,
     this.selectedEffect,
+    this.sizeChanged = false,
   }) : key = UniqueKey();
 
   @override
-  List<Object?> get props => <Object?>[
+  List<Object?> get props =>
+      <Object?>[
         effectGridData,
         availableEffects,
         effects,
         key,
         selectedEffect,
+        sizeChanged,
       ];
 
   factory EffectState.initial() {
@@ -41,16 +45,18 @@ class EffectState extends Equatable {
     final List<Effect>? effects,
     final List<EffectData>? availableEffects,
     final Effect? selectedEffect,
+    final bool? sizeChanged,
   }) {
     return EffectState(
       effectGridData: effectGridData ?? this.effectGridData,
       effects: effects ?? this.effects,
       availableEffects: availableEffects ?? this.availableEffects,
       selectedEffect: selectedEffect ?? this.selectedEffect,
+      sizeChanged: sizeChanged ?? false,
     );
   }
 
-  bool hasEffectGridDataSizeOrMinChanged(final EffectState state) {
+  bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
     final EffectGridData effectGridData = state.effectGridData;
     final bool hasDifferentSizeX = effectGridData.sizeX != this.effectGridData.sizeX;
     final bool hasDifferentSizeY = effectGridData.sizeY != this.effectGridData.sizeY;

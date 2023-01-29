@@ -8,7 +8,7 @@ import 'package:rgb_app/widgets/left_panel/generic_list_container/effects_list_c
 
 class LeftPanel extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object>>>[
         BlocProvider<DevicesBloc>.value(

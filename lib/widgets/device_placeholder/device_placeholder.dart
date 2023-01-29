@@ -3,6 +3,8 @@ import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/models/vector.dart';
+import 'package:rgb_app/widgets/draggable_positioned/draggable_positioned.dart';
 
 class DevicePlaceholder extends StatefulWidget {
   final double fullHeight;
@@ -26,9 +28,7 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
 
   late Offset? position;
   late DevicesBloc devicesBloc;
-
-  double left = 0;
-  double top = 0;
+  late Vector initialPosition;
 
   double get fullHeight => widget.fullHeight;
 
@@ -52,77 +52,37 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
   void initState() {
     super.initState();
     devicesBloc = GetIt.instance.get();
-    left = sizeBase * offsetX;
-    top = sizeBase * offsetY;
+    initialPosition = Vector(
+      x: offsetX * sizeBase,
+      y: offsetY * sizeBase,
+    );
   }
 
   @override
-  Widget build(final BuildContext context) {
-    return Positioned(
-      left: left,
-      top: top,
-      child: GestureDetector(
-        onPanUpdate: onPanUpdate,
-        onPanEnd: onPanEnd,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-            color: Colors.black.withAlpha(200),
-          ),
+  Widget build(BuildContext context) {
+    return DraggablePositioned(
+      width: width,
+      height: height,
+      fullWidth: fullWidth,
+      fullHeight: fullHeight,
+      sizeBase: sizeBase,
+      snapOnPanEnd: true,
+      updateOffset: (int offsetX, int offsetY) => updateOffset(offsetX: offsetX, offsetY: offsetY),
+      initialPosition: initialPosition,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          color: Colors.black.withAlpha(200),
         ),
       ),
     );
   }
 
-  void onPanUpdate(final DragUpdateDetails details) {
-    left = getLeft(details);
-    top = getTop(details);
-    final int offsetX = left ~/ sizeBase;
-    final int offsetY = top ~/ sizeBase;
-    updateOffset(
-      offsetX: offsetX,
-      offsetY: offsetY,
-    );
-    setState(() {});
-  }
-
-  void onPanEnd(final DragEndDetails details) {
-    left = offsetX * sizeBase;
-    top = offsetY * sizeBase;
-    setState(() {});
-  }
-
-  double getLeft(final DragUpdateDetails details) {
-    final Offset delta = details.delta;
-    final double dx = delta.dx;
-    final double newLeft = left + dx;
-    if (newLeft < 0) {
-      return 0;
-    } else if (newLeft + width > fullWidth) {
-      return fullWidth - width;
-    }
-
-    return newLeft;
-  }
-
-  double getTop(final DragUpdateDetails details) {
-    final Offset delta = details.delta;
-    final double dy = delta.dy;
-    final double newTop = top + dy;
-    if (newTop < 0) {
-      return 0;
-    } else if (newTop + height > fullHeight) {
-      return fullHeight - height;
-    }
-
-    return newTop;
-  }
-
   void updateOffset({
-    required final int offsetX,
-    required final int offsetY,
+    required int offsetX,
+    required int offsetY,
   }) {
     final UpdateDeviceOffsetEvent event = UpdateDeviceOffsetEvent(
       offsetX: offsetX,

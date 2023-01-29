@@ -5,6 +5,7 @@ class EffectDictionary {
   static final List<EffectData> availableEffects = <EffectData>[
     rainbowWaveEffect,
     keyStrokeEffect,
+    rainbowSpiralEffect,
   ];
 
   static final EffectData rainbowWaveEffect = EffectData(
@@ -15,6 +16,11 @@ class EffectDictionary {
   static final EffectData keyStrokeEffect = EffectData(
     name: 'Key Stroke',
     className: 'KeyStrokeEffect',
+    iconData: Icons.public,
+  );
+  static final EffectData rainbowSpiralEffect = EffectData(
+    name: 'Rainbow Spiral',
+    className: 'RainbowSpiralEffect',
     iconData: Icons.public,
   );
 }

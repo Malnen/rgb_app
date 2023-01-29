@@ -735,7 +735,7 @@ class KeyDictionary {
   static void _initReverseKeyCodes() {
     _reverseKeyCodes = Map<KeyCode, CellCoords>.fromEntries(
       keys.entries.map(
-        (final MapEntry<CellCoords, KeyboardKey> entry) => MapEntry<KeyCode, CellCoords>(
+        (MapEntry<CellCoords, KeyboardKey> entry) => MapEntry<KeyCode, CellCoords>(
           entry.value.keyCode,
           entry.key,
         ),

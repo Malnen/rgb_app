@@ -12,6 +12,8 @@ abstract class Effect {
 
   Effect({required this.effectData});
 
+  void init() {}
+
   void setEffectBloc() {
     effectBloc = GetIt.instance.get();
   }

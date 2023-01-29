@@ -5,7 +5,7 @@ import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/widgets/main_frame/main_scaffold.dart';
 
 class MainFrame extends StatefulWidget {
-  const MainFrame({final Key? key}) : super(key: key);
+  const MainFrame({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MainFrameState();
@@ -28,7 +28,7 @@ class _MainFrameState extends State<MainFrame> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RGB App',
       theme: ThemeData(

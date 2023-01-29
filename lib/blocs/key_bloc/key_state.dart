@@ -15,7 +15,7 @@ class KeyState extends Equatable {
     required this.keyName,
     required this.type,
     this.keyboardInterface,
-    final UniqueKey? key,
+    UniqueKey? key,
   }) : key = key ?? UniqueKey();
 
   factory KeyState.empty() {
@@ -26,7 +26,7 @@ class KeyState extends Equatable {
     );
   }
 
-  KeyState setKeyboard({final KeyboardInterface? keyboardInterface}) {
+  KeyState setKeyboard({KeyboardInterface? keyboardInterface}) {
     return KeyState(
       keyCode: keyCode,
       keyName: keyName,
@@ -37,11 +37,11 @@ class KeyState extends Equatable {
   }
 
   KeyState copyWith({
-    final int? keyCode,
-    final String? keyName,
-    final UniqueKey? key,
-    final KeyStateType? type,
-    final KeyboardInterface? keyboardInterface,
+    int? keyCode,
+    String? keyName,
+    UniqueKey? key,
+    KeyStateType? type,
+    KeyboardInterface? keyboardInterface,
   }) {
     return KeyState(
       keyCode: keyCode ?? this.keyCode,

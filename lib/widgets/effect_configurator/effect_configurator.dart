@@ -7,9 +7,8 @@ import 'package:rgb_app/widgets/effect_property_renderer/effect_property_rendere
 
 class EffectConfigurator extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
-    final Effect? currentEffect =
-        context.select<EffectBloc, Effect?>((final EffectBloc bloc) => bloc.state.selectedEffect);
+  Widget build(BuildContext context) {
+    final Effect? currentEffect = context.select<EffectBloc, Effect?>((EffectBloc bloc) => bloc.state.selectedEffect);
     return Column(
       children: <Widget>[
         ..._getProperties(currentEffect),
@@ -17,11 +16,11 @@ class EffectConfigurator extends StatelessWidget {
     );
   }
 
-  List<Widget> _getProperties(final Effect? currentEffect) {
+  List<Widget> _getProperties(Effect? currentEffect) {
     if (currentEffect != null) {
       return currentEffect.properties
           .map(
-            (final Property<Object> property) => EffectPropertyRenderer(
+            (Property<Object> property) => EffectPropertyRenderer(
               property: property,
             ),
           )

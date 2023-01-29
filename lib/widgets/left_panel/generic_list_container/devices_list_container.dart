@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -12,15 +13,13 @@ import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
-import 'package:collection/collection.dart';
 
 class DevicesListContainer extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
-    context.select<DevicesBloc, int>((final DevicesBloc devicesBloc) => devicesBloc.state.devicesData.length);
-    context
-        .select<DevicesBloc, List<DeviceData>>((final DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices);
-    context.select<DevicesBloc, int>((final DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
+  Widget build(BuildContext context) {
+    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.devicesData.length);
+    context.select<DevicesBloc, List<DeviceData>>((DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices);
+    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
 
     final DevicesBloc devicesBloc = context.read();
     final KeyBloc keyBloc = GetIt.instance.get();
@@ -33,14 +32,14 @@ class DevicesListContainer extends StatelessWidget {
       getName: _getName,
       isDisabled: _isDisabled,
       values: state.devicesData,
-      onReorder: (final int oldIndex, final int newIndex) => _onReorder(devicesBloc, oldIndex, newIndex),
+      onReorder: (int oldIndex, int newIndex) => _onReorder(devicesBloc, oldIndex, newIndex),
       dialogLabel: 'Choose devices',
-      onAdd: (final DeviceData deviceData) => _addDevice(
+      onAdd: (DeviceData deviceData) => _addDevice(
         devicesBloc: devicesBloc,
         deviceData: deviceData,
       ),
-      onTap: (final _) {},
-      onRemove: (final DeviceData deviceData) => _removeDevice(
+      onTap: (_) {},
+      onRemove: (DeviceData deviceData) => _removeDevice(
         devicesBloc: devicesBloc,
         deviceData: deviceData,
       ),
@@ -49,8 +48,8 @@ class DevicesListContainer extends StatelessWidget {
   }
 
   void _updateKeyBloc({
-    required final KeyBloc keyBloc,
-    required final DevicesBloc devicesBloc,
+    required KeyBloc keyBloc,
+    required DevicesBloc devicesBloc,
   }) {
     final KeyState keyState = keyBloc.state;
     final KeyboardInterface? keyboardInterface = keyState.keyboardInterface;
@@ -65,44 +64,44 @@ class DevicesListContainer extends StatelessWidget {
   }
 
   void _setFirstKeyboard({
-    required final KeyBloc keyBloc,
-    required final DevicesBloc devicesBloc,
+    required KeyBloc keyBloc,
+    required DevicesBloc devicesBloc,
   }) {
     final List<DeviceInterface> deviceInstances = devicesBloc.deviceInstances;
     final KeyboardInterface? firstKeyboard = deviceInstances
-        .firstWhereOrNull((final DeviceInterface element) => element is KeyboardInterface) as KeyboardInterface?;
+        .firstWhereOrNull((DeviceInterface element) => element is KeyboardInterface) as KeyboardInterface?;
     final SetKeyboardDeviceEvent event = SetKeyboardDeviceEvent(keyboardInterface: firstKeyboard);
     keyBloc.add(event);
   }
 
-  IconData _getIcon(final DeviceData value) {
+  IconData _getIcon(DeviceData value) {
     final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
     return deviceProductVendor.icon;
   }
 
-  String _getName(final DeviceData value) {
+  String _getName(DeviceData value) {
     final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
     return deviceProductVendor.name;
   }
 
-  bool _isDisabled(final DeviceData value) => !value.connected;
+  bool _isDisabled(DeviceData value) => !value.connected;
 
-  void _onReorder(final DevicesBloc devicesBloc, final int oldIndex, final int newIndex) {
+  void _onReorder(DevicesBloc devicesBloc, int oldIndex, int newIndex) {
     final ReorderDevicesEvent reorderDevices = ReorderDevicesEvent(oldIndex: oldIndex, newIndex: newIndex);
     devicesBloc.add(reorderDevices);
   }
 
   void _addDevice({
-    required final DevicesBloc devicesBloc,
-    required final DeviceData deviceData,
+    required DevicesBloc devicesBloc,
+    required DeviceData deviceData,
   }) {
     final AddDeviceEvent addDeviceEvent = AddDeviceEvent(deviceData: deviceData);
     devicesBloc.add(addDeviceEvent);
   }
 
   void _removeDevice({
-    required final DevicesBloc devicesBloc,
-    required final DeviceData deviceData,
+    required DevicesBloc devicesBloc,
+    required DeviceData deviceData,
   }) {
     final RemoveDeviceEvent removeDeviceEvent = RemoveDeviceEvent(deviceData: deviceData);
     devicesBloc.add(removeDeviceEvent);

@@ -8,7 +8,7 @@ import 'package:rgb_app/widgets/effect_grid/effect_grid.dart';
 
 class RightPanel extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object>>>[
         BlocProvider<EffectBloc>.value(

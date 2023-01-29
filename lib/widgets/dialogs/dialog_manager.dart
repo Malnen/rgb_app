@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class DialogManager {
   static DialogRoute<void> showDialog({
-    required final BuildContext context,
-    required final Widget child,
-    required final String title,
+    required BuildContext context,
+    required Widget child,
+    required String title,
   }) {
     return DialogRoute<void>(
       context: context,
-      builder: (final BuildContext context) => Dialog(
+      builder: (BuildContext context) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

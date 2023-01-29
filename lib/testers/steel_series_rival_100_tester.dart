@@ -26,20 +26,19 @@ class SteelSeriesRival100Tester implements DeviceTester {
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-      (final Timer timer) {
-        steelSeriesRival100.color =
-            Color.fromARGB(1, value.toInt(), value.toInt(), value.toInt());
+      (Timer timer) {
+        steelSeriesRival100.color = Color.fromARGB(1, value.toInt(), value.toInt(), value.toInt());
         steelSeriesRival100.sendData();
       },
     );
     timers.add(timer);
   }
 
-  void _updateColor([final Duration? duration, final double? speed]) {
+  void _updateColor([final Duration? duration, double? speed]) {
     final double updateSpeed = speed ?? 5;
     final Timer timer = Timer.periodic(
       duration ?? Duration(microseconds: 2000),
-      (final Timer timer) {
+      (Timer timer) {
         if (inc) {
           value += updateSpeed;
         } else {
@@ -61,7 +60,7 @@ class SteelSeriesRival100Tester implements DeviceTester {
 
   @override
   void dispose() {
-    for (final Timer timer in timers) {
+    for (Timer timer in timers) {
       timer.cancel();
     }
   }

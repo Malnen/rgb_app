@@ -25,7 +25,7 @@ class RainbowWaveEffect extends Effect {
           value: 15,
           name: 'Size',
           min: 1,
-          max: 50,
+          max: 20,
         ),
         speed = NumericProperty(
           value: 2.5,
@@ -34,7 +34,7 @@ class RainbowWaveEffect extends Effect {
           max: 20,
         );
 
-  factory RainbowWaveEffect.fromJson(final Map<String, dynamic> json) {
+  factory RainbowWaveEffect.fromJson(Map<String, dynamic> json) {
     final RainbowWaveEffect effect = RainbowWaveEffect(
       effectData: EffectDictionary.rainbowWaveEffect.getWithNewKey(),
     );
@@ -67,13 +67,13 @@ class RainbowWaveEffect extends Effect {
     };
   }
 
-  void _setColors(final int sizeX, final int sizeY, final List<List<Color>> colors) {
+  void _setColors(int sizeX, int sizeY, List<List<Color>> colors) {
     for (int i = 0; i < sizeX; i++) {
       _setColor(i, sizeY, colors);
     }
   }
 
-  void _setColor(final int i, final int sizeY, final List<List<Color>> colors) {
+  void _setColor(int i, int sizeY, List<List<Color>> colors) {
     final double hue = (i * size.value + value) % 360;
     final HSVColor hsv = HSVColor.fromAHSV(1, hue, 1, 1);
     for (int j = 0; j < sizeY; j++) {

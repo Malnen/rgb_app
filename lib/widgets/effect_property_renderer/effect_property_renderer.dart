@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
+import 'package:rgb_app/models/vector_property.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/numeric_property_renderer.dart';
+import 'package:rgb_app/widgets/effect_property_renderer/vector_property_renderer.dart';
 
 class EffectPropertyRenderer extends StatefulWidget {
   final Property<Object> property;
@@ -16,7 +18,7 @@ class _EffectPropertyRendererState extends State<EffectPropertyRenderer> {
   Property<Object> get property => widget.property;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         SizedBox(
@@ -43,6 +45,8 @@ class _EffectPropertyRendererState extends State<EffectPropertyRenderer> {
     switch (runtimeType) {
       case NumericProperty:
         return NumericPropertyRenderer(property: property as NumericProperty);
+      case VectorProperty:
+        return VectorPropertyRenderer(property: property as VectorProperty);
       default:
         throw Exception('Unsupported property type: $runtimeType');
     }

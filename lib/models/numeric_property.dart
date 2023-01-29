@@ -9,6 +9,7 @@ class NumericProperty extends Property<double> {
     required super.name,
     required this.min,
     required this.max,
+    super.onChanged,
   });
 
   @override
