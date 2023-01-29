@@ -1,4 +1,6 @@
 import 'package:rgb_app/models/numeric_property.dart';
+import 'package:rgb_app/models/options.dart';
+import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector.dart';
 import 'package:rgb_app/models/vector_property.dart';
@@ -17,18 +19,17 @@ class PropertyFactory {
       case 'VectorProperty':
         final Map<String, Object> value = Map<String, Object>.from(json['value'] as Map<String, dynamic>);
         return VectorProperty(
-          value: _getVector(value),
+          value: Vector.fromJson(value),
+          name: json['name'] as String,
+        );
+      case 'OptionProperty':
+        final Map<String, Object> value = Map<String, Object>.from(json['value'] as Map<String, dynamic>);
+        return OptionProperty(
+          value: Options.fromJson(value),
           name: json['name'] as String,
         );
       default:
         throw Exception('Unsupported property type: $type');
     }
-  }
-
-  static Vector _getVector(Map<String, Object> json) {
-    final double x = json['x'] as double;
-    final double y = json['y'] as double;
-
-    return Vector(x: x, y: y);
   }
 }

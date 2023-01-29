@@ -32,46 +32,49 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size + thumbSize,
-      height: size + thumbSize,
-      child: Stack(
-        children: <Widget>[
-          Center(
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4),
-                ),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: SizedBox(
+        width: size + thumbSize,
+        height: size + thumbSize,
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: Container(
+                width: size,
+                height: size,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(4),
+                  ),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
-          ),
-          DraggablePositioned(
-            width: thumbSize,
-            height: thumbSize,
-            fullWidth: size,
-            fullHeight: size,
-            sizeBase: 1,
-            padding: 10,
-            draggableCenter: DraggableCenter.center,
-            updateOffset: updateOffset,
-            initialPosition: initialPosition,
-            child: Container(
+            DraggablePositioned(
               width: thumbSize,
               height: thumbSize,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                shape: BoxShape.circle,
+              fullWidth: size,
+              fullHeight: size,
+              sizeBase: 1,
+              padding: 10,
+              draggableCenter: DraggableCenter.center,
+              updateOffset: updateOffset,
+              initialPosition: initialPosition,
+              child: Container(
+                width: thumbSize,
+                height: thumbSize,
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

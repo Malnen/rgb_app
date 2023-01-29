@@ -7,6 +7,9 @@ import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/models/numeric_property.dart';
+import 'package:rgb_app/models/option.dart';
+import 'package:rgb_app/models/options.dart';
+import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector.dart';
 import 'package:rgb_app/models/vector_property.dart';
@@ -15,13 +18,19 @@ class RainbowSpiralEffect extends Effect {
   late Property<double> speed;
   late Property<double> twist;
   late Property<Vector> center;
+  late Property<Options> spinDirectionProperty;
+  late Property<Options> twistDirectionProperty;
   late List<List<int>> _colors;
   double value = 1;
+  double spinDirection = 1;
+  double twistDirection = 1;
 
   @override
   List<Property<Object>> get properties => <Property<Object>>[
         speed,
         twist,
+        spinDirectionProperty,
+        twistDirectionProperty,
         center,
       ];
 
@@ -44,6 +53,40 @@ class RainbowSpiralEffect extends Effect {
       name: 'Center',
       onChanged: (_) => _fillWithProperValues(),
     );
+    spinDirectionProperty = OptionProperty(
+      value: Options(
+        <Option>{
+          Option(
+            value: 0,
+            name: 'Left',
+            selected: false,
+          ),
+          Option(
+            value: 1,
+            name: 'Right',
+            selected: true,
+          ),
+        },
+      ),
+      name: 'Spin Direction',
+    );
+    twistDirectionProperty = OptionProperty(
+      value: Options(
+        <Option>{
+          Option(
+            value: 0,
+            name: 'Left',
+            selected: false,
+          ),
+          Option(
+            value: 1,
+            name: 'Right',
+            selected: true,
+          ),
+        },
+      ),
+      name: 'Twist Direction',
+    );
   }
 
   factory RainbowSpiralEffect.fromJson(Map<String, dynamic> json) {
@@ -53,6 +96,10 @@ class RainbowSpiralEffect extends Effect {
     effect.speed = PropertyFactory.getProperty(json['speed'] as Map<String, dynamic>) as NumericProperty;
     effect.twist = PropertyFactory.getProperty(json['twist'] as Map<String, dynamic>) as NumericProperty;
     effect.center = PropertyFactory.getProperty(json['center'] as Map<String, dynamic>) as VectorProperty;
+    effect.spinDirectionProperty =
+        PropertyFactory.getProperty(json['spinDirection'] as Map<String, dynamic>) as OptionProperty;
+    effect.twistDirectionProperty =
+        PropertyFactory.getProperty(json['twistDirection'] as Map<String, dynamic>) as OptionProperty;
 
     return effect;
   }
@@ -64,6 +111,10 @@ class RainbowSpiralEffect extends Effect {
     effectBloc.stream.listen(_effectGridListener);
     twist.onChanged = (_) => _fillWithProperValues();
     center.onChanged = (_) => _fillWithProperValues();
+    spinDirectionProperty.onChanged = _onSpinDirectionChange;
+    _onSpinDirectionChange(spinDirectionProperty.value);
+    twistDirectionProperty.onChanged = _onTwistDirectionChange;
+    _onTwistDirectionChange(twistDirectionProperty.value);
   }
 
   @override
@@ -72,6 +123,8 @@ class RainbowSpiralEffect extends Effect {
       'twist': twist.toJson(),
       'speed': speed.toJson(),
       'center': center.toJson(),
+      'spinDirection': spinDirectionProperty.toJson(),
+      'twistDirection': twistDirectionProperty.toJson(),
     };
   }
 
@@ -86,7 +139,7 @@ class RainbowSpiralEffect extends Effect {
       }
     }
 
-    value += speed.value;
+    value += speed.value * spinDirection;
     value = value % 360;
   }
 
@@ -123,11 +176,22 @@ class RainbowSpiralEffect extends Effect {
       for (int y = 0; y < height; y++) {
         final double distanceFromCenter = sqrt(pow(x - centerX, 2) + pow(y - centerY, 2));
         final double twistFactor = distanceFromCenter * twist.value;
-        final double angle = atan2(y - centerY, x - centerX) + twistFactor;
+        final double angle = atan2(y - centerY, x - centerX) + twistFactor * twistDirection;
         final double hue = (angle + pi) / (pi * 2) * 360;
         _colors[y][x] = hue.toInt();
       }
     }
+  }
+
+  void _onSpinDirectionChange(Options options) {
+    final Option selectedOption = options.options.firstWhere((Option option) => option.selected);
+    spinDirection = selectedOption.value == 0 ? 1 : -1;
+  }
+
+  void _onTwistDirectionChange(Options options) {
+    final Option selectedOption = options.options.firstWhere((Option option) => option.selected);
+    twistDirection = selectedOption.value == 0 ? 1 : -1;
+    _fillWithProperValues();
   }
 
   void _setColors(int i, int j, List<List<Color>> colors) {

@@ -5,18 +5,23 @@ import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/models/numeric_property.dart';
+import 'package:rgb_app/models/option.dart';
+import 'package:rgb_app/models/options.dart';
+import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 
 class RainbowWaveEffect extends Effect {
   late Property<double> size;
   late Property<double> speed;
+  late Property<Options> waveDirection;
   double value = 1;
-  int direction = -1;
+  double direction = -1;
 
   @override
   List<Property<Object>> get properties => <Property<Object>>[
         size,
         speed,
+        waveDirection,
       ];
 
   RainbowWaveEffect({
@@ -32,6 +37,23 @@ class RainbowWaveEffect extends Effect {
           name: 'Speed',
           min: 1,
           max: 20,
+        ),
+        waveDirection = OptionProperty(
+          value: Options(
+            <Option>{
+              Option(
+                value: 0,
+                name: 'Left',
+                selected: false,
+              ),
+              Option(
+                value: 1,
+                name: 'Right',
+                selected: true,
+              ),
+            },
+          ),
+          name: 'Wave Direction',
         );
 
   factory RainbowWaveEffect.fromJson(Map<String, dynamic> json) {
@@ -40,8 +62,15 @@ class RainbowWaveEffect extends Effect {
     );
     effect.size = PropertyFactory.getProperty(json['size'] as Map<String, dynamic>) as NumericProperty;
     effect.speed = PropertyFactory.getProperty(json['speed'] as Map<String, dynamic>) as NumericProperty;
+    effect.waveDirection = PropertyFactory.getProperty(json['waveDirection'] as Map<String, dynamic>) as OptionProperty;
 
     return effect;
+  }
+
+  @override
+  void init() {
+    waveDirection.onChanged = _onDirectionChange;
+    _onDirectionChange(waveDirection.value);
   }
 
   @override
@@ -64,7 +93,13 @@ class RainbowWaveEffect extends Effect {
     return <String, dynamic>{
       'size': size.toJson(),
       'speed': speed.toJson(),
+      'waveDirection': waveDirection.toJson(),
     };
+  }
+
+  void _onDirectionChange(Options options) {
+    final Option selectedOption = options.options.firstWhere((Option option) => option.selected);
+    direction = selectedOption.value == 0 ? 1 : -1;
   }
 
   void _setColors(int sizeX, int sizeY, List<List<Color>> colors) {

@@ -21,4 +21,11 @@ class Vector extends Equatable {
       'y': y,
     };
   }
+
+  factory Vector.fromJson(Map<String, Object> json) {
+    final double x = json['x'] as double;
+    final double y = json['y'] as double;
+
+    return Vector(x: x, y: y);
+  }
 }
