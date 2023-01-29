@@ -14,7 +14,7 @@ class CorsairVirtuosoTester implements DeviceTester {
   void blink() {
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-      (final Timer timer) {
+      (Timer timer) {
         corsairVirtuoso.color = Color.fromARGB(1, 255, 0, 0);
         corsairVirtuoso.sendData();
       },
@@ -24,7 +24,7 @@ class CorsairVirtuosoTester implements DeviceTester {
 
   @override
   void dispose() {
-    for (final Timer timer in timers) {
+    for (Timer timer in timers) {
       timer.cancel();
     }
   }
