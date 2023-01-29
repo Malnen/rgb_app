@@ -90,7 +90,6 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
     setState(() {
       property.value = updatedValue;
       property.onChange(updatedValue);
-      print(updatedValue);
     });
   }
 }
