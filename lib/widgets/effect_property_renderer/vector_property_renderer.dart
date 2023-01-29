@@ -25,8 +25,8 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
   void initState() {
     super.initState();
     initialPosition = Vector(
-      x: property.value.x * size,
-      y: property.value.y * size,
+      x: property.value.x * size - thumbSize / 2,
+      y: property.value.y * size - thumbSize / 2,
     );
   }
 
@@ -61,7 +61,7 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
             padding: 10,
             draggableCenter: DraggableCenter.center,
             updateOffset: updateOffset,
-            initialPosition: property.value,
+            initialPosition: initialPosition,
             child: Container(
               width: thumbSize,
               height: thumbSize,

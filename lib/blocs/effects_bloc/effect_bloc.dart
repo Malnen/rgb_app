@@ -90,7 +90,10 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       effects.remove(effect);
     }
 
-    final EffectState newState = state.copyWith(effects: effects);
+    final EffectState newState = state.copyWith(
+      effects: effects,
+      clearSelectedEffect: state.selectedEffect == effect,
+    );
     emit(newState);
   }
 

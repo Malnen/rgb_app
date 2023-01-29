@@ -46,12 +46,14 @@ class EffectState extends Equatable {
     final List<EffectData>? availableEffects,
     final Effect? selectedEffect,
     final bool? sizeChanged,
+    final bool clearSelectedEffect = false,
   }) {
+    final Effect? selectedEffectValue = clearSelectedEffect ? null : selectedEffect ?? this.selectedEffect;
     return EffectState(
       effectGridData: effectGridData ?? this.effectGridData,
       effects: effects ?? this.effects,
       availableEffects: availableEffects ?? this.availableEffects,
-      selectedEffect: selectedEffect ?? this.selectedEffect,
+      selectedEffect: selectedEffectValue,
       sizeChanged: sizeChanged ?? false,
     );
   }

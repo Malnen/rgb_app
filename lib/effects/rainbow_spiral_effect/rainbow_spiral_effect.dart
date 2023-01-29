@@ -36,11 +36,11 @@ class RainbowSpiralEffect extends Effect {
       value: 0,
       name: 'Twist',
       min: 0,
-      max: 4,
+      max: 1,
       onChanged: (_) => _fillWithProperValues(),
     );
     center = VectorProperty(
-      value: Vector(x: 3, y: 3),
+      value: Vector(x: 0.5, y: 0.5),
       name: 'Center',
       onChanged: (_) => _fillWithProperValues(),
     );
@@ -121,10 +121,10 @@ class RainbowSpiralEffect extends Effect {
     final double centerY = center.value.y * height;
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        final double angle = atan2(y - centerY, x - centerX);
-        final double distance = sqrt(pow(x - width / 2, 2) + pow(y - height / 2, 2));
-        final double distortion = sin(distance / width * pi) * twist.value;
-        final double hue = (angle + pi + distortion) / (pi * 2) * 360;
+        final double distanceFromCenter = sqrt(pow(x - centerX, 2) + pow(y - centerY, 2));
+        final double twistFactor = distanceFromCenter * twist.value;
+        final double angle = atan2(y - centerY, x - centerX) + twistFactor;
+        final double hue = (angle + pi) / (pi * 2) * 360;
         _colors[y][x] = hue.toInt();
       }
     }
