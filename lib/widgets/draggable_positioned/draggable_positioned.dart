@@ -9,7 +9,7 @@ class DraggablePositioned extends StatefulWidget {
   final double fullHeight;
   final double sizeBase;
   final Widget child;
-  final void Function(int, int) updateOffset;
+  final void Function(double, double) updateOffset;
   final bool snapOnPanEnd;
   final DraggableCenter draggableCenter;
   final Vector? initialPosition;
@@ -36,8 +36,8 @@ class DraggablePositioned extends StatefulWidget {
 class _DraggablePositionedState extends State<DraggablePositioned> {
   double left = 0;
   double top = 0;
-  int offsetX = 0;
-  int offsetY = 0;
+  double offsetX = 0;
+  double offsetY = 0;
 
   double get height => widget.height;
 
@@ -162,21 +162,21 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     return newTop;
   }
 
-  int getOffsetX() {
+  double getOffsetX() {
     switch (widget.draggableCenter) {
       case DraggableCenter.topLeft:
-        return left ~/ widget.sizeBase;
+        return left / widget.sizeBase;
       case DraggableCenter.center:
-        return left ~/ widget.sizeBase + width ~/ 2;
+        return left / widget.sizeBase + width / 2;
     }
   }
 
-  int getOffsetY() {
+  double getOffsetY() {
     switch (widget.draggableCenter) {
       case DraggableCenter.topLeft:
-        return top ~/ widget.sizeBase;
+        return top / widget.sizeBase;
       case DraggableCenter.center:
-        return top ~/ widget.sizeBase + height ~/ 2;
+        return top / widget.sizeBase + height / 2;
     }
   }
 }

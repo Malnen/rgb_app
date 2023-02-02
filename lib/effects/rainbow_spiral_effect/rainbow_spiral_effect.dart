@@ -8,7 +8,6 @@ import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
-import 'package:rgb_app/models/options.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector.dart';
@@ -18,8 +17,8 @@ class RainbowSpiralEffect extends Effect {
   late Property<double> speed;
   late Property<double> twist;
   late Property<Vector> center;
-  late Property<Options> spinDirectionProperty;
-  late Property<Options> twistDirectionProperty;
+  late Property<Set<Option>> spinDirectionProperty;
+  late Property<Set<Option>> twistDirectionProperty;
   late List<List<int>> _colors;
   double value = 1;
   double spinDirection = 1;
@@ -54,37 +53,33 @@ class RainbowSpiralEffect extends Effect {
       onChanged: (_) => _fillWithProperValues(),
     );
     spinDirectionProperty = OptionProperty(
-      value: Options(
-        <Option>{
-          Option(
-            value: 0,
-            name: 'Left',
-            selected: false,
-          ),
-          Option(
-            value: 1,
-            name: 'Right',
-            selected: true,
-          ),
+      value: <Option>{
+        Option(
+          value: 0,
+          name: 'Left',
+          selected: false,
+        ),
+        Option(
+          value: 1,
+          name: 'Right',
+          selected: true,
+        ),
         },
-      ),
       name: 'Spin Direction',
     );
     twistDirectionProperty = OptionProperty(
-      value: Options(
-        <Option>{
-          Option(
-            value: 0,
-            name: 'Left',
-            selected: false,
-          ),
-          Option(
-            value: 1,
-            name: 'Right',
-            selected: true,
-          ),
+      value: <Option>{
+        Option(
+          value: 0,
+          name: 'Left',
+          selected: false,
+        ),
+        Option(
+          value: 1,
+          name: 'Right',
+          selected: true,
+        ),
         },
-      ),
       name: 'Twist Direction',
     );
   }
@@ -183,13 +178,13 @@ class RainbowSpiralEffect extends Effect {
     }
   }
 
-  void _onSpinDirectionChange(Options options) {
-    final Option selectedOption = options.options.firstWhere((Option option) => option.selected);
+  void _onSpinDirectionChange(Set<Option> options) {
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
     spinDirection = selectedOption.value == 0 ? 1 : -1;
   }
 
-  void _onTwistDirectionChange(Options options) {
-    final Option selectedOption = options.options.firstWhere((Option option) => option.selected);
+  void _onTwistDirectionChange(Set<Option> options) {
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
     twistDirection = selectedOption.value == 0 ? 1 : -1;
     _fillWithProperValues();
   }

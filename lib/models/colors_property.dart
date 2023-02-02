@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/models/property.dart';
 
-class ColorListProperty extends Property<List<Color>> {
-  ColorListProperty({
+class ColorsProperty extends Property<List<Color>> {
+  ColorsProperty({
     required super.value,
     required super.name,
   });

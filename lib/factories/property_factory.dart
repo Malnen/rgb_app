@@ -1,5 +1,5 @@
 import 'package:rgb_app/models/numeric_property.dart';
-import 'package:rgb_app/models/options.dart';
+import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector.dart';
@@ -23,9 +23,9 @@ class PropertyFactory {
           name: json['name'] as String,
         );
       case 'OptionProperty':
-        final Map<String, Object> value = Map<String, Object>.from(json['value'] as Map<String, dynamic>);
+        final List<Map<String, Object?>> value = List<Map<String, Object?>>.from(json['value'] as List<dynamic>);
         return OptionProperty(
-          value: Options.fromJson(value),
+          value: value.map(Option.fromJson).toSet(),
           name: json['name'] as String,
         );
       default:

@@ -12,25 +12,29 @@ import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_spread.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/factories/property_factory.dart';
+import 'package:rgb_app/models/colors_property.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
 
 class KeyStrokeEffect extends Effect {
   final KeyBloc keyBloc;
-  final List<Color> colors;
 
   @override
-  List<Property<Object>> get properties => <Property<Object>>[
+  List<Property<Object>> get properties =>
+      <Property<Object>>[
         duration,
         fadeSpeed,
-      //  spreadDelay,
+        //  spreadDelay,
         opacitySpeed,
+        colorsProperty,
       ];
 
   late NumericProperty duration;
   late NumericProperty fadeSpeed;
   late NumericProperty spreadDelay;
   late NumericProperty opacitySpeed;
+  late ColorsProperty colorsProperty;
+  late List<Color> colors;
   late List<KeyStrokeSpread> _spreads;
 
   int colorIndex = 0;
@@ -61,9 +65,17 @@ class KeyStrokeEffect extends Effect {
           min: 0.001,
           max: 1,
         ),
-        colors = colors ?? <Color>[Colors.white, Colors.black] {
+        colors = colors ??
+            <Color>[
+              Colors.white,
+              Colors.black,
+            ] {
     _spreads = <KeyStrokeSpread>[];
     keyBloc.stream.listen(_onKeyEvent);
+    colorsProperty = ColorsProperty(
+      value: this.colors,
+      name: 'Colors',
+    );
   }
 
   factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {

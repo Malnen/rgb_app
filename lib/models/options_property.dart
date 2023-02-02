@@ -1,7 +1,7 @@
-import 'package:rgb_app/models/options.dart';
+import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/models/property.dart';
 
-class OptionProperty extends Property<Options> {
+class OptionProperty extends Property<Set<Option>> {
   OptionProperty({
     required super.value,
     required super.name,
@@ -11,7 +11,7 @@ class OptionProperty extends Property<Options> {
   @override
   Map<String, Object> getData() {
     return <String, Object>{
-      'value': value.toJson(),
+      'value': value.map((Option option) => option.toJson()).toList(),
     };
   }
 }

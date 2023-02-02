@@ -67,7 +67,7 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
       fullHeight: fullHeight,
       sizeBase: sizeBase,
       snapOnPanEnd: true,
-      updateOffset: (int offsetX, int offsetY) => updateOffset(offsetX: offsetX, offsetY: offsetY),
+      updateOffset: updateOffset,
       initialPosition: initialPosition,
       child: Container(
         width: width,
@@ -80,13 +80,10 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
     );
   }
 
-  void updateOffset({
-    required int offsetX,
-    required int offsetY,
-  }) {
+  void updateOffset(double offsetX, double offsetY) {
     final UpdateDeviceOffsetEvent event = UpdateDeviceOffsetEvent(
-      offsetX: offsetX,
-      offsetY: offsetY,
+      offsetX: offsetX.toInt(),
+      offsetY: offsetY.toInt(),
       deviceInterface: deviceInterface,
     );
     devicesBloc.add(event);

@@ -32,10 +32,12 @@ class _MainFrameState extends State<MainFrame> {
     return MaterialApp(
       title: 'RGB App',
       theme: ThemeData(
-        backgroundColor: Color.fromARGB(255, 30, 30, 30),
         canvasColor: Colors.transparent,
         appBarTheme: AppBarTheme(
           backgroundColor: Color.fromARGB(255, 25, 25, 25),
+        ),
+        colorScheme: ColorScheme.dark(
+          background: Color.fromARGB(255, 30, 30, 30),
         ),
       ),
       home: MainScaffold(),

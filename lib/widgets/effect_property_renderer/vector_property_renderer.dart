@@ -79,7 +79,7 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
     );
   }
 
-  void updateOffset(int offsetX, int offsetY) {
+  void updateOffset(double offsetX, double offsetY) {
     final double x = offsetX / size;
     final double y = offsetY / size;
     final Vector vector = Vector(x: x, y: y);

@@ -24,9 +24,7 @@ class LeftPanel extends StatelessWidget {
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
-            backgroundColor: Theme
-                .of(context)
-                .backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
             appBar: AppBar(
               flexibleSpace: const TabBar(
                 indicatorColor: Colors.orange,
