@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
-class LibraryLoader{
+class AssetsLoader {
   static DynamicLibrary loadLibrary(String name) {
     final String assetsPath = _getAssetsPath();
     if (Platform.isWindows) {
@@ -15,6 +15,11 @@ class LibraryLoader{
     }
 
     throw Exception('$name not found');
+  }
+
+  static String getAssetPath(String name) {
+    final String assetsPath = _getAssetsPath();
+    return '$assetsPath/$name';
   }
 
   static String _getAssetsPath() {

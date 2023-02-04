@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
-import 'package:rgb_app/utils/library_loader.dart';
+import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:win32/win32.dart';
 
@@ -46,7 +46,7 @@ class UsbHotPlugHandler {
   }
 
   static void _init() {
-    _library = LibraryLoader.loadLibrary('USBHotPlug');
+    _library = AssetsLoader.loadLibrary('USBHotPlug');
   }
 
   static void _registerUsbConnectedCallback(SendPort sendPort) {

@@ -14,6 +14,7 @@ class DraggablePositioned extends StatefulWidget {
   final DraggableCenter draggableCenter;
   final Vector? initialPosition;
   final double padding;
+  final Vector? forcePosition;
 
   const DraggablePositioned({
     required this.width,
@@ -26,6 +27,7 @@ class DraggablePositioned extends StatefulWidget {
     this.snapOnPanEnd = false,
     this.draggableCenter = DraggableCenter.topLeft,
     this.initialPosition,
+    this.forcePosition,
     this.padding = 0,
   });
 
@@ -67,14 +69,30 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
 
   @override
   Widget build(BuildContext context) {
+    final Vector position = getCorrectPosition();
+    left = position.x;
+    top = position.y;
+
     return Positioned(
-      left: left + padding,
-      top: top + padding,
+      left: position.x + padding,
+      top: position.y + padding,
       child: GestureDetector(
         onPanUpdate: onPanUpdate,
         onPanEnd: widget.snapOnPanEnd ? onPanEnd : null,
         child: widget.child,
       ),
+    );
+  }
+
+  Vector getCorrectPosition() {
+    final Vector? forcePosition = widget.forcePosition;
+    if (forcePosition != null) {
+      return forcePosition.withPadding(-padding);
+    }
+
+    return Vector(
+      x: left,
+      y: top,
     );
   }
 

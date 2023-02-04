@@ -22,6 +22,13 @@ class Vector extends Equatable {
     };
   }
 
+  Vector withPadding(double padding) {
+    return Vector(
+      x: x + padding,
+      y: y + padding,
+    );
+  }
+
   factory Vector.fromJson(Map<String, Object> json) {
     final double x = json['x'] as double;
     final double y = json['y'] as double;

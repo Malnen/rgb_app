@@ -8,6 +8,8 @@ import 'package:rgb_app/cubits/color_picker_cubit/color_picker_cubit.dart';
 import 'package:rgb_app/cubits/color_picker_cubit/color_picker_state.dart';
 import 'package:rgb_app/enums/color_picker_update_source.dart';
 import 'package:rgb_app/enums/draggable_center.dart';
+import 'package:rgb_app/models/vector.dart';
+import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rgb_app/widgets/draggable_positioned/draggable_positioned.dart';
 
 class ColorPicker extends StatefulWidget {
@@ -29,7 +31,7 @@ class _ColorPickerState extends State<ColorPicker> {
   void initState() {
     super.initState();
     colorPickerCubit = context.read();
-    imageFile = File('assets/colorPicker.png');
+    imageFile = File(AssetsLoader.getAssetPath('colorPicker.png'));
     setBytes();
   }
 
@@ -40,9 +42,10 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = context.select<ColorPickerCubit, Color>(
-      (ColorPickerCubit cubit) => cubit.state.color,
+    final ColorPickerState state = context.select<ColorPickerCubit, ColorPickerState>(
+      (ColorPickerCubit cubit) => cubit.state,
     );
+
     return SizedBox(
       width: size + thumbSize,
       height: size + thumbSize,
@@ -77,11 +80,12 @@ class _ColorPickerState extends State<ColorPicker> {
             sizeBase: 1,
             snapOnPanEnd: false,
             draggableCenter: DraggableCenter.center,
+            forcePosition: state.source == ColorPickerUpdateSource.textField ? getUpdatedPosition(state) : null,
             child: Container(
               width: thumbSize,
               height: thumbSize,
               decoration: BoxDecoration(
-                color: color,
+                color: state.color,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.white,
@@ -94,6 +98,38 @@ class _ColorPickerState extends State<ColorPicker> {
         ],
       ),
     );
+  }
+
+  Vector getUpdatedPosition(ColorPickerState state) {
+    final int height = decodedImage!.height;
+    final int width = decodedImage!.width;
+    final HSVColor hsvColor = HSVColor.fromColor(state.color);
+    final double saturation = hsvColor.saturation;
+    final double halfOfHeight = height / 2;
+    final double x = hsvColor.hue * width / 360;
+    final double value = hsvColor.value;
+    final double y =
+        saturation < value || saturation == 0 && value != 0 ? saturation * halfOfHeight : height - value * halfOfHeight;
+    print(
+      Vector(
+            x: mapValue(value: x, oldMax: width, newMax: 100),
+            y: mapValue(value: y, oldMax: height, newMax: 100),
+          ).toString() +
+          ' ' +
+          hsvColor.toString(),
+    );
+    return Vector(
+      x: mapValue(value: x, oldMax: width, newMax: 100),
+      y: mapValue(value: y, oldMax: height, newMax: 100),
+    );
+  }
+
+  double mapValue({
+    required double value,
+    required int oldMax,
+    required int newMax,
+  }) {
+    return value * newMax / oldMax;
   }
 
   void updateOffset(double x, double y) {
@@ -117,7 +153,7 @@ class _ColorPickerState extends State<ColorPicker> {
         color: color,
         source: ColorPickerUpdateSource.colorPicker,
       );
-      colorPickerCubit.setColor(state);
+      colorPickerCubit.update(state);
     }
   }
 

@@ -14,6 +14,9 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
   late TextEditingController rController;
   late TextEditingController gController;
   late TextEditingController bController;
+  late FocusNode rFocusNode;
+  late FocusNode gFocusNode;
+  late FocusNode bFocusNode;
   late ColorPickerCubit colorPickerCubit;
 
   @override
@@ -23,6 +26,9 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     rController = TextEditingController();
     gController = TextEditingController();
     bController = TextEditingController();
+    rFocusNode = FocusNode();
+    gFocusNode = FocusNode();
+    bFocusNode = FocusNode();
     colorPickerCubit.stream.listen(setValues);
     rController.addListener(emitNewColor);
     gController.addListener(emitNewColor);
@@ -44,11 +50,17 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     final int g = getCorrectValue(gController);
     final int b = getCorrectValue(bController);
     final Color color = Color.fromARGB(255, r, g, b);
-    final ColorPickerState newState = ColorPickerState(
-      source: ColorPickerUpdateSource.textField,
-      color: color,
-    );
-    colorPickerCubit.setColor(newState);
+    final ColorPickerState currentState = colorPickerCubit.state;
+    final Color currentColor = currentState.color;
+    final bool hasDifferentColor = currentColor.red != r || currentColor.green != g || currentColor.blue != b;
+    final bool hasFocus = rFocusNode.hasFocus || gFocusNode.hasFocus || bFocusNode.hasFocus;
+    if (hasDifferentColor && hasFocus) {
+      final ColorPickerState newState = ColorPickerState(
+        source: ColorPickerUpdateSource.textField,
+        color: color,
+      );
+      colorPickerCubit.update(newState);
+    }
   }
 
   int getCorrectValue(TextEditingController controller) {
@@ -64,16 +76,33 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        getNumericField('R', rController),
-        getNumericField('G', gController),
-        getNumericField('B', bController),
+        getNumericField(
+          label: 'R',
+          textEditingController: rController,
+          focusNode: rFocusNode,
+        ),
+        getNumericField(
+          label: 'G',
+          textEditingController: gController,
+          focusNode: gFocusNode,
+        ),
+        getNumericField(
+          label: 'B',
+          textEditingController: bController,
+          focusNode: bFocusNode,
+        ),
       ],
     );
   }
 
-  Widget getNumericField(String label, TextEditingController textEditingController) {
+  Widget getNumericField({
+    required String label,
+    required TextEditingController textEditingController,
+    required FocusNode focusNode,
+  }) {
     return NumericField(
       label: label,
+      focusNode: focusNode,
       controller: textEditingController,
       maxValue: 255,
       minValue: 0,

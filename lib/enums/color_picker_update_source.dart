@@ -1,1 +1,5 @@
-enum ColorPickerUpdateSource { colorPicker, textField, initial }
+enum ColorPickerUpdateSource {
+  colorPicker,
+  textField,
+  initial,
+}

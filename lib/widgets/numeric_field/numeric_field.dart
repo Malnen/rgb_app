@@ -11,6 +11,7 @@ class NumericField extends StatelessWidget {
   final double? fontSize;
   final int? minValue;
   final int? maxValue;
+  final FocusNode? focusNode;
 
   const NumericField({
     required this.label,
@@ -21,6 +22,7 @@ class NumericField extends StatelessWidget {
     this.fontSize,
     this.minValue,
     this.maxValue,
+    this.focusNode,
   });
 
   @override
@@ -31,6 +33,7 @@ class NumericField extends StatelessWidget {
       margin: EdgeInsets.all(margin),
       child: TextField(
         controller: controller,
+        focusNode: focusNode,
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.digitsOnly,
