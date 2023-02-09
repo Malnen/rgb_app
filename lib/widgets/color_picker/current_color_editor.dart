@@ -37,7 +37,7 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
 
   void setValues(ColorPickerState state) {
     final ColorPickerUpdateSource source = state.source;
-    if (source == ColorPickerUpdateSource.colorPicker) {
+    if (source != ColorPickerUpdateSource.textField) {
       final Color color = state.color;
       rController.text = color.red.toString();
       gController.text = color.green.toString();
@@ -55,7 +55,7 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     final bool hasDifferentColor = currentColor.red != r || currentColor.green != g || currentColor.blue != b;
     final bool hasFocus = rFocusNode.hasFocus || gFocusNode.hasFocus || bFocusNode.hasFocus;
     if (hasDifferentColor && hasFocus) {
-      final ColorPickerState newState = ColorPickerState(
+      final ColorPickerState newState = ColorPickerState.fromColor(
         source: ColorPickerUpdateSource.textField,
         color: color,
       );
@@ -74,7 +74,7 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: <Widget>[
         getNumericField(
           label: 'R',

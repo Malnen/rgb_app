@@ -82,7 +82,7 @@ class CorsairK70 extends KeyboardInterface {
   void update() {
     try {
       _updateKeys();
-    } catch (e) {
+    } catch (_) {
       print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
     }
 
@@ -91,7 +91,7 @@ class CorsairK70 extends KeyboardInterface {
 
   @override
   Size getSize() {
-    return Size(22, 7);
+    return Size(23, 7);
   }
 
   @override

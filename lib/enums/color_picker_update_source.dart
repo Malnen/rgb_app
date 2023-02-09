@@ -1,5 +1,6 @@
 enum ColorPickerUpdateSource {
-  colorPicker,
+  huePicker,
+  brightnessPicker,
   textField,
   initial,
 }

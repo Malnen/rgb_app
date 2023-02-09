@@ -29,6 +29,16 @@ class Vector extends Equatable {
     );
   }
 
+  Vector copyWith({
+    double? x,
+    double? y,
+  }) {
+    return Vector(
+      x: x ?? this.x,
+      y: y ?? this.y,
+    );
+  }
+
   factory Vector.fromJson(Map<String, Object> json) {
     final double x = json['x'] as double;
     final double y = json['y'] as double;

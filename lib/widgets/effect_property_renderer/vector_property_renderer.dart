@@ -3,6 +3,8 @@ import 'package:rgb_app/enums/draggable_center.dart';
 import 'package:rgb_app/models/vector.dart';
 import 'package:rgb_app/models/vector_property.dart';
 import 'package:rgb_app/widgets/draggable_positioned/draggable_positioned.dart';
+import 'package:rgb_app/widgets/draggable_positioned/draggable_positioned_border.dart';
+import 'package:rgb_app/widgets/draggable_positioned/draggable_thumb.dart';
 
 class VectorPropertyRenderer extends StatefulWidget {
   final VectorProperty property;
@@ -39,20 +41,9 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
         height: size + thumbSize,
         child: Stack(
           children: <Widget>[
-            Center(
-              child: Container(
-                width: size,
-                height: size,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(4),
-                  ),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  ),
-                ),
-              ),
+            DraggablePositionedBorder(
+              width: size,
+              height: size,
             ),
             DraggablePositioned(
               width: thumbSize,
@@ -64,13 +55,9 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
               draggableCenter: DraggableCenter.center,
               updateOffset: updateOffset,
               initialPosition: initialPosition,
-              child: Container(
-                width: thumbSize,
-                height: thumbSize,
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  shape: BoxShape.circle,
-                ),
+              child: DraggableThumb(
+                color: Colors.orange,
+                size: thumbSize,
               ),
             ),
           ],
