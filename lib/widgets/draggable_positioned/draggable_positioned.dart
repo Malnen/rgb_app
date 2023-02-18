@@ -11,11 +11,13 @@ class DraggablePositioned extends StatefulWidget {
   final Widget child;
   final void Function(double, double) updateOffset;
   final bool snapOnPanEnd;
+  final bool moveOnTap;
   final DraggableCenter draggableCenter;
   final Vector? initialPosition;
   final double padding;
   final Vector? forcePosition;
   final bool lockY;
+  final bool lockX;
 
   const DraggablePositioned({
     required this.width,
@@ -26,11 +28,13 @@ class DraggablePositioned extends StatefulWidget {
     required this.child,
     required this.updateOffset,
     this.snapOnPanEnd = false,
+    this.moveOnTap = false,
     this.draggableCenter = DraggableCenter.topLeft,
     this.initialPosition,
     this.forcePosition,
     this.padding = 0,
     this.lockY = false,
+    this.lockX = false,
   });
 
   @override
@@ -57,6 +61,8 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
 
   bool get lockY => widget.lockY;
 
+  bool get lockX => widget.lockX;
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +85,10 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     left = position.x;
     top = position.y;
 
+    return widget.moveOnTap ? buildWithMoveOnStart(position) : buildNormal(position);
+  }
+
+  Widget buildNormal(Vector position) {
     return Positioned(
       left: position.x + padding,
       top: position.y + padding,
@@ -90,16 +100,27 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     );
   }
 
+  Widget buildWithMoveOnStart(Vector position) {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          left: position.x + padding,
+          top: position.y + padding,
+          child: widget.child,
+        ),
+        GestureDetector(
+          onPanStart: onPanStart,
+          onPanUpdate: onPanUpdate,
+          onPanEnd: snapOnPanEnd ? onPanEnd : null,
+        ),
+      ],
+    );
+  }
+
   Vector getCorrectPosition() {
     final Vector? forcePosition = widget.forcePosition;
     if (forcePosition != null) {
-      if (lockY) {
-        return forcePosition.copyWith(
-          y: getLockedY(),
-        );
-      }
-
-      return forcePosition.withPadding(-padding);
+      return getForcedPosition(forcePosition);
     }
 
     return Vector(
@@ -108,16 +129,49 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     );
   }
 
+  Vector getForcedPosition(Vector forcePosition) {
+    if (lockY) {
+      return forcePosition.copyWith(
+        y: getLockedY(),
+      );
+    }
+
+    if (lockX) {
+      return forcePosition.copyWith(
+        x: getLockedX(),
+      );
+    }
+
+    return forcePosition.withPadding(-padding);
+  }
+
+  void onPanStart(DragStartDetails details) {
+    final Offset localPosition = details.localPosition;
+    final double x = localPosition.dx - padding - width / 2;
+    final double y = localPosition.dy - padding - height / 2;
+    left = getLeft(x);
+    top = getTop(y);
+    setOffset();
+    setState(() {});
+  }
+
   void onPanUpdate(DragUpdateDetails details) {
-    left = getLeft(details);
-    top = getTop(details);
+    final Offset delta = details.delta;
+    final double x = delta.dx + left;
+    final double y = delta.dy + top;
+    left = getLeft(x);
+    top = getTop(y);
+    setOffset();
+    setState(() {});
+  }
+
+  void setOffset() {
     offsetX = getOffset(left, width);
     offsetY = getOffset(top, height);
     widget.updateOffset(
       offsetX,
       offsetY,
     );
-    setState(() {});
   }
 
   void onPanEnd(DragEndDetails details) {
@@ -126,10 +180,11 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     setState(() {});
   }
 
-  double getLeft(DragUpdateDetails details) {
-    final Offset delta = details.delta;
-    final double dx = delta.dx;
-    final double newLeft = left + dx;
+  double getLeft(double newLeft) {
+    if (lockX) {
+      return getLockedX();
+    }
+
     switch (widget.draggableCenter) {
       case DraggableCenter.topLeft:
         return getTopLeftLeft(newLeft);
@@ -159,14 +214,11 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     return newLeft;
   }
 
-  double getTop(DragUpdateDetails details) {
+  double getTop(double newTop) {
     if (lockY) {
       return getLockedY();
     }
 
-    final Offset delta = details.delta;
-    final double dy = delta.dy;
-    final double newTop = top + dy;
     switch (widget.draggableCenter) {
       case DraggableCenter.topLeft:
         return getTopLeftTop(newTop);
@@ -177,6 +229,10 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
 
   double getLockedY() {
     return fullHeight / 2 - height / 2;
+  }
+
+  double getLockedX() {
+    return fullWidth / 2 - width / 2;
   }
 
   double getTopLeftTop(double newTop) {

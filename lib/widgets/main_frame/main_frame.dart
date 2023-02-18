@@ -18,13 +18,8 @@ class _MainFrameState extends State<MainFrame> {
 
   @override
   void initState() {
-    super.initState();
     devicesBloc = GetIt.instance.get();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    super.initState();
   }
 
   @override

@@ -46,6 +46,7 @@ class BrightnessPicker extends StatelessWidget {
             fullHeight: size,
             sizeBase: 1,
             snapOnPanEnd: false,
+            moveOnTap: true,
             forcePosition: getForcePosition(state),
             draggableCenter: DraggableCenter.center,
             child: DraggableThumb(
@@ -62,6 +63,7 @@ class BrightnessPicker extends StatelessWidget {
   Vector? getForcePosition(ColorPickerState state) {
     switch (state.source) {
       case ColorPickerUpdateSource.textField:
+      case ColorPickerUpdateSource.initial:
         return getUpdatedPosition(state);
       default:
         return null;

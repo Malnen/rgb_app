@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:isolate';
 
@@ -30,31 +31,40 @@ class UsbHotPlugHandler {
 
   static void _createIsolate() async {
     final ReceivePort receivePort = ReceivePort();
+    final Stream<Object?> broadcastReceivePort = receivePort.asBroadcastStream();
     await Isolate.spawn(_sendIsolate, receivePort.sendPort);
-    receivePort
-        .asBroadcastStream()
-        .debounce((_) => TimerStream<bool>(true, Duration(microseconds: 250)))
-        .listen((_) => _onMessage());
+    broadcastReceivePort.debounceTime(Duration(seconds: 1)).listen(_onMessage);
   }
 
   static void _sendIsolate(SendPort sendPort) {
     _sendPort = sendPort;
     _init();
-    _registerUsbConnectedCallback(sendPort);
+    _registerUsbConnectedCallback();
     _registerTestMessageCallback();
+    _registerShouldKillCallback();
     _startListening();
   }
 
   static void _init() {
     _library = AssetsLoader.loadLibrary('USBHotPlug');
+    final ReceivePort receivePort = ReceivePort();
+    _sendPort.send(receivePort.sendPort);
   }
 
-  static void _registerUsbConnectedCallback(SendPort sendPort) {
+  static void _registerUsbConnectedCallback() {
     final String functionName = 'registerUsbConnectionCallback';
     final Pointer<NativeVoidFunction> pointer =
         _library.lookup<NativeFunction<Void Function(VoidFunctionPointer)>>(functionName);
     final void Function(VoidFunctionPointer) register = pointer.asFunction<void Function(VoidFunctionPointer)>();
     register(Pointer.fromFunction(_notify));
+  }
+
+  static void _registerShouldKillCallback() {
+    final String functionName = 'registerShouldKill';
+    final Pointer<NativeVoidFunction> pointer =
+        _library.lookup<NativeFunction<Void Function(VoidFunctionPointer)>>(functionName);
+    final void Function(VoidFunctionPointer) register = pointer.asFunction<void Function(VoidFunctionPointer)>();
+    register(Pointer.fromFunction(_shouldKill));
   }
 
   static void _registerTestMessageCallback() {
@@ -73,6 +83,8 @@ class UsbHotPlugHandler {
     _sendPort.send(null);
   }
 
+  static void _shouldKill() {}
+
   static void _startListening() {
     final String functionName = 'startListening';
     final Pointer<NativeFunction<Void Function(Int32)>> pointer =
@@ -82,7 +94,7 @@ class UsbHotPlugHandler {
     startListening(windowHandle);
   }
 
-  static void _onMessage() {
+  static void _onMessage(Object? value) {
     final DevicesBloc devicesBloc = GetIt.instance.get();
     final CheckDevicesConnectionStateEvent event = CheckDevicesConnectionStateEvent();
     devicesBloc.add(event);

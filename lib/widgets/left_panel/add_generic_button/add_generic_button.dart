@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/widgets/dialogs/dialog_manager.dart';
+import 'package:rgb_app/widgets/left_panel/add_generic_button/add_button.dart';
 import 'package:rgb_app/widgets/left_panel/generic_tile/generic_tile.dart';
 
 class AddGenericButton<T> extends StatefulWidget {
@@ -29,23 +30,7 @@ class _AddGenericButtonState<T> extends State<AddGenericButton<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        height: 36,
-        width: 36,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 16, 16, 16),
-          borderRadius: BorderRadius.all(
-            Radius.circular(4),
-          ),
-        ),
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
-      onTap: _onTap,
-    );
+    return AddButton(onTap: _onTap);
   }
 
   void _onTap() {

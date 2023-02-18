@@ -55,6 +55,7 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
               draggableCenter: DraggableCenter.center,
               updateOffset: updateOffset,
               initialPosition: initialPosition,
+              moveOnTap: true,
               child: DraggableThumb(
                 color: Colors.orange,
                 size: thumbSize,

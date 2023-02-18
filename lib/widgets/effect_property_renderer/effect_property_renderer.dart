@@ -4,7 +4,7 @@ import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector_property.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/color_property_renderer.dart';
+import 'package:rgb_app/widgets/effect_property_renderer/color_property/color_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/numeric_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/option_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/vector_property_renderer.dart';

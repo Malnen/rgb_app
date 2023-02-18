@@ -33,6 +33,8 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     rController.addListener(emitNewColor);
     gController.addListener(emitNewColor);
     bController.addListener(emitNewColor);
+
+    setValues(colorPickerCubit.state);
   }
 
   void setValues(ColorPickerState state) {

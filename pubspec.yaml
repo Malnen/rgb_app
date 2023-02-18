@@ -28,7 +28,6 @@ flutter:
   assets:
     - assets/libusb-1.0.dll
     - assets/USBHotPlug.dll
-    - assets/colorPicker.png
 ffigen:
   output: 'generated_bindings.dart'
   headers:
