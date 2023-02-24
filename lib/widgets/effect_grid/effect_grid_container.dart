@@ -66,7 +66,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
         children: <Widget>[
           grid,
           ...devicesBloc.deviceInstances.map(
-                (DeviceInterface deviceInterface) => DevicePlaceholder(
+            (DeviceInterface deviceInterface) => DevicePlaceholder(
               fullHeight: fullHeight,
               sizeBase: cellSize + margin,
               fullWidth: fullWidth,

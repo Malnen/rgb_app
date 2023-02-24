@@ -4,6 +4,10 @@ class NumericProperty extends Property<double> {
   final double min;
   final double max;
 
+  double get invertedValue {
+    return (max + 1) - value;
+  }
+
   NumericProperty({
     required super.value,
     required super.name,

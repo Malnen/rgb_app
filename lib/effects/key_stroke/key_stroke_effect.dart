@@ -20,8 +20,7 @@ class KeyStrokeEffect extends Effect {
   final KeyBloc keyBloc;
 
   @override
-  List<Property<Object>> get properties =>
-      <Property<Object>>[
+  List<Property<Object>> get properties => <Property<Object>>[
         duration,
         fadeSpeed,
         //  spreadDelay,
@@ -34,12 +33,11 @@ class KeyStrokeEffect extends Effect {
   late NumericProperty spreadDelay;
   late NumericProperty opacitySpeed;
   late ColorsProperty colorsProperty;
-  late List<Color> colors;
   late List<KeyStrokeSpread> _spreads;
 
   int colorIndex = 0;
 
-  KeyStrokeEffect({required super.effectData, List<Color>? colors})
+  KeyStrokeEffect({required super.effectData})
       : keyBloc = GetIt.instance.get(),
         duration = NumericProperty(
           min: 1,
@@ -64,27 +62,24 @@ class KeyStrokeEffect extends Effect {
           name: 'Opacity Speed',
           min: 0.001,
           max: 1,
-        ),
-        colors = colors ??
-            <Color>[
-              Colors.white,
-              Colors.black,
-            ] {
+        ) {
     _spreads = <KeyStrokeSpread>[];
     keyBloc.stream.listen(_onKeyEvent);
     colorsProperty = ColorsProperty(
-      value: this.colors,
+      value: <Color>[
+        Colors.white,
+        Colors.black,
+      ],
       name: 'Colors',
     );
   }
 
   factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {
-    final List<int> colors = json['colors'] as List<int>;
     final KeyStrokeEffect effect = KeyStrokeEffect(
       effectData: EffectDictionary.keyStrokeEffect.getWithNewKey(),
-      colors: colors.map(Color.new).toList(),
     );
     effect.duration = PropertyFactory.getProperty(json['duration'] as Map<String, dynamic>) as NumericProperty;
+    effect.colorsProperty = PropertyFactory.getProperty(json['colors'] as Map<String, dynamic>) as ColorsProperty;
 
     return effect;
   }
@@ -100,7 +95,7 @@ class KeyStrokeEffect extends Effect {
   Map<String, dynamic> getData() {
     return <String, dynamic>{
       'duration': duration.toJson(),
-      'colors': colors.map((Color color) => color.value).toList(),
+      'colors': colorsProperty.toJson(),
     };
   }
 
@@ -144,6 +139,7 @@ class KeyStrokeEffect extends Effect {
   }
 
   Color _getColor() {
+    final List<Color> colors = colorsProperty.value;
     final int index = colorIndex;
     colorIndex++;
     if (colorIndex >= colors.length) {

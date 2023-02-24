@@ -9,17 +9,14 @@ import 'package:rgb_app/widgets/effect_property_renderer/numeric_property_render
 import 'package:rgb_app/widgets/effect_property_renderer/option_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/vector_property_renderer.dart';
 
-class EffectPropertyRenderer extends StatefulWidget {
+class EffectPropertyRenderer extends StatelessWidget {
   final Property<Object> property;
+  final VoidCallback updateRenderer;
 
-  const EffectPropertyRenderer({required this.property});
-
-  @override
-  State<EffectPropertyRenderer> createState() => _EffectPropertyRendererState();
-}
-
-class _EffectPropertyRendererState extends State<EffectPropertyRenderer> {
-  Property<Object> get property => widget.property;
+  const EffectPropertyRenderer({
+    required this.property,
+    required this.updateRenderer,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +55,10 @@ class _EffectPropertyRendererState extends State<EffectPropertyRenderer> {
       case VectorProperty:
         return VectorPropertyRenderer(property: property as VectorProperty);
       case OptionProperty:
-        return OptionPropertyRenderer(property: property as OptionProperty);
+        return OptionPropertyRenderer(
+          property: property as OptionProperty,
+          updateRenderer: updateRenderer,
+        );
       case ColorsProperty:
         return ColorPropertyRenderer(property: property as ColorsProperty);
       default:

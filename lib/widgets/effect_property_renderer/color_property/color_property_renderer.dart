@@ -22,7 +22,9 @@ class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
 
   late PopupCubit cubit;
 
-  List<Color> get value => widget.property.value;
+  ColorsProperty get property => widget.property;
+
+  List<Color> get value => property.value;
 
   @override
   void initState() {
@@ -35,7 +37,7 @@ class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
     final Iterable<Widget> colors = getColors();
     final List<Widget> colorPositions = colors.toList();
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
+      padding: const EdgeInsets.only(left: 23.0),
       child: SizedBox(
         width: 200,
         child: Wrap(
@@ -82,6 +84,7 @@ class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
         setState(
           () {
             value[index] = newColor;
+            property.onChanged?.call(value);
           },
         );
       },
@@ -91,12 +94,14 @@ class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
   void addColor() {
     setState(() {
       value.add(Colors.white);
+      property.onChanged?.call(value);
     });
   }
 
   void deleteColor(int index) {
     setState(() {
       value.removeAt(index);
+      property.onChanged?.call(value);
     });
   }
 }

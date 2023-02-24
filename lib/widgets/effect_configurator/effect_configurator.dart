@@ -5,7 +5,12 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/effect_property_renderer.dart';
 
-class EffectConfigurator extends StatelessWidget {
+class EffectConfigurator extends StatefulWidget {
+  @override
+  State<EffectConfigurator> createState() => _EffectConfiguratorState();
+}
+
+class _EffectConfiguratorState extends State<EffectConfigurator> {
   @override
   Widget build(BuildContext context) {
     final Effect? currentEffect = context.select<EffectBloc, Effect?>((EffectBloc bloc) => bloc.state.selectedEffect);
@@ -21,7 +26,8 @@ class EffectConfigurator extends StatelessWidget {
       return currentEffect.properties
           .map(
             (Property<Object> property) => EffectPropertyRenderer(
-              property: property,
+          property: property,
+              updateRenderer: () => setState(() {}),
             ),
           )
           .toList();

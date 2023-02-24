@@ -3,14 +3,14 @@ import 'package:rgb_app/effects/effect_data.dart';
 
 class EffectDictionary {
   static final List<EffectData> availableEffects = <EffectData>[
-    rainbowWaveEffect,
+    waveEffect,
     keyStrokeEffect,
-    rainbowSpiralEffect,
+    spiralEffect,
   ];
 
-  static final EffectData rainbowWaveEffect = EffectData(
-    name: 'Rainbow Waves',
-    className: 'RainbowWaveEffect',
+  static final EffectData waveEffect = EffectData(
+    name: 'Wave',
+    className: 'WaveEffect',
     iconData: Icons.waves,
   );
   static final EffectData keyStrokeEffect = EffectData(
@@ -18,9 +18,9 @@ class EffectDictionary {
     className: 'KeyStrokeEffect',
     iconData: Icons.public,
   );
-  static final EffectData rainbowSpiralEffect = EffectData(
-    name: 'Rainbow Spiral',
-    className: 'RainbowSpiralEffect',
+  static final EffectData spiralEffect = EffectData(
+    name: 'Spiral',
+    className: 'SpiralEffect',
     iconData: Icons.public,
   );
 }

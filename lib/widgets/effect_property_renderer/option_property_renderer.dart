@@ -5,8 +5,12 @@ import 'package:rgb_app/widgets/effect_property_renderer/option_tile.dart';
 
 class OptionPropertyRenderer extends StatefulWidget {
   final OptionProperty property;
+  final VoidCallback? updateRenderer;
 
-  const OptionPropertyRenderer({required this.property});
+  const OptionPropertyRenderer({
+    required this.property,
+    this.updateRenderer,
+  });
 
   @override
   State<OptionPropertyRenderer> createState() => _OptionPropertyRendererState();
@@ -52,6 +56,7 @@ class _OptionPropertyRendererState extends State<OptionPropertyRenderer> {
 
       widget.property.value = newOptions;
       widget.property.onChange(newOptions);
+      widget.updateRenderer?.call();
       setState(() {});
     }
   }
