@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart' show calloc;
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/extensions/pointer_extension.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 import 'package:rgb_app/testers/corsair_virtuoso_tester.dart';
 
@@ -96,14 +97,18 @@ class CorsairVirtuoso extends DeviceInterface {
       0x00,
       0x00,
     ]);
+    final ffi.Pointer<ffi.Uint8> pointer = data.allocatePointer();
+    final ffi.Pointer<ffi.Int32> actualLength = calloc<ffi.Int32>();
     libusb.libusb_bulk_transfer(
       devHandle,
       0x02,
-      data.allocatePointer(),
+      pointer,
       64,
-      calloc<ffi.Int32>(),
+      actualLength,
       1000,
     );
+    pointer.free();
+    actualLength.free();
   }
 
   @override

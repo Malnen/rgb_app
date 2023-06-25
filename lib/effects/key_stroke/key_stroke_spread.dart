@@ -47,6 +47,10 @@ class KeyStrokeSpread {
     _spread = newSpread;
   }
 
+  bool canBeDeleted() {
+    return _spread.isEmpty;
+  }
+
   void _spreadData(
     final KeyStrokeData data,
     final List<KeyStrokeData> newSpread,

@@ -3,10 +3,11 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' show calloc;
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
+import 'package:rgb_app/extensions/pointer_extension.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 import 'package:rgb_app/packet_managers/packet_manager.dart';
 
-class CorsairK70PacketManager extends PacketManager {
+class CorsairK70PacketManager implements PacketManager {
   final CorsairK70 corsairK70;
 
   CorsairK70PacketManager(this.corsairK70);
@@ -820,104 +821,21 @@ class CorsairK70PacketManager extends PacketManager {
 
   @override
   void sendData() {
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.rPkt1.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.rPkt2.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.rPkt3.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.dataPkt1.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
+    corsairK70.packets.forEach(_bulkTransfer);
+  }
 
+  void _bulkTransfer(Uint8List data) {
+    final Pointer<Uint8> pointer = data.allocatePointer();
+    final Pointer<Int32> actualLength = calloc<Int32>();
     corsairK70.libusb.libusb_bulk_transfer(
       corsairK70.devHandle,
       0x02,
-      corsairK70.gPkt1.allocatePointer(),
+      pointer,
       64,
-      calloc<Int32>(),
+      actualLength,
       1000,
     );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.gPkt2.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.gPkt3.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.dataPkt2.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.bPkt1.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.bPkt2.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.bPkt3.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
-
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      corsairK70.dataPkt3.allocatePointer(),
-      64,
-      calloc<Int32>(),
-      1000,
-    );
+    pointer.free();
+    actualLength.free();
   }
 }

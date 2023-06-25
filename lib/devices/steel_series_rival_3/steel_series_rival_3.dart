@@ -1,8 +1,10 @@
+import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/mouse_interface.dart';
+import 'package:rgb_app/extensions/pointer_extension.dart';
 import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
 import 'package:rgb_app/testers/steel_series_rival_3_tester.dart';
 
@@ -68,16 +70,18 @@ class SteelSeriesRival3 extends MouseInterface {
       0x00,
       0x00
     ]);
+    final ffi.Pointer<ffi.Uint8> pointer = data.allocatePointer();
     libusb.libusb_control_transfer(
       devHandle,
       0x21,
       0x09,
       0x200,
       0x03,
-      data.allocatePointer(),
+      pointer,
       32,
       10,
     );
+    pointer.free();
   }
 
   @override

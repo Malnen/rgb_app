@@ -89,6 +89,8 @@ class KeyStrokeEffect extends Effect {
     for (KeyStrokeSpread spread in _spreads) {
       spread.spread();
     }
+
+    _spreads.removeWhere((KeyStrokeSpread element) => element.canBeDeleted());
   }
 
   @override

@@ -40,6 +40,9 @@ class CorsairK70 extends KeyboardInterface {
   late Uint8List rPkt3;
   late Uint8List gPkt3;
   late Uint8List bPkt3;
+
+  late List<Uint8List> packets;
+
   late CorsairK70PacketManager packetManager;
 
   List<List<KeyboardKey>> keys = <List<KeyboardKey>>[];
@@ -53,6 +56,7 @@ class CorsairK70 extends KeyboardInterface {
     super.init();
     packetManager = CorsairK70PacketManager(this);
     packetManager.fill();
+    _storePackets();
     //test();
     //blink();
   }
@@ -101,6 +105,23 @@ class CorsairK70 extends KeyboardInterface {
       configuration: 1,
       interface: 1,
     );
+  }
+
+  void _storePackets() {
+    packets = <Uint8List>[
+      rPkt1,
+      rPkt2,
+      rPkt3,
+      dataPkt1,
+      gPkt1,
+      gPkt2,
+      gPkt3,
+      dataPkt2,
+      bPkt1,
+      bPkt2,
+      bPkt3,
+      dataPkt3,
+    ];
   }
 
   void _updateKeys() {
