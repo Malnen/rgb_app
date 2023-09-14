@@ -24,10 +24,10 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   }
 
   @override
-  EffectState fromJson(Map<String, dynamic> json) {
-    final List<Map<String, dynamic>> effectsJson = List<Map<String, dynamic>>.from(json['effects'] as List<dynamic>);
+  EffectState fromJson(Map<String, Object?> json) {
+    final List<Map<String, Object?>> effectsJson = List<Map<String, Object?>>.from(json['effects'] as List<Object?>);
     final EffectGridData effectGridData = EffectGridData.fromJson(
-      json['effectGridData'] as Map<String, dynamic>,
+      json['effectGridData'] as Map<String, Object?>,
     );
     final List<Effect> effects = effectsJson.map(EffectFactory.getEffectFromJson).toList();
 
@@ -39,8 +39,8 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   }
 
   @override
-  Map<String, dynamic> toJson(EffectState state) {
-    return <String, dynamic>{
+  Map<String, Object?> toJson(EffectState state) {
+    return <String, Object?>{
       'effectGridData': state.effectGridData,
       'effects': state.effects.map((Effect effect) => effect.toJson()).toList(),
     };

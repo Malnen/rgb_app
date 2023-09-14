@@ -6,7 +6,7 @@ import 'package:rgb_app/effects/spiral_effect/spiral_effect.dart';
 import 'package:rgb_app/effects/wave_effect.dart';
 
 class EffectFactory {
-  static Effect getEffectFromJson(Map<String, dynamic> json) {
+  static Effect getEffectFromJson(Map<String, Object?> json) {
     final String className = json['className'] as String;
     switch (className) {
       case 'WaveEffect':

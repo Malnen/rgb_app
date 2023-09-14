@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 
-class KeyStrokeData extends Equatable {
+class SpreadData extends Equatable {
   final CellCoords cellCoords;
   final Color color;
   final bool increment;
   final double opacity;
   final NumericProperty duration;
 
-  KeyStrokeData({
+  SpreadData({
     required this.cellCoords,
     required this.color,
     required this.duration,
@@ -18,14 +18,14 @@ class KeyStrokeData extends Equatable {
     this.opacity = 0,
   });
 
-  KeyStrokeData copyWith({
+  SpreadData copyWith({
     final CellCoords? cellCoords,
     final Color? color,
     final NumericProperty? duration,
     final bool? increment,
     final double? opacity,
   }) {
-    return KeyStrokeData(
+    return SpreadData(
       cellCoords: cellCoords ?? this.cellCoords,
       color: color ?? this.color,
       duration: duration ?? this.duration,

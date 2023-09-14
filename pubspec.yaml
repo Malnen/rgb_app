@@ -19,6 +19,8 @@ dependencies:
   rxdart: ^0.27.7
   image: ^4.0.13
   vector_math: ^2.1.4
+  system_tray: ^2.0.3
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +31,7 @@ flutter:
   assets:
     - assets/libusb-1.0.dll
     - assets/USBHotPlug.dll
+    - assets/app_icon.ico
 ffigen:
   output: 'generated_bindings.dart'
   headers:

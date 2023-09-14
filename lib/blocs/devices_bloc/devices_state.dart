@@ -40,24 +40,24 @@ class DevicesState extends Equatable {
     );
   }
 
-  static DevicesState fromJson(Map<String, dynamic> json) {
+  static DevicesState fromJson(Map<String, Object?> json) {
     return DevicesState(
-      devicesData: _mapDeviceData(json['devicesData'] as List<dynamic>),
+      devicesData: _mapDeviceData(json['devicesData'] as List<Object?>),
       availableDevices: <DeviceData>[],
       deviceInstances: <DeviceInterface>[],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+  Map<String, Object?> toJson() {
+    return <String, Object?>{
       'devicesData': devicesData,
     };
   }
 
-  static List<DeviceData> _mapDeviceData(List<dynamic> json) {
+  static List<DeviceData> _mapDeviceData(List<Object?> json) {
     return json
         .map(
-          (Object? element) => DeviceData.fromJson(element as Map<String, dynamic>),
+          (Object? element) => DeviceData.fromJson(element as Map<String, Object?>),
         )
         .toList();
   }

@@ -31,7 +31,7 @@ class Option extends Equatable {
     );
   }
 
-  factory Option.fromJson(Map<String, dynamic> json) {
+  factory Option.fromJson(Map<String, Object?> json) {
     return Option(
       value: json['value'] as int,
       name: json['name'] as String,

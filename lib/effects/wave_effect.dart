@@ -86,16 +86,16 @@ class WaveEffect extends Effect {
           name: 'Custom Colors',
         );
 
-  factory WaveEffect.fromJson(Map<String, dynamic> json) {
+  factory WaveEffect.fromJson(Map<String, Object?> json) {
     final WaveEffect effect = WaveEffect(
       effectData: EffectDictionary.waveEffect.getWithNewKey(),
     );
-    effect.size = PropertyFactory.getProperty(json['size'] as Map<String, dynamic>) as NumericProperty;
-    effect.speed = PropertyFactory.getProperty(json['speed'] as Map<String, dynamic>) as NumericProperty;
-    effect.waveDirection = PropertyFactory.getProperty(json['waveDirection'] as Map<String, dynamic>) as OptionProperty;
-    effect.colorModeProperty = PropertyFactory.getProperty(json['colorMode'] as Map<String, dynamic>) as OptionProperty;
+    effect.size = PropertyFactory.getProperty<NumericProperty>(json['size'] as Map<String, Object?>);
+    effect.speed = PropertyFactory.getProperty<NumericProperty>(json['speed'] as Map<String, Object?>);
+    effect.waveDirection = PropertyFactory.getProperty<OptionProperty>(json['waveDirection'] as Map<String, Object?>);
+    effect.colorModeProperty = PropertyFactory.getProperty<OptionProperty>(json['colorMode'] as Map<String, Object?>);
     effect.customColorsProperty =
-        PropertyFactory.getProperty(json['customColors'] as Map<String, dynamic>) as ColorsProperty;
+        PropertyFactory.getProperty<ColorsProperty>(json['customColors'] as Map<String, Object?>);
 
     return effect;
   }
@@ -113,8 +113,8 @@ class WaveEffect extends Effect {
   }
 
   @override
-  Map<String, dynamic> getData() {
-    return <String, dynamic>{
+  Map<String, Object?> getData() {
+    return <String, Object?>{
       'size': size.toJson(),
       'speed': speed.toJson(),
       'waveDirection': waveDirection.toJson(),

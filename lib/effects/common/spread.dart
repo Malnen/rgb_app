@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
+import 'package:rgb_app/effects/common/spread_data.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 
-class KeyStrokeSpread {
-  final KeyStrokeData data;
+class Spread {
+  final SpreadData data;
   final NumericProperty fadeSpeed;
   final NumericProperty spreadDelay;
   final NumericProperty opacitySpeed;
@@ -17,7 +17,7 @@ class KeyStrokeSpread {
   late HashSet<CellCoords> _visitedCells;
   late double _startDecreasing;
   late EffectBloc _effectBloc;
-  List<KeyStrokeData> _spread = <KeyStrokeData>[];
+  List<SpreadData> _spread = <SpreadData>[];
 
   List<List<Color>> get colors => _effectBloc.colors;
 
@@ -25,7 +25,7 @@ class KeyStrokeSpread {
 
   int get sizeY => _effectBloc.sizeY;
 
-  KeyStrokeSpread({
+  Spread({
     required this.data,
     required this.duration,
     required this.fadeSpeed,
@@ -39,8 +39,8 @@ class KeyStrokeSpread {
   }
 
   void spread() {
-    final List<KeyStrokeData> newSpread = <KeyStrokeData>[];
-    for (KeyStrokeData data in _spread) {
+    final List<SpreadData> newSpread = <SpreadData>[];
+    for (SpreadData data in _spread) {
       _spreadData(data, newSpread);
     }
 
@@ -52,13 +52,13 @@ class KeyStrokeSpread {
   }
 
   void _spreadData(
-    final KeyStrokeData data,
-    final List<KeyStrokeData> newSpread,
+    final SpreadData data,
+    final List<SpreadData> newSpread,
   ) {
     _setNewColor(data);
     final NumericProperty duration = data.duration;
     final double opacity = data.opacity;
-    final KeyStrokeData newData = _getNewData(data, duration, opacity);
+    final SpreadData newData = _getNewData(data, duration, opacity);
     final bool hasDuration = duration.value >= 0;
     if (hasDuration) {
       newSpread.add(newData);
@@ -66,7 +66,7 @@ class KeyStrokeSpread {
     }
   }
 
-  void _setNewColor(KeyStrokeData data) {
+  void _setNewColor(SpreadData data) {
     final CellCoords cellCoords = data.cellCoords;
     try {
       final Color currentColor = colors[cellCoords.y][cellCoords.x];
@@ -78,8 +78,8 @@ class KeyStrokeSpread {
     } catch (_) {}
   }
 
-  KeyStrokeData _getNewData(
-    final KeyStrokeData data,
+  SpreadData _getNewData(
+    final SpreadData data,
     final NumericProperty duration,
     final double opacity,
   ) {
@@ -109,8 +109,8 @@ class KeyStrokeSpread {
 
   void _propagateAfterDelay(
     final NumericProperty duration,
-    final KeyStrokeData newData,
-    final List<KeyStrokeData> newSpread,
+    final SpreadData newData,
+    final List<SpreadData> newSpread,
   ) {
     final bool canPropagate = this.duration.value - duration.value >= spreadDelay.value;
     if (canPropagate) {
@@ -118,7 +118,7 @@ class KeyStrokeSpread {
     }
   }
 
-  void _tryToPropagate(KeyStrokeData newData, List<KeyStrokeData> newSpread) {
+  void _tryToPropagate(SpreadData newData, List<SpreadData> newSpread) {
     final CellCoords cellCoords = newData.cellCoords;
     final bool newKey = !_visitedCells.contains(cellCoords);
     if (newKey) {
@@ -126,14 +126,14 @@ class KeyStrokeSpread {
     }
   }
 
-  void _propagateSpread(KeyStrokeData data, List<KeyStrokeData> newSpread) {
+  void _propagateSpread(SpreadData data, List<SpreadData> newSpread) {
     _propagateToRight(data, newSpread);
     _propagateToLeft(data, newSpread);
     _propagateToTop(data, newSpread);
     _propagateToDown(data, newSpread);
   }
 
-  void _propagateToRight(KeyStrokeData data, List<KeyStrokeData> newSpread) {
+  void _propagateToRight(SpreadData data, List<SpreadData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetX: 1);
     _propagateToNext(
@@ -144,7 +144,7 @@ class KeyStrokeSpread {
     );
   }
 
-  void _propagateToLeft(KeyStrokeData data, List<KeyStrokeData> newSpread) {
+  void _propagateToLeft(SpreadData data, List<SpreadData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetX: -1);
     _propagateToNext(
@@ -155,7 +155,7 @@ class KeyStrokeSpread {
     );
   }
 
-  void _propagateToTop(KeyStrokeData data, List<KeyStrokeData> newSpread) {
+  void _propagateToTop(SpreadData data, List<SpreadData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetY: 1);
     _propagateToNext(
@@ -166,7 +166,7 @@ class KeyStrokeSpread {
     );
   }
 
-  void _propagateToDown(KeyStrokeData data, List<KeyStrokeData> newSpread) {
+  void _propagateToDown(SpreadData data, List<SpreadData> newSpread) {
     final CellCoords coords = data.cellCoords;
     final CellCoords newCoords = coords.getWithOffset(offsetY: -1);
     _propagateToNext(
@@ -180,12 +180,12 @@ class KeyStrokeSpread {
   void _propagateToNext({
     required CellCoords newCoords,
     required CellCoords coords,
-    required KeyStrokeData data,
-    required List<KeyStrokeData> newSpread,
+    required SpreadData data,
+    required List<SpreadData> newSpread,
   }) {
     final bool canPropagate = _canPropagate(newCoords);
     if (canPropagate) {
-      final KeyStrokeData spreadData = KeyStrokeData(
+      final SpreadData spreadData = SpreadData(
         color: data.color,
         duration: duration,
         cellCoords: newCoords,

@@ -121,20 +121,20 @@ class SpiralEffect extends Effect {
     );
   }
 
-  factory SpiralEffect.fromJson(Map<String, dynamic> json) {
+  factory SpiralEffect.fromJson(Map<String, Object?> json) {
     final SpiralEffect effect = SpiralEffect(
       effectData: EffectDictionary.spiralEffect.getWithNewKey(),
     );
-    effect.speed = PropertyFactory.getProperty(json['speed'] as Map<String, dynamic>) as NumericProperty;
-    effect.twist = PropertyFactory.getProperty(json['twist'] as Map<String, dynamic>) as NumericProperty;
-    effect.center = PropertyFactory.getProperty(json['center'] as Map<String, dynamic>) as VectorProperty;
+    effect.speed = PropertyFactory.getProperty<NumericProperty>(json['speed'] as Map<String, Object?>);
+    effect.twist = PropertyFactory.getProperty<NumericProperty>(json['twist'] as Map<String, Object?>);
+    effect.center = PropertyFactory.getProperty<VectorProperty>(json['center'] as Map<String, Object?>);
     effect.spinDirectionProperty =
-        PropertyFactory.getProperty(json['spinDirection'] as Map<String, dynamic>) as OptionProperty;
+        PropertyFactory.getProperty<OptionProperty>(json['spinDirection'] as Map<String, Object?>);
     effect.twistDirectionProperty =
-        PropertyFactory.getProperty(json['twistDirection'] as Map<String, dynamic>) as OptionProperty;
-    effect.colorModeProperty = PropertyFactory.getProperty(json['colorMode'] as Map<String, dynamic>) as OptionProperty;
+        PropertyFactory.getProperty<OptionProperty>(json['twistDirection'] as Map<String, Object?>);
+    effect.colorModeProperty = PropertyFactory.getProperty<OptionProperty>(json['colorMode'] as Map<String, Object?>);
     effect.customColorsProperty =
-        PropertyFactory.getProperty(json['customColors'] as Map<String, dynamic>) as ColorsProperty;
+        PropertyFactory.getProperty<ColorsProperty>(json['customColors'] as Map<String, Object?>);
 
     return effect;
   }
@@ -157,7 +157,7 @@ class SpiralEffect extends Effect {
   }
 
   @override
-  Map<String, dynamic> getData() {
+  Map<String, Object?> getData() {
     return <String, Object>{
       'twist': twist.toJson(),
       'speed': speed.toJson(),

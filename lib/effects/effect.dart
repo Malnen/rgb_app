@@ -20,13 +20,13 @@ abstract class Effect {
 
   void update();
 
-  Map<String, dynamic> getData();
+  Map<String, Object?> getData();
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = <String, dynamic>{
+  Map<String, Object?> toJson() {
+    final Map<String, Object?> json = <String, Object?>{
       'className': effectData.className,
     };
-    final Map<String, dynamic> data = getData();
+    final Map<String, Object?> data = getData();
     json.addAll(data);
 
     return json;

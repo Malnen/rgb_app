@@ -15,13 +15,13 @@ abstract class Property<T> {
     onChanged?.call(value);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = <String, dynamic>{
+  Map<String, Object?> toJson() {
+    final Map<String, Object?> json = <String, Object?>{
       'value': value,
       'name': name,
       'type': runtimeType.toString(),
     };
-    final Map<String, dynamic> data = getData();
+    final Map<String, Object?> data = getData();
     json.addAll(data);
 
     return json;

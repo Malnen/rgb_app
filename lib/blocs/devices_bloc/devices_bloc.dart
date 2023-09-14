@@ -28,9 +28,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   @override
-  DevicesState fromJson(Map<String, dynamic> json) {
+  DevicesState fromJson(Map<String, Object?> json) {
     final DevicesState state = DevicesState.fromJson(
-      json['devicesState'] as Map<String, dynamic>,
+      json['devicesState'] as Map<String, Object?>,
     );
     final List<DeviceData> devicesData = state.devicesData;
     return DevicesState(
@@ -41,9 +41,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   @override
-  Map<String, dynamic> toJson(DevicesState state) {
-    return <String, dynamic>{
-      'devicesState': <String, dynamic>{
+  Map<String, Object?> toJson(DevicesState state) {
+    return <String, Object?>{
+      'devicesState': <String, Object?>{
         'devicesData': state.devicesData,
       }
     };

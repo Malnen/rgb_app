@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   keyboard_event
+        system_tray
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

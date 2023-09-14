@@ -6,10 +6,10 @@ import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
+import 'package:rgb_app/effects/common/spread.dart';
+import 'package:rgb_app/effects/common/spread_data.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
-import 'package:rgb_app/effects/key_stroke/key_stroke_data.dart';
-import 'package:rgb_app/effects/key_stroke/key_stroke_spread.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/colors_property.dart';
@@ -33,7 +33,7 @@ class KeyStrokeEffect extends Effect {
   late NumericProperty spreadDelay;
   late NumericProperty opacitySpeed;
   late ColorsProperty colorsProperty;
-  late List<KeyStrokeSpread> _spreads;
+  late List<Spread> _spreads;
 
   int colorIndex = 0;
 
@@ -63,7 +63,7 @@ class KeyStrokeEffect extends Effect {
           min: 0.001,
           max: 1,
         ) {
-    _spreads = <KeyStrokeSpread>[];
+    _spreads = <Spread>[];
     keyBloc.stream.listen(_onKeyEvent);
     colorsProperty = ColorsProperty(
       value: <Color>[
@@ -74,28 +74,28 @@ class KeyStrokeEffect extends Effect {
     );
   }
 
-  factory KeyStrokeEffect.fromJson(Map<String, dynamic> json) {
+  factory KeyStrokeEffect.fromJson(Map<String, Object?> json) {
     final KeyStrokeEffect effect = KeyStrokeEffect(
       effectData: EffectDictionary.keyStrokeEffect.getWithNewKey(),
     );
-    effect.duration = PropertyFactory.getProperty(json['duration'] as Map<String, dynamic>) as NumericProperty;
-    effect.colorsProperty = PropertyFactory.getProperty(json['colors'] as Map<String, dynamic>) as ColorsProperty;
+    effect.duration = PropertyFactory.getProperty<NumericProperty>(json['duration'] as Map<String, Object?>);
+    effect.colorsProperty = PropertyFactory.getProperty<ColorsProperty>(json['colors'] as Map<String, Object?>);
 
     return effect;
   }
 
   @override
   void update() {
-    for (KeyStrokeSpread spread in _spreads) {
+    for (Spread spread in _spreads) {
       spread.spread();
     }
 
-    _spreads.removeWhere((KeyStrokeSpread element) => element.canBeDeleted());
+    _spreads.removeWhere((Spread element) => element.canBeDeleted());
   }
 
   @override
-  Map<String, dynamic> getData() {
-    return <String, dynamic>{
+  Map<String, Object?> getData() {
+    return <String, Object?>{
       'duration': duration.toJson(),
       'colors': colorsProperty.toJson(),
     };
@@ -110,12 +110,12 @@ class KeyStrokeEffect extends Effect {
   void _onKeyPressed(KeyState state) {
     final Color color = _getColor();
     final CellCoords coords = _getCoords(state);
-    final KeyStrokeData data = KeyStrokeData(
+    final SpreadData data = SpreadData(
       cellCoords: coords,
       color: color,
       duration: duration,
     );
-    final KeyStrokeSpread spread = KeyStrokeSpread(
+    final Spread spread = Spread(
       data: data,
       duration: duration,
       fadeSpeed: fadeSpeed,

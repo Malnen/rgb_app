@@ -19,8 +19,8 @@ class DeviceData extends Equatable {
         deviceProductVendor,
       ];
 
-  DeviceData.fromJson(Map<String, dynamic> json)
-      : deviceProductVendor = DeviceProductVendor.fromJson(json['deviceProductVendor'] as Map<String, dynamic>),
+  DeviceData.fromJson(Map<String, Object?> json)
+      : deviceProductVendor = DeviceProductVendor.fromJson(json['deviceProductVendor'] as Map<String, Object?>),
         offsetX = json['offsetX'] as int? ?? 0,
         offsetY = json['offsetY'] as int? ?? 0,
         connected = false;
@@ -45,8 +45,8 @@ class DeviceData extends Equatable {
 
   bool get isKnownDevice => deviceProductVendor is! UnknownProductVendor;
 
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+  Map<String, Object?> toJson() {
+    return <String, Object?>{
       'deviceProductVendor': deviceProductVendor,
       'offsetX': offsetX,
       'offsetY': offsetY,
