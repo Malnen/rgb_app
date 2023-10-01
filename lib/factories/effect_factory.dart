@@ -2,7 +2,8 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_effect.dart';
-import 'package:rgb_app/effects/spiral_effect/spiral_effect.dart';
+import 'package:rgb_app/effects/ripple/ripple_effect.dart';
+import 'package:rgb_app/effects/spiral/spiral_effect.dart';
 import 'package:rgb_app/effects/wave_effect.dart';
 
 class EffectFactory {
@@ -25,17 +26,13 @@ class EffectFactory {
 
     switch (className) {
       case 'WaveEffect':
-        return WaveEffect(
-          effectData: effectData,
-        );
+        return WaveEffect(effectData);
       case 'KeyStrokeEffect':
-        return KeyStrokeEffect(
-          effectData: effectData,
-        );
+        return KeyStrokeEffect(effectData);
       case 'SpiralEffect':
-        return SpiralEffect(
-          effectData: effectData,
-        );
+        return SpiralEffect(effectData);
+      case 'RippleEffect':
+        return RippleEffect(effectData);
       default:
         throw Exception('Illegal effect');
     }

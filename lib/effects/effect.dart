@@ -10,7 +10,7 @@ abstract class Effect {
 
   List<Property<Object>> get properties => <Property<Object>>[];
 
-  Effect({required this.effectData});
+  Effect(EffectData effectData) : effectData = effectData.getWithNewKey();
 
   void init() {}
 

@@ -6,6 +6,7 @@ class EffectDictionary {
     waveEffect,
     keyStrokeEffect,
     spiralEffect,
+    rippleEffect,
   ];
 
   static final EffectData waveEffect = EffectData(
@@ -16,11 +17,16 @@ class EffectDictionary {
   static final EffectData keyStrokeEffect = EffectData(
     name: 'Key Stroke',
     className: 'KeyStrokeEffect',
-    iconData: Icons.public,
+    iconData: Icons.keyboard,
   );
   static final EffectData spiralEffect = EffectData(
     name: 'Spiral',
     className: 'SpiralEffect',
-    iconData: Icons.public,
+    iconData: Icons.rotate_left,
+  );
+  static final EffectData rippleEffect = EffectData(
+    name: 'Ripple',
+    className: 'RippleEffect',
+    iconData: Icons.circle_outlined,
   );
 }

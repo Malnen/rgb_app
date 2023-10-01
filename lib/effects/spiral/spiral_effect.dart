@@ -48,7 +48,7 @@ class SpiralEffect extends Effect {
 
   int get customColorsLength => customColors.length;
 
-  SpiralEffect({required super.effectData}) {
+  SpiralEffect(super.effectData) {
     speed = NumericProperty(
       value: 2.5,
       name: 'Speed',
@@ -122,9 +122,7 @@ class SpiralEffect extends Effect {
   }
 
   factory SpiralEffect.fromJson(Map<String, Object?> json) {
-    final SpiralEffect effect = SpiralEffect(
-      effectData: EffectDictionary.spiralEffect.getWithNewKey(),
-    );
+    final SpiralEffect effect = SpiralEffect(EffectDictionary.spiralEffect);
     effect.speed = PropertyFactory.getProperty<NumericProperty>(json['speed'] as Map<String, Object?>);
     effect.twist = PropertyFactory.getProperty<NumericProperty>(json['twist'] as Map<String, Object?>);
     effect.center = PropertyFactory.getProperty<VectorProperty>(json['center'] as Map<String, Object?>);

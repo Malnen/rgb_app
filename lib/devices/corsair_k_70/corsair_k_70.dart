@@ -1,8 +1,8 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
@@ -180,16 +180,16 @@ class CorsairK70 extends KeyboardInterface {
   }
 
   void _setKeys() {
-    final Map<CellCoords, KeyboardKey> keys = KeyDictionary.keys;
-    final Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries = keys.entries;
+    final Map<Point<int>, KeyboardKey> keys = KeyDictionary.keys;
+    final Iterable<MapEntry<Point<int>, KeyboardKey>> keyEntries = keys.entries;
     _setMinMax(keyEntries);
     _setKeysDimensions(keyEntries);
-    for (MapEntry<CellCoords, KeyboardKey> entry in keyEntries) {
+    for (MapEntry<Point<int>, KeyboardKey> entry in keyEntries) {
       _setKey(entry);
     }
   }
 
-  void _setMinMax(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+  void _setMinMax(Iterable<MapEntry<Point<int>, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries) + 1;
     final int maxX = _getMaxX(keyEntries) + 1;
     final EffectState state = effectBloc.state;
@@ -206,7 +206,7 @@ class CorsairK70 extends KeyboardInterface {
     effectBloc.add(event);
   }
 
-  void _setKeysDimensions(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
+  void _setKeysDimensions(Iterable<MapEntry<Point<int>, KeyboardKey>> keyEntries) {
     final int lastY = _getLastKeyY(keyEntries);
     final int maxX = _getMaxX(keyEntries);
 
@@ -217,15 +217,15 @@ class CorsairK70 extends KeyboardInterface {
     );
   }
 
-  int _getLastKeyY(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
-    final MapEntry<CellCoords, KeyboardKey> lastKeyEntry = keyEntries.last;
-    final CellCoords lastKey = lastKeyEntry.key;
+  int _getLastKeyY(Iterable<MapEntry<Point<int>, KeyboardKey>> keyEntries) {
+    final MapEntry<Point<int>, KeyboardKey> lastKeyEntry = keyEntries.last;
+    final Point<int> lastKey = lastKeyEntry.key;
 
     return lastKey.y;
   }
 
-  void _setKey(MapEntry<CellCoords, KeyboardKey> entry) {
-    final CellCoords key = entry.key;
+  void _setKey(MapEntry<Point<int>, KeyboardKey> entry) {
+    final Point<int> key = entry.key;
     final KeyboardKey value = entry.value;
     final int y = key.y;
     final int x = key.x;
@@ -233,8 +233,8 @@ class CorsairK70 extends KeyboardInterface {
     keys[y][x] = value;
   }
 
-  int _getMaxX(Iterable<MapEntry<CellCoords, KeyboardKey>> keyEntries) {
-    final List<int> xValues = keyEntries.map((MapEntry<CellCoords, KeyboardKey> entry) => entry.key.x).toList();
+  int _getMaxX(Iterable<MapEntry<Point<int>, KeyboardKey>> keyEntries) {
+    final List<int> xValues = keyEntries.map((MapEntry<Point<int>, KeyboardKey> entry) => entry.key.x).toList();
 
     return xValues.max;
   }

@@ -1,44 +1,42 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
-import 'package:rgb_app/blocs/key_bloc/key_state.dart';
-import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
-import 'package:rgb_app/devices/key_dictionary.dart';
-import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/effects/common/ripple.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
-import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/colors_property.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
+import 'package:rxdart/rxdart.dart';
 
-class KeyStrokeEffect extends Effect {
-  final KeyBloc keyBloc;
-
+class RippleEffect extends Effect {
   @override
   List<Property<Object>> get properties => <Property<Object>>[
         duration,
         expansion,
         fadeSpeed,
+        ripplePeriod,
         colorsProperty,
       ];
+
+  final StreamController<double> _periodStream;
 
   late NumericProperty duration;
   late NumericProperty expansion;
   late NumericProperty fadeSpeed;
+  late NumericProperty ripplePeriod;
   late ColorsProperty colorsProperty;
   late List<Ripple> _ripples;
 
+  Timer? _timer;
+
   int colorIndex = 0;
 
-  KeyStrokeEffect(super.effectData)
-      : keyBloc = GetIt.instance.get(),
-        duration = NumericProperty(
+  RippleEffect(super.effectData)
+      : duration = NumericProperty(
           min: 1,
           max: 10,
           name: 'Duration',
@@ -55,9 +53,16 @@ class KeyStrokeEffect extends Effect {
           max: 0.5,
           name: 'Fade Speed',
           value: 0.1,
-        ) {
+        ),
+        _periodStream = StreamController<double>() {
     _ripples = <Ripple>[];
-    keyBloc.stream.listen(_onKeyEvent);
+    ripplePeriod = NumericProperty(
+      min: 0.1,
+      max: 10,
+      name: 'Ripple Period',
+      value: 1,
+      onChanged: _periodStream.add,
+    );
     colorsProperty = ColorsProperty(
       value: <Color>[
         Colors.white,
@@ -65,16 +70,24 @@ class KeyStrokeEffect extends Effect {
       ],
       name: 'Colors',
     );
+    _periodStream.stream.debounceTime(Duration(milliseconds: 250)).listen(_onRipplePeriodChange);
   }
 
-  factory KeyStrokeEffect.fromJson(Map<String, Object?> json) {
-    final KeyStrokeEffect effect = KeyStrokeEffect(EffectDictionary.keyStrokeEffect);
+  factory RippleEffect.fromJson(Map<String, Object?> json) {
+    final RippleEffect effect = RippleEffect(EffectDictionary.rippleEffect);
     effect.duration = PropertyFactory.getProperty<NumericProperty>(json['duration'] as Map<String, Object?>);
     effect.expansion = PropertyFactory.getProperty<NumericProperty>(json['expansion'] as Map<String, Object?>);
     effect.fadeSpeed = PropertyFactory.getProperty<NumericProperty>(json['fadeSpeed'] as Map<String, Object?>);
+    effect.ripplePeriod = PropertyFactory.getProperty<NumericProperty>(json['ripplePeriod'] as Map<String, Object?>);
     effect.colorsProperty = PropertyFactory.getProperty<ColorsProperty>(json['colors'] as Map<String, Object?>);
 
     return effect;
+  }
+
+  @override
+  void init() {
+    ripplePeriod.onChanged = _periodStream.add;
+    ripplePeriod.onChange(ripplePeriod.value);
   }
 
   @override
@@ -93,6 +106,34 @@ class KeyStrokeEffect extends Effect {
     _ripples.removeWhere((Ripple ripple) => ripple.canBeDeleted);
   }
 
+  @override
+  Map<String, Object?> getData() {
+    return <String, Object?>{
+      'duration': duration.toJson(),
+      'expansion': expansion.toJson(),
+      'fadeSpeed': fadeSpeed.toJson(),
+      'ripplePeriod': ripplePeriod.toJson(),
+      'colors': colorsProperty.toJson(),
+    };
+  }
+
+  void _onRipplePeriodChange(double time) {
+    final int milliseconds = (time * 1000).toInt();
+    _timer?.cancel();
+    print(time);
+    Timer.periodic(Duration(milliseconds: milliseconds), (Timer timer) {
+      _timer = timer;
+      final Color color = _getColor();
+      final Point<int> center = _getCenter();
+      final Ripple ripple = Ripple(
+        center: center,
+        lifespan: duration.value,
+        color: color,
+      );
+      _ripples.add(ripple);
+    });
+  }
+
   void _processRipple(Ripple ripple, Point<int> position, List<List<Color>> colors) {
     final double opacity = ripple.getOpacity(position);
     final Color currentColor = colors[position.y][position.x];
@@ -103,46 +144,12 @@ class KeyStrokeEffect extends Effect {
     );
   }
 
-  @override
-  Map<String, Object?> getData() {
-    return <String, Object?>{
-      'duration': duration.toJson(),
-      'expansion': expansion.toJson(),
-      'fadeSpeed': fadeSpeed.toJson(),
-      'colors': colorsProperty.toJson(),
-    };
-  }
+  Point<int> _getCenter() {
+    final Random random = Random();
+    final int x = random.nextInt(effectBloc.sizeX);
+    final int y = random.nextInt(effectBloc.sizeY);
 
-  void _onKeyEvent(KeyState state) {
-    if (state.type == KeyStateType.pressed) {
-      _onKeyPressed(state);
-    }
-  }
-
-  void _onKeyPressed(KeyState state) {
-    final Color color = _getColor();
-    final Point<int> center = _getCenter(state);
-    final Ripple ripple = Ripple(
-      center: center,
-      lifespan: duration.value,
-      color: color,
-    );
-    _ripples.add(ripple);
-  }
-
-  Point<int> _getCenter(KeyState state) {
-    final KeyCode keycode = KeyCodeExtension.fromKeyCode(state.keyCode);
-    final Map<KeyCode, Point<int>> reverseKeys = KeyDictionary.reverseKeyCodes;
-    final Point<int>? position = reverseKeys[keycode];
-    if (position != null) {
-      final KeyboardInterface? keyboardInterface = state.keyboardInterface;
-      return Point<int>(
-        position.x + (keyboardInterface?.offsetX ?? 0),
-        position.y + (keyboardInterface?.offsetY ?? 0),
-      );
-    }
-
-    return Point<int>(-1, -1);
+    return Point<int>(x, y);
   }
 
   Color _getColor() {

@@ -34,9 +34,8 @@ class WaveEffect extends Effect {
         if (customColorsMode) customColorsProperty,
       ];
 
-  WaveEffect({
-    required super.effectData,
-  })  : size = NumericProperty(
+  WaveEffect(super.effectData)
+      : size = NumericProperty(
           value: 15,
           name: 'Size',
           min: 1,
@@ -87,9 +86,7 @@ class WaveEffect extends Effect {
         );
 
   factory WaveEffect.fromJson(Map<String, Object?> json) {
-    final WaveEffect effect = WaveEffect(
-      effectData: EffectDictionary.waveEffect.getWithNewKey(),
-    );
+    final WaveEffect effect = WaveEffect(EffectDictionary.waveEffect);
     effect.size = PropertyFactory.getProperty<NumericProperty>(json['size'] as Map<String, Object?>);
     effect.speed = PropertyFactory.getProperty<NumericProperty>(json['speed'] as Map<String, Object?>);
     effect.waveDirection = PropertyFactory.getProperty<OptionProperty>(json['waveDirection'] as Map<String, Object?>);

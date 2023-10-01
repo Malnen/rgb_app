@@ -14,7 +14,10 @@ void main() {
 
 Future<void> _run() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _initSystemTray();
+  if (!kDebugMode) {
+    await _initSystemTray();
+  }
+
   final HydratedStorage storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );

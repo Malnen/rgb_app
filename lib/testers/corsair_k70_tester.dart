@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';
-import 'package:rgb_app/blocs/effects_bloc/cell_coords.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
@@ -46,11 +46,11 @@ class CorsairK70Tester implements DeviceTester {
 
   @override
   Future<void> blink() async {
-    final Iterable<MapEntry<CellCoords, KeyboardKey>> entries = KeyDictionary.keys.entries;
+    final Iterable<MapEntry<Point<int>, KeyboardKey>> entries = KeyDictionary.keys.entries;
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-          (Timer timer) {
+      (Timer timer) {
         _blink(entries);
         corsairK70.sendData();
       },
@@ -65,8 +65,8 @@ class CorsairK70Tester implements DeviceTester {
     }
   }
 
-  void _blink(Iterable<MapEntry<CellCoords, KeyboardKey>> entries) {
-    for (MapEntry<CellCoords, KeyboardKey> entry in entries) {
+  void _blink(Iterable<MapEntry<Point<int>, KeyboardKey>> entries) {
+    for (MapEntry<Point<int>, KeyboardKey> entry in entries) {
       final KeyboardKey key = entry.value;
       final int packetIndex = key.packetIndex;
       if (packetIndex < 0) continue;
