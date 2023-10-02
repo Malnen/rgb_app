@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' as material;
 import 'package:get_it/get_it.dart';
 import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
@@ -15,6 +16,7 @@ import 'package:rgb_app/utils/libusb_loader.dart';
 
 abstract class DeviceInterface {
   late EffectBloc effectBloc;
+  late EffectsColorsCubit effectsColorsCubit;
   late Pointer<libusb_device_handle> devHandle;
   late DeviceData deviceData;
 
@@ -28,6 +30,7 @@ abstract class DeviceInterface {
     required this.deviceData,
   }) {
     effectBloc = GetIt.instance.get();
+    effectsColorsCubit = GetIt.instance.get();
   }
 
   Libusb get libusb => LibusbLoader.getInstance;

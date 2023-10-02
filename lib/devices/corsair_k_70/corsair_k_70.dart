@@ -143,7 +143,7 @@ class CorsairK70 extends KeyboardInterface {
   void _updateKey(KeyboardKey key, int i, int j) {
     final int packetIndex = key.packetIndex;
     final int index = key.index;
-    final Color color = effectBloc.colors[i + offsetX][j + offsetY];
+    final Color color = effectsColorsCubit.colors[i + offsetX][j + offsetY];
     final int r = color.red;
     final int g = color.green;
     final int b = color.blue;
@@ -196,11 +196,12 @@ class CorsairK70 extends KeyboardInterface {
     final EffectGridData effectGridData = state.effectGridData;
     final int currentMinX = effectGridData.minSizeX;
     final int currentMinY = effectGridData.minSizeY;
-
+    final int minSizeX = currentMinX < maxX ? maxX : currentMinX;
+    final int minSizeY = currentMinY < lastY ? lastY : currentMinY;
     final SetGridSizeEvent event = SetGridSizeEvent(
       effectGridData: effectGridData.copyWith(
-        minSizeX: currentMinX < maxX ? maxX : currentMinX,
-        minSizeY: currentMinY < lastY ? lastY : currentMinY,
+        minSizeX: minSizeX,
+        minSizeY: minSizeY,
       ),
     );
     effectBloc.add(event);

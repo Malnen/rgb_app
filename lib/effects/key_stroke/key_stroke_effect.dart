@@ -79,7 +79,7 @@ class KeyStrokeEffect extends Effect {
 
   @override
   void update() {
-    final List<List<Color>> colors = effectBloc.colors;
+    final List<List<Color>> colors = effectsColorsCubit.colors;
     for (Ripple ripple in _ripples) {
       for (int x = 0; x < effectBloc.sizeX; x++) {
         for (int y = 0; y < effectBloc.sizeY; y++) {

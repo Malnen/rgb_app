@@ -6,7 +6,6 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/colors_property.dart';
-import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/models/options_property.dart';
@@ -169,9 +168,7 @@ class SpiralEffect extends Effect {
 
   @override
   void update() {
-    final EffectState state = effectBloc.state;
-    final EffectGridData effectGridData = state.effectGridData;
-    final List<List<Color>> colors = effectGridData.colors;
+    final List<List<Color>> colors = effectsColorsCubit.colors;
     for (int i = 0; i < effectBloc.sizeY; i++) {
       for (int j = 0; j < effectBloc.sizeX; j++) {
         _setColors(i, j, colors);

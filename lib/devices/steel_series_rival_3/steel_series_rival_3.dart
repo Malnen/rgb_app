@@ -105,7 +105,7 @@ class SteelSeriesRival3 extends MouseInterface {
     try {
       final List<Color> newColors = <Color>[];
       for (int i = 0; i < colors.length; i++) {
-        final Color newColor = effectBloc.colors[offsetY + i][offsetX];
+        final Color newColor = effectsColorsCubit.colors[offsetY + i][offsetX];
         newColors.add(newColor);
       }
       colors = newColors;

@@ -1,22 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/models/property.dart';
 
 abstract class Effect {
   final EffectData effectData;
 
-  late EffectBloc effectBloc;
+  EffectBloc? _effectBloc;
+  EffectsColorsCubit? _effectsColorsCubit;
+
+  Effect(EffectData effectData) : effectData = effectData.getWithNewKey() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      init();
+    });
+  }
 
   List<Property<Object>> get properties => <Property<Object>>[];
 
-  Effect(EffectData effectData) : effectData = effectData.getWithNewKey();
+  EffectBloc get effectBloc {
+    _effectBloc ??= GetIt.instance.get();
+    return _effectBloc!;
+  }
+
+  EffectsColorsCubit get effectsColorsCubit {
+    _effectsColorsCubit ??= GetIt.instance.get();
+    return _effectsColorsCubit!;
+  }
 
   void init() {}
-
-  void setEffectBloc() {
-    effectBloc = GetIt.instance.get();
-  }
 
   void update();
 

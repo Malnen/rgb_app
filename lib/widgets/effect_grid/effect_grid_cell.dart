@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 
 class EffectGridCell extends StatefulWidget {
   final int x;
   final int y;
-  final EffectBloc bloc;
   final StreamController<Object> rebuildNotifier;
   final double size;
   final double margin;
@@ -14,7 +15,6 @@ class EffectGridCell extends StatefulWidget {
   const EffectGridCell({
     required this.x,
     required this.y,
-    required this.bloc,
     required this.rebuildNotifier,
     required this.size,
     required this.margin,
@@ -26,10 +26,14 @@ class EffectGridCell extends StatefulWidget {
 
 class _EffectGridCellState extends State<EffectGridCell> {
   late StreamSubscription<Object> subscription;
+  late EffectBloc effectBloc;
+  late EffectsColorsCubit effectsColorsCubit;
 
   @override
   void initState() {
     super.initState();
+    effectBloc = GetIt.instance.get();
+    effectsColorsCubit = GetIt.instance.get();
     subscription = widget.rebuildNotifier.stream.listen(onRebuild);
   }
 
@@ -59,7 +63,7 @@ class _EffectGridCellState extends State<EffectGridCell> {
 
   Color getColor() {
     try {
-      return widget.bloc.colors[widget.y][widget.x];
+      return effectsColorsCubit.colors[widget.y][widget.x];
     } catch (e) {
       print(widget.x.toString() + ', ' + widget.y.toString() + ' out of range');
       return Colors.black;

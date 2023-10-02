@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_apply_button.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_wrapper.dart';
@@ -17,12 +18,14 @@ class _EffectGridState extends State<EffectGrid> {
   final TextEditingController controllerX = TextEditingController();
   final TextEditingController controllerY = TextEditingController();
 
-  late EffectBloc bloc;
+  late EffectBloc effectBloc;
+  late EffectsColorsCubit effectsColorsCubit;
 
   @override
   void initState() {
     super.initState();
-    bloc = context.read();
+    effectBloc = GetIt.instance.get();
+    effectsColorsCubit = GetIt.instance.get();
     setControllersValue();
   }
 
@@ -72,7 +75,7 @@ class _EffectGridState extends State<EffectGrid> {
   }
 
   void setGridSize() {
-    final EffectState state = bloc.state;
+    final EffectState state = effectBloc.state;
     final EffectGridData effectGridData = state.effectGridData;
     final int minX = effectGridData.minSizeX;
     final int minY = effectGridData.minSizeY;
@@ -84,7 +87,8 @@ class _EffectGridState extends State<EffectGrid> {
         sizeY: y,
       ),
     );
-    bloc.add(event);
+    effectBloc.add(event);
+    effectsColorsCubit.updateColorsSize(x, y);
   }
 
   int correctValue(TextEditingController controller, int min) {
@@ -103,7 +107,7 @@ class _EffectGridState extends State<EffectGrid> {
   }
 
   void setControllersValue() {
-    final EffectState state = bloc.state;
+    final EffectState state = effectBloc.state;
     final EffectGridData effectGridData = state.effectGridData;
     final int sizeX = effectGridData.sizeX;
     final int sizeY = effectGridData.sizeY;

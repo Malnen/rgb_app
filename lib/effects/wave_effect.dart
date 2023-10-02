@@ -124,7 +124,7 @@ class WaveEffect extends Effect {
   void update() {
     final EffectState state = effectBloc.state;
     final EffectGridData effectGridData = state.effectGridData;
-    final List<List<Color>> colors = effectBloc.colors;
+    final List<List<Color>> colors = effectsColorsCubit.colors;
     final int sizeX = effectGridData.sizeX;
     final int sizeY = effectGridData.sizeY;
     if (colors.isNotEmpty) {

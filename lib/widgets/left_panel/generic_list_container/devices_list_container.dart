@@ -21,7 +21,7 @@ class DevicesListContainer extends StatelessWidget {
     context.select<DevicesBloc, List<DeviceData>>((DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices);
     context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
 
-    final DevicesBloc devicesBloc = context.read();
+    final DevicesBloc devicesBloc = GetIt.instance.get();
     final KeyBloc keyBloc = GetIt.instance.get();
     final DevicesState state = devicesBloc.state;
     final List<DeviceData> availableDevices = state.availableDevices;

@@ -118,7 +118,7 @@ class CorsairVirtuoso extends DeviceInterface {
 
   @override
   void update() {
-    color = effectBloc.colors[offsetY][offsetX];
+    color = effectsColorsCubit.colors[offsetY][offsetX];
     super.update();
   }
 

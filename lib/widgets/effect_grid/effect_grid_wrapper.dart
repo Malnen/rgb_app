@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_container.dart';
 
 class EffectGridWrapper extends StatefulWidget {
@@ -12,14 +13,15 @@ class EffectGridWrapper extends StatefulWidget {
 class _EffectGridWrapperState extends State<EffectGridWrapper> {
   late List<List<Color>> colors;
   late EffectBloc effectBloc;
+  late EffectsColorsCubit effectsColorsCubit;
 
   @override
   void initState() {
     super.initState();
-    effectBloc = context.read();
+    effectBloc = GetIt.instance.get();
     colors = buildColors();
-    final ColorsUpdatedEvent colorsUpdatedEvent = ColorsUpdatedEvent(colors: colors);
-    effectBloc.add(colorsUpdatedEvent);
+    effectsColorsCubit = GetIt.instance.get();
+    effectsColorsCubit.updateColors(colors);
   }
 
   @override

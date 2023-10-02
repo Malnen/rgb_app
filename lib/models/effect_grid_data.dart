@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 class EffectGridData extends Equatable {
   final int sizeX;
   final int sizeY;
-  final List<List<Color>> colors;
   final int minSizeX;
   final int minSizeY;
 
   EffectGridData({
     required this.sizeX,
     required this.sizeY,
-    required this.colors,
     required this.minSizeX,
     required this.minSizeY,
   });
@@ -23,7 +21,6 @@ class EffectGridData extends Equatable {
     return EffectGridData(
       sizeX: 20,
       sizeY: 20,
-      colors: <List<Color>>[],
       minSizeX: 20,
       minSizeY: 9,
     );
@@ -33,7 +30,6 @@ class EffectGridData extends Equatable {
     return EffectGridData(
       sizeX: json['sizeX'] as int,
       sizeY: json['sizeY'] as int,
-      colors: <List<Color>>[],
       minSizeY: 10,
       minSizeX: 20,
     );
@@ -53,7 +49,6 @@ class EffectGridData extends Equatable {
     return EffectGridData(
       sizeX: sizeX ?? this.sizeX,
       sizeY: sizeY ?? this.sizeY,
-      colors: colors ?? this.colors,
       minSizeX: minSizeX ?? this.minSizeX,
       minSizeY: minSizeY ?? this.minSizeY,
     );

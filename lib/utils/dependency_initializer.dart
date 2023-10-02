@@ -3,6 +3,7 @@ import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/utils/hot_plug/usb_hot_plug_handler.dart';
 
 class DependencyInitializer {
@@ -11,7 +12,8 @@ class DependencyInitializer {
   static void init() {
     _initDevicesBloc();
     _initKeyBloc();
-    _initEffectBlocAndInitEffects();
+    _initEffectBloc();
+    _initEffectsColorsCubit();
     _initUsbHotPlugHandler();
   }
 
@@ -31,10 +33,14 @@ class DependencyInitializer {
     instance.registerSingleton(keyBloc);
   }
 
-  static void _initEffectBlocAndInitEffects() async {
+  static void _initEffectBloc() async {
     final EffectBloc effectBloc = EffectBloc();
     instance.registerSingleton(effectBloc);
-    effectBloc.setBlocInExistingEffectsAndInit();
+  }
+
+  static void _initEffectsColorsCubit() async {
+    final EffectsColorsCubit effectsColorsCubit = EffectsColorsCubit();
+    instance.registerSingleton(effectsColorsCubit);
   }
 
   static void _initUsbHotPlugHandler() {

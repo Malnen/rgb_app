@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/widgets/device_placeholder/device_placeholder.dart';
@@ -24,6 +25,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   final double cellMargin = 2;
 
   late EffectBloc effectBloc;
+  late EffectsColorsCubit effectsColorsCubit;
   late DevicesBloc devicesBloc;
   late List<Effect> effects;
   late StreamController<Object> rebuildNotifier;
@@ -33,13 +35,13 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   @override
   void initState() {
     super.initState();
-    effectBloc = context.read();
-    devicesBloc = context.read();
+    effectBloc = GetIt.instance.get();
+    effectsColorsCubit = GetIt.instance.get();
+    devicesBloc = GetIt.instance.get();
     rebuildNotifier = StreamController<Object>.broadcast();
 
     Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
-      final ColorsUpdatedEvent event = ColorsUpdatedEvent(colors: colors);
-      effectBloc.add(event);
+      effectsColorsCubit.updateColors(colors);
       for (Effect effect in effectBloc.state.effects) {
         effect.update();
       }
@@ -92,7 +94,6 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
                   size: cellSize,
                   x: xIndex,
                   y: yIndex,
-                  bloc: effectBloc,
                   rebuildNotifier: rebuildNotifier,
                 ),
               ),

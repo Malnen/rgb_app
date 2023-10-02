@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
@@ -21,7 +22,7 @@ class _EffectsListContainerState extends State<EffectsListContainer> {
     context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.effects.length);
     context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.availableEffects.length);
 
-    final EffectBloc effectBloc = context.read();
+    final EffectBloc effectBloc = GetIt.instance.get();
     final EffectState state = effectBloc.state;
 
     return GenericListContainer<EffectData>(
@@ -51,9 +52,6 @@ class _EffectsListContainerState extends State<EffectsListContainer> {
   void _onAdd(EffectBloc bloc, EffectData effectData) {
     final String className = effectData.className;
     final Effect effect = EffectFactory.getEffectByClassName(className);
-    effect.setEffectBloc();
-    effect.init();
-
     final AddEffectEvent event = AddEffectEvent(effect: effect);
     bloc.add(event);
   }
