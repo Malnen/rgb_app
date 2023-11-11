@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
+import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/models/property.dart';
 
 abstract class Effect {
   final EffectData effectData;
-
   EffectBloc? _effectBloc;
   EffectsColorsCubit? _effectsColorsCubit;
 
@@ -29,9 +29,23 @@ abstract class Effect {
     return _effectsColorsCubit!;
   }
 
-  void init() {}
+  @mustCallSuper
+  void init() {
+    for (Property<Object> property in properties) {
+      property.addListener(onPropertyChanged);
+      property.notify();
+    }
+  }
 
   void update();
+
+  void dispose() {}
+
+  @protected
+  void onPropertyChanged() {
+    final EffectPropertyChangedEvent event = EffectPropertyChangedEvent();
+    effectBloc.add(event);
+  }
 
   Map<String, Object?> getData();
 

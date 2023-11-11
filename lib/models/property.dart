@@ -1,18 +1,21 @@
-abstract class Property<T> {
-  T value;
-  String name;
-  void Function(T)? onChanged;
+import 'package:flutter/cupertino.dart';
+
+abstract class Property<T> extends ValueNotifier<T> {
+  final String name;
 
   Property({
-    required this.value,
     required this.name,
-    this.onChanged,
-  });
+    required T initialValue,
+  }) : super(initialValue);
 
   Map<String, Object> getData();
 
-  void onChange(T value) {
-    onChanged?.call(value);
+  void addValueChangeListener(void Function(T) onChange) {
+    addListener(() => onChange(value));
+  }
+
+  void notify() {
+    notifyListeners();
   }
 
   Map<String, Object?> toJson() {

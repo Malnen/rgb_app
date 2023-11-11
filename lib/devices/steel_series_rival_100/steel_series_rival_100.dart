@@ -32,40 +32,42 @@ class SteelSeriesRival100 extends MouseInterface {
 
   @override
   void sendData() {
-    final Uint8List data = Uint8List.fromList(<int>[
-      0x05,
-      0x00,
-      color.red,
-      color.green,
-      color.blue,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00
-    ]);
+    final Uint8List data = Uint8List.fromList(
+      <int>[
+        0x05,
+        0x00,
+        color.red,
+        color.green,
+        color.blue,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+      ],
+    );
 
     final ffi.Pointer<ffi.Uint8> pointer = data.allocatePointer();
     libusb.libusb_control_transfer(
@@ -102,7 +104,7 @@ class SteelSeriesRival100 extends MouseInterface {
     try {
       color = effectsColorsCubit.colors[offsetY][offsetX];
     } catch (e) {
-      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
+      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
     }
 
     super.update();

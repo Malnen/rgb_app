@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/models/colors_property.dart';
+import 'package:rgb_app/models/color_list_property.dart';
+import 'package:rgb_app/models/color_property.dart' as color;
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector_property.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/color_property/color_property_renderer.dart';
+import 'package:rgb_app/widgets/effect_property_renderer/color_list_property/color_list_property_renderer.dart';
+import 'package:rgb_app/widgets/effect_property_renderer/color_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/numeric_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/option_property_renderer.dart';
 import 'package:rgb_app/widgets/effect_property_renderer/vector_property_renderer.dart';
@@ -50,17 +52,19 @@ class EffectPropertyRenderer extends StatelessWidget {
   Widget _getProperRenderer() {
     final Type runtimeType = property.runtimeType;
     switch (runtimeType) {
-      case NumericProperty:
+      case const (NumericProperty):
         return NumericPropertyRenderer(property: property as NumericProperty);
-      case VectorProperty:
+      case const (VectorProperty):
         return VectorPropertyRenderer(property: property as VectorProperty);
-      case OptionProperty:
+      case const (OptionProperty):
         return OptionPropertyRenderer(
           property: property as OptionProperty,
           updateRenderer: updateRenderer,
         );
-      case ColorsProperty:
-        return ColorPropertyRenderer(property: property as ColorsProperty);
+      case const (ColorListProperty):
+        return ColorListPropertyRenderer(property: property as ColorListProperty);
+      case const (color.ColorProperty):
+        return ColorPropertyRenderer(property: property as color.ColorProperty);
       default:
         throw Exception('Unsupported property type: $runtimeType');
     }

@@ -1,0 +1,4 @@
+enum AudioSampleCommand {
+  createCapture,
+  getAudioSample,
+}

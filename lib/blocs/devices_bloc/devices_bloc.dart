@@ -7,11 +7,16 @@ import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/quick_usb/quick_usb.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 
 class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
+  final TickProvider _tickProvider;
+
   List<DeviceInterface> get deviceInstances => state.deviceInstances;
 
-  DevicesBloc() : super(DevicesState.empty()) {
+  DevicesBloc({required TickProvider tickProvider})
+      : _tickProvider = tickProvider,
+        super(DevicesState.empty()) {
     on<AddDeviceEvent>(_onAddDeviceEvent);
     on<RemoveDeviceEvent>(_onRemoveDeviceEvent);
     on<RestoreDevicesEvent>(_onRestoreDevices);
@@ -24,6 +29,11 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     Future<void>.delayed(const Duration(seconds: 2), () {
       final CheckDevicesConnectionStateEvent checkDevicesConnectionStateEvent = CheckDevicesConnectionStateEvent();
       add(checkDevicesConnectionStateEvent);
+    });
+    _tickProvider.onTick(() {
+      for (DeviceInterface device in deviceInstances) {
+        device.update();
+      }
     });
   }
 
@@ -45,7 +55,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     return <String, Object?>{
       'devicesState': <String, Object?>{
         'devicesData': state.devicesData,
-      }
+      },
     };
   }
 
@@ -59,7 +69,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
     final DeviceData deviceData = event.deviceData;
     final List<DeviceData> existingDevices =
-        deviceInstances.map((DeviceInterface existingDeviceData) => existingDeviceData.deviceData).toList();
+    deviceInstances.map((DeviceInterface existingDeviceData) => existingDeviceData.deviceData).toList();
     if (!existingDevices.contains(deviceData)) {
       return _addDevice(
         deviceData: deviceData,
@@ -109,11 +119,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     );
   }
 
-  DevicesState _removeDevice(
-    final DeviceData deviceData,
-    final List<DeviceData> devicesData,
-    final List<DeviceInterface> deviceInstances,
-  ) {
+  DevicesState _removeDevice(final DeviceData deviceData,
+      final List<DeviceData> devicesData,
+      final List<DeviceInterface> deviceInstances,) {
     final DeviceInterface deviceInterface = state.deviceInstances.firstWhere(
           (DeviceInterface deviceInterface) =>
           deviceInterface.deviceData.deviceProductVendor == deviceData.deviceProductVendor,
@@ -128,10 +136,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     );
   }
 
-  Future<void> _onRestoreDevices(
-    final RestoreDevicesEvent event,
-    final Emitter<DevicesState> emit,
-  ) async {
+  Future<void> _onRestoreDevices(final RestoreDevicesEvent event,
+      final Emitter<DevicesState> emit,) async {
     final List<DeviceData> devicesData = state.devicesData;
     for (DeviceData deviceData in devicesData) {
       final AddDeviceEvent event = AddDeviceEvent(deviceData: deviceData);
@@ -139,10 +145,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     }
   }
 
-  Future<void> _onLoadAvailableDevicesEvent(
-    final LoadAvailableDevicesEvent event,
-    final Emitter<DevicesState> emit,
-  ) async {
+  Future<void> _onLoadAvailableDevicesEvent(final LoadAvailableDevicesEvent event,
+      final Emitter<DevicesState> emit,) async {
     final QuickUsb quickUsb = QuickUsb();
     final List<DeviceData> deviceProductInfo = quickUsb.getDeviceProductInfo();
     final DevicesState newState = state.copyWith(availableDevices: deviceProductInfo);
@@ -150,10 +154,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     emit(newState);
   }
 
-  Future<void> _onReorderDevicesEvent(
-    final ReorderDevicesEvent event,
-    final Emitter<DevicesState> emit,
-  ) async {
+  Future<void> _onReorderDevicesEvent(final ReorderDevicesEvent event,
+      final Emitter<DevicesState> emit,) async {
     final int oldIndex = event.oldIndex;
     final int newIndex = event.newIndex;
     final List<DeviceData> devicesData = _replaceDeviceData(oldIndex, newIndex);
@@ -188,10 +190,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     }
   }
 
-  void _onCheckDevicesConnectionStateEvent(
-    final CheckDevicesConnectionStateEvent event,
-    final Emitter<DevicesState> emit,
-  ) {
+  void _onCheckDevicesConnectionStateEvent(final CheckDevicesConnectionStateEvent event,
+      final Emitter<DevicesState> emit,) {
     final QuickUsb quickUsb = QuickUsb();
     final List<DeviceData> availableDevices = quickUsb.getDeviceProductInfo();
     final List<DeviceData> devicesData = <DeviceData>[];

@@ -1,20 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/widgets/device_placeholder/device_placeholder.dart';
-import 'package:rgb_app/widgets/effect_grid/effect_grid_cell.dart';
+import 'package:rgb_app/widgets/effect_grid/effect_grid_cells.dart';
 
 class EffectGridContainer extends StatefulWidget {
-  final List<List<Color>> colors;
-
-  const EffectGridContainer({required this.colors});
+  const EffectGridContainer();
 
   @override
   State<EffectGridContainer> createState() => _EffectGridContainerState();
@@ -25,38 +20,21 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   final double cellMargin = 2;
 
   late EffectBloc effectBloc;
-  late EffectsColorsCubit effectsColorsCubit;
   late DevicesBloc devicesBloc;
   late List<Effect> effects;
-  late StreamController<Object> rebuildNotifier;
-
-  List<List<Color>> get colors => widget.colors;
+  late GlobalKey cellsKey;
 
   @override
   void initState() {
     super.initState();
     effectBloc = GetIt.instance.get();
-    effectsColorsCubit = GetIt.instance.get();
     devicesBloc = GetIt.instance.get();
-    rebuildNotifier = StreamController<Object>.broadcast();
-
-    Timer.periodic(Duration(milliseconds: 25), (Timer timer) {
-      effectsColorsCubit.updateColors(colors);
-      for (Effect effect in effectBloc.state.effects) {
-        effect.update();
-      }
-      for (DeviceInterface device in devicesBloc.deviceInstances) {
-        device.update();
-      }
-      rebuildNotifier.add(Object());
-    });
+    cellsKey = GlobalKey();
   }
 
   @override
   Widget build(BuildContext context) {
     context.select<DevicesBloc, int>((DevicesBloc bloc) => bloc.state.deviceInstances.length);
-
-    final Widget grid = buildGrid();
     final double margin = cellMargin * 2;
     final double fullHeight = effectBloc.sizeY * cellSize + effectBloc.sizeY * margin;
     final double fullWidth = effectBloc.sizeX * cellSize + effectBloc.sizeX * margin;
@@ -66,7 +44,10 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
       width: fullWidth,
       child: Stack(
         children: <Widget>[
-          grid,
+          EffectGridCells(
+            cellMargin: cellMargin,
+            cellSize: cellSize,
+          ),
           ...devicesBloc.deviceInstances.map(
             (DeviceInterface deviceInterface) => DevicePlaceholder(
               fullHeight: fullHeight,
@@ -80,33 +61,8 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
     );
   }
 
-  Widget buildGrid() {
-    return Column(
-      children: <Widget>[
-        ...List<Widget>.generate(
-          effectBloc.sizeY,
-              (int yIndex) => Row(
-            children: <Widget>[
-              ...List<Widget>.generate(
-                effectBloc.sizeX,
-                (int xIndex) => EffectGridCell(
-                  margin: cellMargin,
-                  size: cellSize,
-                  x: xIndex,
-                  y: yIndex,
-                  rebuildNotifier: rebuildNotifier,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   void dispose() {
-    rebuildNotifier.close();
     super.dispose();
   }
 }

@@ -66,7 +66,7 @@ class _HuePickerState extends State<HuePicker> {
               size: thumbSize,
             ),
             updateOffset: (_, double y) => updateOffset(y),
-          )
+          ),
         ],
       ),
     );

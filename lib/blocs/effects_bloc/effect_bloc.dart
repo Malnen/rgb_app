@@ -5,18 +5,29 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/factories/effect_factory.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
+  final TickProvider _tickProvider;
+
   int get sizeX => state.effectGridData.sizeX;
 
   int get sizeY => state.effectGridData.sizeY;
 
-  EffectBloc() : super(EffectState.initial()) {
+  EffectBloc({required TickProvider tickProvider})
+      : _tickProvider = tickProvider,
+        super(EffectState.initial()) {
     on<SetGridSizeEvent>(_onSetGridSizeEvent);
     on<AddEffectEvent>(_onAddEffectEvent);
     on<RemoveEffectEvent>(_onRemoveEffectEvent);
     on<ReorderEffectsEvent>(_onReorderEffectsEvent);
     on<SelectEffectEvent>(_onSelectEffectEvent);
+    on<EffectPropertyChangedEvent>(_onEffectPropertyChangedEvent);
+    _tickProvider.onTick(() {
+      for (Effect effect in state.effects) {
+        effect.update();
+      }
+    });
   }
 
   @override
@@ -68,6 +79,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     final List<Effect> effects = state.effects;
     final bool hasEffect = effects.contains(effect);
     if (hasEffect) {
+      effect.dispose();
       effects.remove(effect);
     }
 
@@ -78,10 +90,8 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     emit(newState);
   }
 
-  Future<void> _onReorderEffectsEvent(
-    final ReorderEffectsEvent event,
-    final Emitter<EffectState> emit,
-  ) async {
+  Future<void> _onReorderEffectsEvent(final ReorderEffectsEvent event,
+      final Emitter<EffectState> emit,) async {
     final int oldIndex = event.oldIndex;
     final int newIndex = event.newIndex;
     final List<Effect> effects = state.effects;
@@ -102,6 +112,14 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     final EffectState newState = state.copyWith(
       selectedEffect: event.effect,
     );
+    emit(newState);
+  }
+
+  Future<void> _onEffectPropertyChangedEvent(
+    final EffectPropertyChangedEvent event,
+    final Emitter<EffectState> emit,
+  ) async {
+    final EffectState newState = state.copyWith();
     emit(newState);
   }
 }

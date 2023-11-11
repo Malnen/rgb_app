@@ -32,7 +32,7 @@ class BrightnessRenderer extends StatelessWidget {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }

@@ -16,7 +16,7 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
   @override
   Widget build(BuildContext context) {
     return Slider(
-      value: property.value,
+      value: property.currentValue,
       max: property.max,
       min: property.min,
       onChanged: onChanged,
@@ -28,7 +28,6 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
   void onChanged(double updatedValue) {
     setState(() {
       property.value = updatedValue;
-      property.onChange(updatedValue);
     });
   }
 }

@@ -125,7 +125,7 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
           RemoveGenericButton<T>(
             value: value,
             onTap: widget.onRemove,
-          )
+          ),
         ],
       ),
     );

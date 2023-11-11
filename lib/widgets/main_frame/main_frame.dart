@@ -5,7 +5,7 @@ import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/widgets/main_frame/main_scaffold.dart';
 
 class MainFrame extends StatefulWidget {
-  const MainFrame({Key? key}) : super(key: key);
+  const MainFrame({super.key});
 
   @override
   State<StatefulWidget> createState() => _MainFrameState();

@@ -17,6 +17,8 @@ class OptionPropertyRenderer extends StatefulWidget {
 }
 
 class _OptionPropertyRendererState extends State<OptionPropertyRenderer> {
+  OptionProperty get property => widget.property;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,7 +35,7 @@ class _OptionPropertyRendererState extends State<OptionPropertyRenderer> {
           ),
         ),
         child: Row(
-          children: widget.property.value
+          children: property.value
               .map(
                 (Option option) => OptionTile(
                   option: option,
@@ -49,13 +51,12 @@ class _OptionPropertyRendererState extends State<OptionPropertyRenderer> {
   void onTap(Option tappedOption) {
     if (!tappedOption.selected) {
       final Set<Option> newOptions = <Option>{};
-      for (Option option in widget.property.value) {
+      for (Option option in property.value) {
         final Option newOption = option.copyWith(selected: tappedOption == option);
         newOptions.add(newOption);
       }
 
-      widget.property.value = newOptions;
-      widget.property.onChange(newOptions);
+      property.value = newOptions;
       widget.updateRenderer?.call();
       setState(() {});
     }

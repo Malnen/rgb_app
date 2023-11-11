@@ -77,7 +77,6 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
   void onChanged(Vector updatedValue) {
     setState(() {
       property.value = updatedValue;
-      property.onChange(updatedValue);
     });
   }
 }

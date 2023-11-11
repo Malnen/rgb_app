@@ -1,3 +1,4 @@
+import 'package:rgb_app/effects/audio_visualizer_effect/audio_visualizer_effect.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
@@ -10,12 +11,16 @@ class EffectFactory {
   static Effect getEffectFromJson(Map<String, Object?> json) {
     final String className = json['className'] as String;
     switch (className) {
-      case 'WaveEffect':
+      case WaveEffect.className:
         return WaveEffect.fromJson(json);
-      case 'KeyStrokeEffect':
+      case KeyStrokeEffect.className:
         return KeyStrokeEffect.fromJson(json);
-      case 'SpiralEffect':
+      case SpiralEffect.className:
         return SpiralEffect.fromJson(json);
+      case RippleEffect.className:
+        return RippleEffect.fromJson(json);
+      case AudioVisualizerEffect.className:
+        return AudioVisualizerEffect.fromJson(json);
       default:
         throw Exception('Illegal effect');
     }
@@ -23,16 +28,17 @@ class EffectFactory {
 
   static Effect getEffectByClassName(String className) {
     final EffectData effectData = _getCorrectEffectData(className);
-
     switch (className) {
-      case 'WaveEffect':
+      case WaveEffect.className:
         return WaveEffect(effectData);
-      case 'KeyStrokeEffect':
+      case KeyStrokeEffect.className:
         return KeyStrokeEffect(effectData);
-      case 'SpiralEffect':
+      case SpiralEffect.className:
         return SpiralEffect(effectData);
-      case 'RippleEffect':
+      case RippleEffect.className:
         return RippleEffect(effectData);
+      case AudioVisualizerEffect.className:
+        return AudioVisualizerEffect(effectData);
       default:
         throw Exception('Illegal effect');
     }
@@ -40,7 +46,7 @@ class EffectFactory {
 
   static EffectData _getCorrectEffectData(String className) {
     final EffectData effectData =
-        EffectDictionary.availableEffects.firstWhere((EffectData effectData) => effectData.className == className);
+    EffectDictionary.availableEffects.firstWhere((EffectData effectData) => effectData.className == className);
     return effectData.getWithNewKey();
   }
 }

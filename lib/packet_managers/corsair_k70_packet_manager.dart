@@ -14,72 +14,74 @@ class CorsairK70PacketManager implements PacketManager {
 
   @override
   void fill() {
-    corsairK70.dataPkt1 = Uint8List.fromList(<int>[
-      0x07,
-      0x28,
-      0x01,
-      0x03,
-      0x01,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00
-    ]);
+    corsairK70.dataPkt1 = Uint8List.fromList(
+      <int>[
+        0x07,
+        0x28,
+        0x01,
+        0x03,
+        0x01,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+      ],
+    );
 
     corsairK70.dataPkt2 = Uint8List.fromList(<int>[
       0x07,
@@ -145,7 +147,7 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.dataPkt3 = Uint8List.fromList(<int>[
@@ -212,7 +214,7 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.rPkt1 = Uint8List.fromList(<int>[
@@ -279,7 +281,7 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0xFF,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.rPkt2 = Uint8List.fromList(<int>[
@@ -346,7 +348,7 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0xFF,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.rPkt3 = Uint8List.fromList(<int>[
@@ -413,7 +415,7 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.gPkt1 = Uint8List.fromList(<int>[
@@ -480,7 +482,7 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0xFF,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.gPkt2 = Uint8List.fromList(<int>[
@@ -547,7 +549,7 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0xFF,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.gPkt3 = Uint8List.fromList(<int>[
@@ -614,7 +616,7 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.bPkt1 = Uint8List.fromList(<int>[
@@ -681,7 +683,7 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0xFF,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.bPkt2 = Uint8List.fromList(<int>[
@@ -748,7 +750,7 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0xFF,
       0x00,
-      0x00
+      0x00,
     ]);
 
     corsairK70.bPkt3 = Uint8List.fromList(<int>[
@@ -815,7 +817,7 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-      0x00
+      0x00,
     ]);
   }
 

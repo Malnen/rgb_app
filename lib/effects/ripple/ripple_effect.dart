@@ -7,12 +7,15 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/factories/property_factory.dart';
-import 'package:rgb_app/models/colors_property.dart';
+import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RippleEffect extends Effect {
+  static const String className = 'RippleEffect';
+  static const String name = 'Ripple';
+
   @override
   List<Property<Object>> get properties => <Property<Object>>[
         duration,
@@ -28,7 +31,7 @@ class RippleEffect extends Effect {
   late NumericProperty expansion;
   late NumericProperty fadeSpeed;
   late NumericProperty ripplePeriod;
-  late ColorsProperty colorsProperty;
+  late ColorListProperty colorsProperty;
   late List<Ripple> _ripples;
 
   Timer? _timer;
@@ -40,19 +43,22 @@ class RippleEffect extends Effect {
           min: 1,
           max: 10,
           name: 'Duration',
-          value: 4,
+          initialValue: 4,
+          debugArtificialValue: true,
         ),
         expansion = NumericProperty(
           min: 0.01,
           max: 1.5,
           name: 'Expansion',
-          value: 0.25,
+          initialValue: 0.25,
+          debugArtificialValue: true,
         ),
         fadeSpeed = NumericProperty(
           min: 0.01,
           max: 0.5,
           name: 'Fade Speed',
-          value: 0.1,
+          initialValue: 0.1,
+          debugArtificialValue: true,
         ),
         _periodStream = StreamController<double>() {
     _ripples = <Ripple>[];
@@ -60,11 +66,10 @@ class RippleEffect extends Effect {
       min: 0.1,
       max: 10,
       name: 'Ripple Period',
-      value: 1,
-      onChanged: _periodStream.add,
+      initialValue: 1,
     );
-    colorsProperty = ColorsProperty(
-      value: <Color>[
+    colorsProperty = ColorListProperty(
+      initialValue: <Color>[
         Colors.white,
         Colors.black,
       ],
@@ -75,19 +80,19 @@ class RippleEffect extends Effect {
 
   factory RippleEffect.fromJson(Map<String, Object?> json) {
     final RippleEffect effect = RippleEffect(EffectDictionary.rippleEffect);
-    effect.duration = PropertyFactory.getProperty<NumericProperty>(json['duration'] as Map<String, Object?>);
-    effect.expansion = PropertyFactory.getProperty<NumericProperty>(json['expansion'] as Map<String, Object?>);
-    effect.fadeSpeed = PropertyFactory.getProperty<NumericProperty>(json['fadeSpeed'] as Map<String, Object?>);
-    effect.ripplePeriod = PropertyFactory.getProperty<NumericProperty>(json['ripplePeriod'] as Map<String, Object?>);
-    effect.colorsProperty = PropertyFactory.getProperty<ColorsProperty>(json['colors'] as Map<String, Object?>);
+    effect.duration = PropertyFactory.getProperty(json['duration'] as Map<String, Object?>);
+    effect.expansion = PropertyFactory.getProperty(json['expansion'] as Map<String, Object?>);
+    effect.fadeSpeed = PropertyFactory.getProperty(json['fadeSpeed'] as Map<String, Object?>);
+    effect.ripplePeriod = PropertyFactory.getProperty(json['ripplePeriod'] as Map<String, Object?>);
+    effect.colorsProperty = PropertyFactory.getProperty(json['colors'] as Map<String, Object?>);
 
     return effect;
   }
 
   @override
   void init() {
-    ripplePeriod.onChanged = _periodStream.add;
-    ripplePeriod.onChange(ripplePeriod.value);
+    ripplePeriod.addValueChangeListener(_periodStream.add);
+    super.init();
   }
 
   @override

@@ -2,7 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
-abstract class EffectEvent extends Equatable {}
+abstract class EffectEvent extends Equatable {
+  @override
+  List<Object> get props => <Object>[];
+}
 
 class SetGridSizeEvent extends EffectEvent {
   final EffectGridData effectGridData;
@@ -55,3 +58,5 @@ class SelectEffectEvent extends EffectEvent {
   @override
   List<Object> get props => <Object>[effect];
 }
+
+class EffectPropertyChangedEvent extends EffectEvent {}

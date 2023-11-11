@@ -3,7 +3,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/factories/property_factory.dart';
-import 'package:rgb_app/models/colors_property.dart';
+import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
@@ -11,11 +11,14 @@ import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 
 class WaveEffect extends Effect {
+  static const String className = 'WaveEffect';
+  static const String name = 'Wave';
+
   late NumericProperty size;
   late NumericProperty speed;
   late Property<Set<Option>> waveDirection;
   late Property<Set<Option>> colorModeProperty;
-  late ColorsProperty customColorsProperty;
+  late ColorListProperty customColorsProperty;
   late List<Color> gradientColors;
   late List<Color> shiftedColors;
   late int colorsIncrementMax;
@@ -27,28 +30,28 @@ class WaveEffect extends Effect {
 
   @override
   List<Property<Object>> get properties => <Property<Object>>[
-        size,
-        speed,
-        waveDirection,
-        colorModeProperty,
-        if (customColorsMode) customColorsProperty,
-      ];
+    size,
+    speed,
+    waveDirection,
+    colorModeProperty,
+    if (customColorsMode) customColorsProperty,
+  ];
 
   WaveEffect(super.effectData)
       : size = NumericProperty(
-          value: 15,
+    initialValue: 15,
           name: 'Size',
           min: 1,
           max: 20,
         ),
         speed = NumericProperty(
-          value: 2.5,
+          initialValue: 2.5,
           name: 'Speed',
           min: 1,
           max: 20,
         ),
         waveDirection = OptionProperty(
-          value: <Option>{
+          initialValue: <Option>{
             Option(
               value: 0,
               name: 'Left',
@@ -63,7 +66,7 @@ class WaveEffect extends Effect {
           name: 'Wave Direction',
         ),
         colorModeProperty = OptionProperty(
-          value: <Option>{
+          initialValue: <Option>{
             Option(
               value: 0,
               name: 'Custom',
@@ -77,8 +80,8 @@ class WaveEffect extends Effect {
           },
           name: 'Color Mode',
         ),
-        customColorsProperty = ColorsProperty(
-          value: <Color>[
+        customColorsProperty = ColorListProperty(
+          initialValue: <Color>[
             Colors.white,
             Colors.black,
           ],
@@ -87,26 +90,22 @@ class WaveEffect extends Effect {
 
   factory WaveEffect.fromJson(Map<String, Object?> json) {
     final WaveEffect effect = WaveEffect(EffectDictionary.waveEffect);
-    effect.size = PropertyFactory.getProperty<NumericProperty>(json['size'] as Map<String, Object?>);
-    effect.speed = PropertyFactory.getProperty<NumericProperty>(json['speed'] as Map<String, Object?>);
+    effect.size = PropertyFactory.getProperty(json['size'] as Map<String, Object?>);
+    effect.speed = PropertyFactory.getProperty(json['speed'] as Map<String, Object?>);
     effect.waveDirection = PropertyFactory.getProperty<OptionProperty>(json['waveDirection'] as Map<String, Object?>);
     effect.colorModeProperty = PropertyFactory.getProperty<OptionProperty>(json['colorMode'] as Map<String, Object?>);
-    effect.customColorsProperty =
-        PropertyFactory.getProperty<ColorsProperty>(json['customColors'] as Map<String, Object?>);
+    effect.customColorsProperty = PropertyFactory.getProperty(json['customColors'] as Map<String, Object?>);
 
     return effect;
   }
 
   @override
   void init() {
-    waveDirection.onChanged = _onDirectionChange;
-    _onDirectionChange(waveDirection.value);
-    colorModeProperty.onChanged = _onColorModeChange;
-    _onColorModeChange(colorModeProperty.value);
-    customColorsProperty.onChanged = _onCustomColorChange;
-    _onCustomColorChange(customColorsProperty.value);
-    size.onChanged = _onSizeChange;
-    _onSizeChange(size.value);
+    waveDirection.addValueChangeListener(_onDirectionChange);
+    colorModeProperty.addValueChangeListener(_onColorModeChange);
+    customColorsProperty.addValueChangeListener(_onCustomColorChange);
+    size.addValueChangeListener(_onSizeChange);
+    super.init();
   }
 
   @override
@@ -228,14 +227,12 @@ class WaveEffect extends Effect {
     shiftedColors = List<Color>.from(gradientColors);
   }
 
-  List<Color> _getGradient(
-    int i,
-    int remainingGradientColorCount,
-    int gradientColorCountPerSegment,
-    List<Color> colors,
-  ) {
+  List<Color> _getGradient(int i,
+      int remainingGradientColorCount,
+      int gradientColorCountPerSegment,
+      List<Color> colors,) {
     final int gradientColorCount =
-        i < remainingGradientColorCount ? gradientColorCountPerSegment : gradientColorCountPerSegment - 1;
+    i < remainingGradientColorCount ? gradientColorCountPerSegment : gradientColorCountPerSegment - 1;
     final Color startColor = colors[i];
     final Color endColor = colors[i + 1];
     final List<Color> gradient = _createGradient(

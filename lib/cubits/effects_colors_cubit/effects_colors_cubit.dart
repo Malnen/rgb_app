@@ -5,7 +5,7 @@ import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_state.dart';
 class EffectsColorsCubit extends Cubit<EffectsColorsState> {
   List<List<Color>> get colors => state.colors;
 
-  EffectsColorsCubit() : super(EffectsColorsState(colors: <List<Color>>[])) {}
+  EffectsColorsCubit() : super(EffectsColorsState(colors: <List<Color>>[]));
 
   void updateColors(List<List<Color>> colors) {
     emitColors(colors);

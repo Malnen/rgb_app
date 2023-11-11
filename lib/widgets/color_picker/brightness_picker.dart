@@ -54,7 +54,7 @@ class BrightnessPicker extends StatelessWidget {
               size: thumbSize,
             ),
             updateOffset: (double x, double y) => setCurrentColor(x, y, cubit),
-          )
+          ),
         ],
       ),
     );

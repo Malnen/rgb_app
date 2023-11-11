@@ -68,7 +68,7 @@ class SteelSeriesRival3 extends MouseInterface {
       0x00,
       0x00,
       0x00,
-      0x00
+      0x00,
     ]);
     final ffi.Pointer<ffi.Uint8> pointer = data.allocatePointer();
     libusb.libusb_control_transfer(
@@ -110,7 +110,7 @@ class SteelSeriesRival3 extends MouseInterface {
       }
       colors = newColors;
     } catch (e) {
-      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
+      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
     }
 
     super.update();

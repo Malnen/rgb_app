@@ -18,17 +18,12 @@ Future<void> _run() async {
     await _initSystemTray();
   }
 
-  final HydratedStorage storage = await HydratedStorage.build(
+  HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
-  HydratedBlocOverrides.runZoned(
-    () {
-      LibusbLoader.initLibusb();
-      DependencyInitializer.init();
-      runApp(const MainFrame());
-    },
-    storage: storage,
-  );
+  LibusbLoader.initLibusb();
+  DependencyInitializer.init();
+  runApp(const MainFrame());
 }
 
 Future<void> _initSystemTray() async {

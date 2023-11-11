@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/models/property.dart';
 
-class ColorsProperty extends Property<List<Color>> {
-  ColorsProperty({
-    required super.value,
+class ColorProperty extends Property<Color> {
+  ColorProperty({
     required super.name,
+    required super.initialValue,
   });
 
   @override
   Map<String, Object> getData() {
     return <String, Object>{
-      'value': value.map((Color color) => color.value).toList(),
+      'value': value.value,
     };
   }
 }

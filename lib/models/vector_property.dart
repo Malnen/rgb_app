@@ -3,9 +3,8 @@ import 'package:rgb_app/models/vector.dart';
 
 class VectorProperty extends Property<Vector> {
   VectorProperty({
-    required super.value,
     required super.name,
-    super.onChanged,
+    required super.initialValue,
   });
 
   @override
@@ -16,11 +15,11 @@ class VectorProperty extends Property<Vector> {
   }
 
   VectorProperty copyWith({
-    final Vector? value,
+    final Vector? initialValue,
     final String? name,
   }) {
     return VectorProperty(
-      value: value ?? this.value,
+      initialValue: initialValue ?? value,
       name: name ?? this.name,
     );
   }

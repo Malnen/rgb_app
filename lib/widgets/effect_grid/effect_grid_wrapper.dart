@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_container.dart';
 
 class EffectGridWrapper extends StatefulWidget {
@@ -14,6 +16,7 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
   late List<List<Color>> colors;
   late EffectBloc effectBloc;
   late EffectsColorsCubit effectsColorsCubit;
+  late DevicesBloc devicesBloc;
 
   @override
   void initState() {
@@ -21,7 +24,11 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
     effectBloc = GetIt.instance.get();
     colors = buildColors();
     effectsColorsCubit = GetIt.instance.get();
-    effectsColorsCubit.updateColors(colors);
+    devicesBloc = GetIt.instance.get();
+    final TickProvider tickProvider = GetIt.instance.get();
+    tickProvider.onTick(() {
+      effectsColorsCubit.updateColors(colors);
+    });
   }
 
   @override
@@ -30,9 +37,7 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
     context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeY);
     colors = buildColors();
 
-    return EffectGridContainer(
-      colors: colors,
-    );
+    return EffectGridContainer();
   }
 
   List<List<Color>> buildColors() {

@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/cubits/popup_cubit/popup_cubit.dart';
 import 'package:rgb_app/cubits/popup_cubit/popup_state.dart';
-import 'package:rgb_app/models/colors_property.dart';
+import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/widgets/color_picker/color_picker_renderer.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/color_property/color_position.dart';
+import 'package:rgb_app/widgets/effect_property_renderer/color_list_property/color_position.dart';
 import 'package:rgb_app/widgets/left_panel/add_generic_button/add_button.dart';
 
-class ColorPropertyRenderer extends StatefulWidget {
-  final ColorsProperty property;
+class ColorListPropertyRenderer extends StatefulWidget {
+  final ColorListProperty property;
 
-  ColorPropertyRenderer({required this.property});
+  ColorListPropertyRenderer({required this.property});
 
   @override
-  State<ColorPropertyRenderer> createState() => _ColorPropertyRendererState();
+  State<ColorListPropertyRenderer> createState() => _ColorListPropertyRendererState();
 }
 
-class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
+class _ColorListPropertyRendererState extends State<ColorListPropertyRenderer> {
   final double width = 230;
   final double height = 220;
 
   late PopupCubit cubit;
 
-  ColorsProperty get property => widget.property;
+  ColorListProperty get property => widget.property;
 
   List<Color> get value => property.value;
 
@@ -84,7 +84,7 @@ class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
         setState(
           () {
             value[index] = newColor;
-            property.onChanged?.call(value);
+            property.value = value;
           },
         );
       },
@@ -94,14 +94,14 @@ class _ColorPropertyRendererState extends State<ColorPropertyRenderer> {
   void addColor() {
     setState(() {
       value.add(Colors.white);
-      property.onChanged?.call(value);
+      property.value = value;
     });
   }
 
   void deleteColor(int index) {
     setState(() {
       value.removeAt(index);
-      property.onChanged?.call(value);
+      property.value = value;
     });
   }
 }

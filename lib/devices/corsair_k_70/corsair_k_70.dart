@@ -87,7 +87,7 @@ class CorsairK70 extends KeyboardInterface {
     try {
       _updateKeys();
     } catch (_) {
-      print(offsetX.toString() + ', ' + offsetY.toString() + ' out of range ' + deviceData.deviceProductVendor.name);
+      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
     }
 
     super.update();
@@ -143,7 +143,7 @@ class CorsairK70 extends KeyboardInterface {
   void _updateKey(KeyboardKey key, int i, int j) {
     final int packetIndex = key.packetIndex;
     final int index = key.index;
-    final Color color = effectsColorsCubit.colors[i + offsetX][j + offsetY];
+    final Color color = effectsColorsCubit.colors[i + offsetY][j + offsetX];
     final int r = color.red;
     final int g = color.green;
     final int b = color.blue;
