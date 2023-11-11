@@ -34,6 +34,7 @@ flutter:
     - assets/libusb-1.0.dll
     - assets/USBHotPlug.dll
     - assets/app_icon.ico
+    - assets/rgbAppService/
 ffigen:
   output: 'generated_bindings.dart'
   headers:
