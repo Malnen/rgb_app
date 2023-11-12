@@ -35,6 +35,10 @@ flutter:
     - assets/USBHotPlug.dll
     - assets/app_icon.ico
     - assets/rgbAppService/
+    - assets/rgbAppService/runtimes/
+    - assets/rgbAppService/runtimes/win/
+    - assets/rgbAppService/runtimes/win/lib/
+    - assets/rgbAppService/runtimes/win/lib/net7.0/
 ffigen:
   output: 'generated_bindings.dart'
   headers:
