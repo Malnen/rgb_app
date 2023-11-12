@@ -52,6 +52,6 @@ class AudioSampleRecorder {
   }
 
   void _onAudioData(Map<String, Object> data) {
-    audioDataStream.value = List<int>.from(data['audioData'] as List<Object?>).map((int value) => value + 150).toList();
+    audioDataStream.value = List<int>.from(data['audioData'] as List<Object?>);
   }
 }
