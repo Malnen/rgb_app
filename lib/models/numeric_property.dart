@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/models/property.dart';
 
 class NumericProperty extends Property<double> {
@@ -7,6 +8,7 @@ class NumericProperty extends Property<double> {
   final double _min;
   final double _max;
   final bool debugArtificialValue;
+  final NumericPropertyType propertyType;
 
   double get invertedValue {
     return (max + 1) - value;
@@ -33,6 +35,7 @@ class NumericProperty extends Property<double> {
     required double min,
     required double max,
     this.debugArtificialValue = false,
+    this.propertyType = NumericPropertyType.slider,
   })  : _min = min,
         _max = max;
 
@@ -43,6 +46,7 @@ class NumericProperty extends Property<double> {
       'max': _getUnmodifiedValue(max),
       'value': _getUnmodifiedValue(value),
       'debugArtificialValue': debugArtificialValue,
+      'propertyType': propertyType.name,
     };
   }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
+import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/color_property.dart' as color;
@@ -20,7 +21,9 @@ class AudioVisualizerEffect extends Effect {
   late AudioSampleRecorder recorder;
 
   @override
-  List<Property<Object>> get properties => <Property<Object>>[
+  List<Property<Object>> get properties =>
+      <Property<Object>>[
+        audioGain,
         boost,
         pulseRate,
         spectrumSize,
@@ -34,6 +37,7 @@ class AudioVisualizerEffect extends Effect {
 
   final ValueNotifier<bool> _disabled = ValueNotifier<bool>(false);
 
+  late NumericProperty audioGain;
   late NumericProperty boost;
   late NumericProperty pulseRate;
   late NumericProperty spectrumSize;
@@ -55,7 +59,14 @@ class AudioVisualizerEffect extends Effect {
   Timer? _transitionTimer;
 
   AudioVisualizerEffect(super.effectData)
-      : boost = NumericProperty(
+      : audioGain = NumericProperty(
+          initialValue: 150,
+          name: 'AudioGain',
+          min: -200,
+          max: 500,
+          propertyType: NumericPropertyType.textField,
+        ),
+        boost = NumericProperty(
           initialValue: -100,
           name: 'Boost',
           min: -200,
@@ -141,6 +152,7 @@ class AudioVisualizerEffect extends Effect {
   @override
   Map<String, Object?> getData() {
     return <String, Object>{
+      'audioGain': audioGain.toJson(),
       'boost': boost.toJson(),
       'pulseRate': pulseRate.toJson(),
       'spectrumSize': spectrumSize.toJson(),
@@ -158,6 +170,9 @@ class AudioVisualizerEffect extends Effect {
     barsColorMode.addValueChangeListener(_onBarsColorModeChange);
     backgroundColorMode.addValueChangeListener(_onBackgroundColorModeChange);
     disabledOnIdle.addValueChangeListener(_onDisableOnIdle);
+    audioGain.addValueChangeListener((double value) {
+      recorder.audioGain = value;
+    });
     super.init();
   }
 
@@ -335,6 +350,7 @@ class AudioVisualizerEffect extends Effect {
     effect.barsColorMode = PropertyFactory.getProperty(json['barsColorMode'] as Map<String, Object?>);
     effect.backgroundColorMode = PropertyFactory.getProperty(json['backgroundColorMode'] as Map<String, Object?>);
     effect.disabledOnIdle = PropertyFactory.getProperty(json['disabledOnIdle'] as Map<String, Object?>);
+    effect.audioGain = PropertyFactory.getProperty(json['audioGain'] as Map<String, Object?>);
 
     return effect;
   }

@@ -10,10 +10,20 @@ import 'package:rxdart/rxdart.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class AudioSampleRecorder {
+  final RgbAppService _service;
+
   late final BehaviorSubject<List<int>> audioDataStream;
   late final WebSocketChannel _channel;
 
-  late Timer _getAudioSampleTimer;
+  double _audioGain;
+
+  AudioSampleRecorder()
+      : _audioGain = 0,
+        _service = GetIt.instance.get();
+
+  set audioGain(double value) {
+    _audioGain = value;
+  }
 
   void init() async {
     audioDataStream = BehaviorSubject<List<int>>.seeded(<int>[]);
@@ -21,18 +31,14 @@ class AudioSampleRecorder {
   }
 
   void dispose() {
-    _getAudioSampleTimer.cancel();
     audioDataStream.close();
     _channel.sink.close();
   }
 
   Future<void> _createWebSocketConnection() async {
-    final RgbAppService service = GetIt.instance.get();
-    _channel = await service.connect('audioSample', _channelListener);
-    service.sendCommand(RgbAppServiceRequest(AudioSampleCommand.createCapture.name), _channel);
-    _getAudioSampleTimer = Timer.periodic(Duration(milliseconds: 10), (_) {
-      service.sendCommand(RgbAppServiceRequest(AudioSampleCommand.getAudioSample.name), _channel);
-    });
+    _channel = await _service.connect('audioSample', _channelListener);
+    _service.sendCommand(RgbAppServiceRequest(command: AudioSampleCommand.createCapture.name), _channel);
+    _getAudioData();
   }
 
   void _channelListener(Object? data) {
@@ -51,7 +57,21 @@ class AudioSampleRecorder {
     }
   }
 
-  void _onAudioData(Map<String, Object> data) {
+  void _onAudioData(Map<String, Object> data) async {
     audioDataStream.value = List<int>.from(data['audioData'] as List<Object?>);
+    await Future<void>.delayed(Duration(milliseconds: 10));
+    _getAudioData();
+  }
+
+  void _getAudioData() {
+    _service.sendCommand(
+      RgbAppServiceRequest(
+        command: AudioSampleCommand.getAudioSample.name,
+        data: <String, Object>{
+          'audioGain': _audioGain,
+        },
+      ),
+      _channel,
+    );
   }
 }

@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
-import 'package:rgb_app/interfaces/serializable.dart';
 
-class RgbAppServiceRequest extends Equatable implements Serializable {
+class RgbAppServiceRequest extends Equatable {
   final String command;
+  final Map<String, Object>? data;
 
-  RgbAppServiceRequest(this.command);
+  RgbAppServiceRequest({required this.command, this.data});
 
   @override
   List<Object> get props => <Object>[];
 
-  @override
-  Map<String, Object> toJson() {
-    return <String, Object>{
+  Map<String, Object?> toJson() {
+    return <String, Object?>{
       'command': command,
+      'data': data,
     };
   }
 }

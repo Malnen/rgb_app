@@ -41,7 +41,7 @@ class RgbAppService {
   }
 
   void sendCommand(RgbAppServiceRequest request, WebSocketChannel channel) {
-    final Map<String, Object> json = request.toJson();
+    final Map<String, Object?> json = request.toJson();
     final String body = jsonEncode(json);
 
     return channel.sink.add(body);

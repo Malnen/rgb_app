@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 
-class MinMaxTextInputFormatter extends TextInputFormatter {
-  final int min;
-  final int max;
+class MinMaxTextInputFormatter<T extends num> extends TextInputFormatter {
+  final T min;
+  final T max;
 
   MinMaxTextInputFormatter({required this.min, required this.max});
 
@@ -11,17 +11,22 @@ class MinMaxTextInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final int newTextLength = newValue.text.length;
+    if (min < 0) {
+      if (newValue.text == '-') {
+        return newValue;
+      }
+    }
 
+    final int newTextLength = newValue.text.length;
     final int? parsedValue = int.tryParse(newValue.text);
     if (newTextLength == 0) {
       return newValue.copyWith(text: '');
     } else if (parsedValue == null) {
       return oldValue;
     } else if (parsedValue < min) {
-      return oldValue;
+      return oldValue.copyWith(text: min.toString());
     } else if (parsedValue > max) {
-      return oldValue;
+      return oldValue.copyWith(text: max.toString());
     }
 
     return newValue;

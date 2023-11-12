@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/color_property.dart' as color;
 import 'package:rgb_app/models/numeric_property.dart';
@@ -18,6 +19,7 @@ class PropertyFactory {
           min: json['min'] as double,
           max: json['max'] as double,
           debugArtificialValue: json['debugArtificialValue'] as bool,
+          propertyType: NumericPropertyType.values.byName(json['propertyType'] as String),
         ) as T;
       case 'VectorProperty':
         final Map<String, Object> value = Map<String, Object>.from(json['value'] as Map<String, Object?>);

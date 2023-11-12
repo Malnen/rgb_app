@@ -47,7 +47,7 @@ class _EffectGridState extends State<EffectGrid> {
       padding: const EdgeInsets.only(top: 20),
       child: Row(
         children: <Widget>[
-          NumericField(
+          NumericField<int>(
             label: 'X',
             controller: controllerX,
           ),
@@ -62,7 +62,7 @@ class _EffectGridState extends State<EffectGrid> {
               ),
             ),
           ),
-          NumericField(
+          NumericField<int>(
             label: 'Y',
             controller: controllerY,
           ),

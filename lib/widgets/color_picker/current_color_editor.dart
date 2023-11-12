@@ -102,7 +102,7 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     required TextEditingController textEditingController,
     required FocusNode focusNode,
   }) {
-    return NumericField(
+    return NumericField<int>(
       label: label,
       focusNode: focusNode,
       controller: textEditingController,

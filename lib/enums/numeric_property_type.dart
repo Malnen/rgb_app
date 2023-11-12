@@ -1,0 +1,4 @@
+enum NumericPropertyType {
+  slider,
+  textField,
+}
