@@ -21,13 +21,14 @@ class AudioVisualizerEffect extends Effect {
   late AudioSampleRecorder recorder;
 
   @override
-  List<Property<Object>> get properties =>
-      <Property<Object>>[
+  List<Property<Object>> get properties => <Property<Object>>[
         audioGain,
-        boost,
+        if (!_useDynamicBoost) boost,
+        dynamicBoost,
         pulseRate,
         spectrumSize,
         spectrumShift,
+        displayMode,
         disabledOnIdle,
         barsColorMode,
         if (!_areBarsTransparent) barsColor,
@@ -42,6 +43,8 @@ class AudioVisualizerEffect extends Effect {
   late NumericProperty pulseRate;
   late NumericProperty spectrumSize;
   late NumericProperty spectrumShift;
+  late OptionProperty displayMode;
+  late OptionProperty dynamicBoost;
   late color.ColorProperty barsColor;
   late color.ColorProperty backgroundColor;
   late OptionProperty barsColorMode;
@@ -49,12 +52,18 @@ class AudioVisualizerEffect extends Effect {
   late OptionProperty backgroundColorMode;
   late List<int> _currentValues;
 
+  final double _dynamicBoostSpeed = 0.1;
+  final double _dynamicBoostCeil = 75;
+
   bool _isBackgroundTransparent = false;
   bool _areBarsTransparent = false;
   bool _disableOnIdle = false;
   bool _hasAudioData = false;
   bool _duringTransition = false;
+  bool _useDynamicBoost = true;
   double _transitionOpacity = 0;
+  double _dynamicBoostValue = 0;
+  int _maxAudioValue = 0;
   Timer? _idleTimer;
   Timer? _transitionTimer;
 
@@ -113,6 +122,21 @@ class AudioVisualizerEffect extends Effect {
           },
           name: 'Disable On Idle',
         ),
+        displayMode = OptionProperty(
+          initialValue: <Option>{
+            Option(
+              value: 0,
+              name: 'Bottom',
+              selected: false,
+            ),
+            Option(
+              value: 1,
+              name: 'Middle',
+              selected: true,
+            ),
+          },
+          name: 'Display Mode',
+        ),
         barsColorMode = OptionProperty(
           initialValue: <Option>{
             Option(
@@ -142,6 +166,21 @@ class AudioVisualizerEffect extends Effect {
             ),
           },
           name: 'Background Color Mode',
+        ),
+        dynamicBoost = OptionProperty(
+          initialValue: <Option>{
+            Option(
+              value: 0,
+              name: 'On',
+              selected: true,
+            ),
+            Option(
+              value: 1,
+              name: 'Off',
+              selected: false,
+            ),
+          },
+          name: 'Dynamic Boost',
         ) {
     recorder = AudioSampleRecorder();
     recorder.init();
@@ -162,6 +201,8 @@ class AudioVisualizerEffect extends Effect {
       'barsColorMode': barsColorMode.toJson(),
       'backgroundColor': backgroundColor.toJson(),
       'backgroundColorMode': backgroundColorMode.toJson(),
+      'displayMode': displayMode.toJson(),
+      'dynamicBoost': dynamicBoost.toJson(),
     };
   }
 
@@ -173,6 +214,7 @@ class AudioVisualizerEffect extends Effect {
     audioGain.addValueChangeListener((double value) {
       recorder.audioGain = value;
     });
+    dynamicBoost.addValueChangeListener(_onDynamicBoostChange);
     super.init();
   }
 
@@ -187,6 +229,11 @@ class AudioVisualizerEffect extends Effect {
         _updateColors(value);
       }
     }
+  }
+
+  @override
+  void dispose() {
+    recorder.dispose();
   }
 
   void _onDisableChange() {
@@ -236,9 +283,19 @@ class AudioVisualizerEffect extends Effect {
     }
   }
 
+  void _onDynamicBoostChange(Set<Option> options) {
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
+    _useDynamicBoost = selectedOption.value == 0;
+  }
+
   void _updateColors(List<int> value) {
     final int length = _calculateLengthAndCorrectCurrentValues();
-    _currentValues = _resizeValue(value, length).map(_applyBoost).indexed.map(_processCurrentValue).toList();
+    final Iterable<int> values = _resizeValue(value, length);
+    if (_useDynamicBoost) {
+      _manageDynamicBoost();
+    }
+
+    _currentValues = values.map(_applyBoost).indexed.map(_processCurrentValue).toList();
     _processUpdatedValues();
   }
 
@@ -256,6 +313,7 @@ class AudioVisualizerEffect extends Effect {
   Iterable<int> _resizeValue(List<int> source, int targetLength) sync* {
     final int sourceLength = source.length;
     final int step = sourceLength ~/ targetLength;
+    _maxAudioValue = -1000;
     for (int i = 0; i < targetLength; i++) {
       int sum = 0;
       for (int j = 0; j < step; j++) {
@@ -263,11 +321,38 @@ class AudioVisualizerEffect extends Effect {
         sum += index < sourceLength ? source[index] : sum += source.last;
       }
 
-      yield sum ~/ step;
+      final int value = sum ~/ step;
+      if (value > _maxAudioValue) {
+        _maxAudioValue = value;
+      }
+
+      yield value;
     }
   }
 
-  int _applyBoost(int value) => value + boost.value.toInt();
+  void _manageDynamicBoost() {
+    if (_maxAudioValue < -75) {
+      _maxAudioValue = 0;
+    }
+
+    final double boostValue = _dynamicBoostCeil - _maxAudioValue;
+    final double difference = (_dynamicBoostCeil - boostValue).abs();
+    if (difference < _dynamicBoostSpeed) {
+      _dynamicBoostValue = boostValue;
+    } else if (_dynamicBoostValue > boostValue) {
+      _dynamicBoostValue -= _dynamicBoostSpeed;
+    } else if (_dynamicBoostValue < boostValue) {
+      _dynamicBoostValue += _dynamicBoostSpeed;
+    }
+  }
+
+  int _applyBoost(int value) {
+    if (_useDynamicBoost) {
+      return value + _dynamicBoostValue.toInt();
+    }
+
+    return value + boost.value.toInt();
+  }
 
   int _processCurrentValue((int index, int value) record) {
     int currentValue = _currentValues[record.$1];
@@ -314,7 +399,30 @@ class AudioVisualizerEffect extends Effect {
   }
 
   void _setColor(int step, int j, int i, int value, int sizeY, List<List<Color>> colors, int y, Color currentColor) {
+    final int selectedId = displayMode.selectedOption.value;
+    if (selectedId == 0) {
+      _onNormalDisplay(step, j, value, currentColor, colors, y, i);
+    } else if (selectedId == 1) {
+      _onMirroredDisplay(step, j, value ~/ 2, currentColor, colors, y, i);
+    }
+  }
+
+  void _onNormalDisplay(int step, int j, int value, Color currentColor, List<List<Color>> colors, int y, int i) {
     final double opacity = _calculateOpacity(step, j, value);
+    final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
+    final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
+    colors[y][i] = ColorExtension.mix(barsColorValue, backgroundColorValue, opacity);
+  }
+
+  void _onMirroredDisplay(int step, int j, int value, Color currentColor, List<List<Color>> colors, int y, int i) {
+    final int halfOfHeight = effectBloc.sizeY ~/ 2;
+    late double opacity;
+    if (y < halfOfHeight) {
+      opacity = _calculateOpacity(step, j - halfOfHeight, value);
+    } else {
+      opacity = 1 - _calculateOpacity(step, j + halfOfHeight, 100 - value);
+    }
+
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
     colors[y][i] = ColorExtension.mix(barsColorValue, backgroundColorValue, opacity);
@@ -334,11 +442,6 @@ class AudioVisualizerEffect extends Effect {
     return 0;
   }
 
-  @override
-  void dispose() {
-    recorder.dispose();
-  }
-
   factory AudioVisualizerEffect.fromJson(Map<String, Object?> json) {
     final AudioVisualizerEffect effect = AudioVisualizerEffect(EffectDictionary.audioVisualizer);
     effect.boost = PropertyFactory.getProperty(json['boost'] as Map<String, Object?>);
@@ -351,6 +454,8 @@ class AudioVisualizerEffect extends Effect {
     effect.backgroundColorMode = PropertyFactory.getProperty(json['backgroundColorMode'] as Map<String, Object?>);
     effect.disabledOnIdle = PropertyFactory.getProperty(json['disabledOnIdle'] as Map<String, Object?>);
     effect.audioGain = PropertyFactory.getProperty(json['audioGain'] as Map<String, Object?>);
+    effect.displayMode = PropertyFactory.getProperty(json['displayMode'] as Map<String, Object?>);
+    effect.dynamicBoost = PropertyFactory.getProperty(json['dynamicBoost'] as Map<String, Object?>);
 
     return effect;
   }
