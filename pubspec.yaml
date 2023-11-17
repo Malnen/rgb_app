@@ -32,7 +32,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/libusb-1.0.dll
-    - assets/USBHotPlug.dll
     - assets/app_icon.ico
     - assets/rgbAppService/
     - assets/rgbAppService/runtimes/
@@ -44,4 +43,3 @@ ffigen:
   headers:
     entry-points:
       #  - 'assets/libusb.h'
-      - 'assets/UsbHotPlug.h'
