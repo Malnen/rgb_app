@@ -1,10 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rgb_app/utils/dependency_initializer.dart';
 import 'package:rgb_app/utils/libusb_loader.dart';
+import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart';
 import 'package:rgb_app/widgets/main_frame/main_frame.dart';
 import 'package:system_tray/system_tray.dart';
 
@@ -23,6 +27,8 @@ Future<void> _run() async {
   );
   LibusbLoader.initLibusb();
   DependencyInitializer.init();
+
+  _initUsbDetector();
   runApp(const MainFrame());
 }
 
@@ -68,4 +74,14 @@ Future<void> _initSystemTray() async {
   if (!kDebugMode) {
     await appWindow.hide();
   }
+}
+
+void _initUsbDetector() {
+  final UsbDeviceChangeDetector detector = UsbDeviceChangeDetector(() {
+    final DevicesBloc devicesBloc = GetIt.instance.get();
+    final CheckDevicesConnectionStateEvent event = CheckDevicesConnectionStateEvent();
+    devicesBloc.add(event);
+  });
+  detector.init();
+  GetIt.instance.registerSingleton(detector);
 }

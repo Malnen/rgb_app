@@ -6,7 +6,6 @@ import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
-import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart';
 
 class DependencyInitializer {
   static final GetIt instance = GetIt.instance;
@@ -18,7 +17,6 @@ class DependencyInitializer {
     _initKeyBloc();
     _initEffectBloc();
     _initEffectsColorsCubit();
-    _initUsbDeviceChangeDetector();
   }
 
   static void _initRgbAppService() {
@@ -56,15 +54,5 @@ class DependencyInitializer {
   static void _initEffectsColorsCubit() async {
     final EffectsColorsCubit effectsColorsCubit = EffectsColorsCubit();
     instance.registerSingleton(effectsColorsCubit);
-  }
-
-  static void _initUsbDeviceChangeDetector() async {
-    final UsbDeviceChangeDetector detector = UsbDeviceChangeDetector(() {
-      final DevicesBloc devicesBloc = instance.get();
-      final CheckDevicesConnectionStateEvent event = CheckDevicesConnectionStateEvent();
-      devicesBloc.add(event);
-    });
-    detector.init();
-    instance.registerSingleton(detector);
   }
 }
