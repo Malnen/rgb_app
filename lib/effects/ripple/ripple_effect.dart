@@ -4,9 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rgb_app/effects/common/ripple.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
-import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
@@ -43,6 +41,7 @@ class RippleEffect extends Effect {
           min: 1,
           max: 10,
           name: 'Duration',
+          idn: 'duration',
           initialValue: 4,
           debugArtificialValue: true,
         ),
@@ -50,6 +49,7 @@ class RippleEffect extends Effect {
           min: 0.01,
           max: 1.5,
           name: 'Expansion',
+          idn: 'expansion',
           initialValue: 0.25,
           debugArtificialValue: true,
         ),
@@ -57,6 +57,7 @@ class RippleEffect extends Effect {
           min: 0.01,
           max: 0.5,
           name: 'Fade Speed',
+          idn: 'fadeSpeed',
           initialValue: 0.1,
           debugArtificialValue: true,
         ),
@@ -66,6 +67,7 @@ class RippleEffect extends Effect {
       min: 0.1,
       max: 10,
       name: 'Ripple Period',
+      idn: 'ripplePeriod',
       initialValue: 1,
     );
     colorsProperty = ColorListProperty(
@@ -73,20 +75,10 @@ class RippleEffect extends Effect {
         Colors.white,
         Colors.black,
       ],
+      idn: 'colors',
       name: 'Colors',
     );
     _periodStream.stream.debounceTime(Duration(milliseconds: 250)).listen(_onRipplePeriodChange);
-  }
-
-  factory RippleEffect.fromJson(Map<String, Object?> json) {
-    final RippleEffect effect = RippleEffect(EffectDictionary.rippleEffect);
-    effect.duration = PropertyFactory.getProperty(json['duration'] as Map<String, Object?>);
-    effect.expansion = PropertyFactory.getProperty(json['expansion'] as Map<String, Object?>);
-    effect.fadeSpeed = PropertyFactory.getProperty(json['fadeSpeed'] as Map<String, Object?>);
-    effect.ripplePeriod = PropertyFactory.getProperty(json['ripplePeriod'] as Map<String, Object?>);
-    effect.colorsProperty = PropertyFactory.getProperty(json['colors'] as Map<String, Object?>);
-
-    return effect;
   }
 
   @override
@@ -109,17 +101,6 @@ class RippleEffect extends Effect {
     }
 
     _ripples.removeWhere((Ripple ripple) => ripple.canBeDeleted);
-  }
-
-  @override
-  Map<String, Object?> getData() {
-    return <String, Object?>{
-      'duration': duration.toJson(),
-      'expansion': expansion.toJson(),
-      'fadeSpeed': fadeSpeed.toJson(),
-      'ripplePeriod': ripplePeriod.toJson(),
-      'colors': colorsProperty.toJson(),
-    };
   }
 
   void _onRipplePeriodChange(double time) {

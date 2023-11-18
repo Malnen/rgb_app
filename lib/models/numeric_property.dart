@@ -5,10 +5,10 @@ import 'package:rgb_app/models/property.dart';
 class NumericProperty extends Property<double> {
   static const double debugMultiplier = 4;
 
-  final double _min;
-  final double _max;
-  final bool debugArtificialValue;
-  final NumericPropertyType propertyType;
+  double _min;
+  double _max;
+  bool debugArtificialValue;
+  NumericPropertyType propertyType;
 
   double get invertedValue {
     return (max + 1) - value;
@@ -32,6 +32,7 @@ class NumericProperty extends Property<double> {
   NumericProperty({
     required super.initialValue,
     required super.name,
+    required super.idn,
     required double min,
     required double max,
     this.debugArtificialValue = false,
@@ -53,14 +54,26 @@ class NumericProperty extends Property<double> {
   NumericProperty copyWith({
     final double? initialValue,
     final String? name,
+    final String? idn,
     final double? min,
     final double? max,
   }) {
     return NumericProperty(
       initialValue: initialValue ?? value,
       name: name ?? this.name,
+      idn: idn ?? this.idn,
       min: min ?? this.min,
       max: max ?? this.max,
     );
+  }
+
+  @override
+  void updateProperty(NumericProperty property) {
+    super.updateProperty(property);
+    _min = _getUnmodifiedValue(property.min);
+    _max = _getUnmodifiedValue(property.max);
+    value = _getUnmodifiedValue(property.value);
+    debugArtificialValue = property.debugArtificialValue;
+    propertyType = property.propertyType;
   }
 }

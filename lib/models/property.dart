@@ -2,10 +2,15 @@ import 'package:flutter/cupertino.dart';
 
 abstract class Property<T> extends ValueNotifier<T> {
   final String name;
+  final String idn;
+
+  bool visible;
 
   Property({
     required this.name,
+    required this.idn,
     required T initialValue,
+    this.visible = true,
   }) : super(initialValue);
 
   Map<String, Object> getData();
@@ -16,6 +21,11 @@ abstract class Property<T> extends ValueNotifier<T> {
 
   void notify() {
     notifyListeners();
+  }
+
+  void updateProperty(covariant Property<T> property) {
+    value = property.value;
+    visible = property.visible;
   }
 
   Map<String, Object?> toJson() {

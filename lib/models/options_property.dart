@@ -7,6 +7,7 @@ class OptionProperty extends Property<Set<Option>> {
 
   OptionProperty({
     required super.name,
+    required super.idn,
     required super.initialValue,
   }) {
     addValueChangeListener((Set<Option> options) {

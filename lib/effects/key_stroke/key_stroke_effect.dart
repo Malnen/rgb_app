@@ -9,10 +9,8 @@ import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/effects/common/ripple.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/effects/effect_dictionary.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
-import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
@@ -45,6 +43,7 @@ class KeyStrokeEffect extends Effect {
           min: 1,
           max: 10,
           name: 'Duration',
+          idn: 'duration',
           initialValue: 4,
           debugArtificialValue: true,
         ),
@@ -52,6 +51,7 @@ class KeyStrokeEffect extends Effect {
           min: 0.01,
           max: 1.5,
           name: 'Expansion',
+          idn: 'expansion',
           initialValue: 0.75,
           debugArtificialValue: true,
         ),
@@ -59,6 +59,7 @@ class KeyStrokeEffect extends Effect {
           min: 0.01,
           max: 0.5,
           name: 'Fade Speed',
+          idn: 'fadeSpeed',
           initialValue: 0.15,
           debugArtificialValue: true,
         ) {
@@ -69,18 +70,9 @@ class KeyStrokeEffect extends Effect {
         Colors.white,
         Colors.black,
       ],
+      idn: 'colors',
       name: 'Colors',
     );
-  }
-
-  factory KeyStrokeEffect.fromJson(Map<String, Object?> json) {
-    final KeyStrokeEffect effect = KeyStrokeEffect(EffectDictionary.keyStrokeEffect);
-    effect.duration = PropertyFactory.getProperty(json['duration'] as Map<String, Object?>);
-    effect.expansion = PropertyFactory.getProperty(json['expansion'] as Map<String, Object?>);
-    effect.fadeSpeed = PropertyFactory.getProperty(json['fadeSpeed'] as Map<String, Object?>);
-    effect.colorsProperty = PropertyFactory.getProperty(json['colors'] as Map<String, Object?>);
-
-    return effect;
   }
 
   @override
@@ -107,16 +99,6 @@ class KeyStrokeEffect extends Effect {
       currentColor,
       opacity,
     );
-  }
-
-  @override
-  Map<String, Object?> getData() {
-    return <String, Object?>{
-      'duration': duration.toJson(),
-      'expansion': expansion.toJson(),
-      'fadeSpeed': fadeSpeed.toJson(),
-      'colors': colorsProperty.toJson(),
-    };
   }
 
   void _onKeyEvent(KeyState state) {

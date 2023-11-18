@@ -4,6 +4,7 @@ import 'package:rgb_app/models/property.dart';
 class ColorListProperty extends Property<List<Color>> {
   ColorListProperty({
     required super.name,
+    required super.idn,
     required super.initialValue,
   });
 

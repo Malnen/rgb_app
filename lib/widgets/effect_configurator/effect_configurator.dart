@@ -24,9 +24,10 @@ class _EffectConfiguratorState extends State<EffectConfigurator> {
   List<Widget> _getProperties(Effect? currentEffect) {
     if (currentEffect != null) {
       return currentEffect.properties
+          .where((Property<Object> property) => property.visible)
           .map(
             (Property<Object> property) => EffectPropertyRenderer(
-          property: property,
+              property: property,
               updateRenderer: () => setState(() {}),
             ),
           )

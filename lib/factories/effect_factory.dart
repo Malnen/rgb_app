@@ -10,20 +10,10 @@ import 'package:rgb_app/effects/wave_effect.dart';
 class EffectFactory {
   static Effect getEffectFromJson(Map<String, Object?> json) {
     final String className = json['className'] as String;
-    switch (className) {
-      case WaveEffect.className:
-        return WaveEffect.fromJson(json);
-      case KeyStrokeEffect.className:
-        return KeyStrokeEffect.fromJson(json);
-      case SpiralEffect.className:
-        return SpiralEffect.fromJson(json);
-      case RippleEffect.className:
-        return RippleEffect.fromJson(json);
-      case AudioVisualizerEffect.className:
-        return AudioVisualizerEffect.fromJson(json);
-      default:
-        throw Exception('Illegal effect');
-    }
+    final Effect effect = getEffectByClassName(className);
+    effect.updatePropertiesFromJson(json);
+
+    return effect;
   }
 
   static Effect getEffectByClassName(String className) {

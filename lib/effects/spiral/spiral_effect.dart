@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/effects/effect_dictionary.dart';
-import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
@@ -37,14 +35,14 @@ class SpiralEffect extends Effect {
 
   @override
   List<Property<Object>> get properties => <Property<Object>>[
-    speed,
-    twist,
-    spinDirectionProperty,
-    twistDirectionProperty,
-    colorModeProperty,
-    if (customColorsMode) customColorsProperty,
-    center,
-  ];
+        speed,
+        twist,
+        spinDirectionProperty,
+        twistDirectionProperty,
+        colorModeProperty,
+        customColorsProperty,
+        center,
+      ];
 
   List<Color> get customColors => customColorsProperty.value;
 
@@ -54,6 +52,7 @@ class SpiralEffect extends Effect {
     speed = NumericProperty(
       initialValue: 5,
       name: 'Speed',
+      idn: 'speed',
       min: 1,
       max: 20,
       debugArtificialValue: true,
@@ -61,12 +60,14 @@ class SpiralEffect extends Effect {
     twist = NumericProperty(
       initialValue: 0,
       name: 'Twist',
+      idn: 'twist',
       min: 0,
       max: 1,
     );
     center = VectorProperty(
       initialValue: Vector(x: 0.5, y: 0.5),
       name: 'Center',
+      idn: 'center',
     );
     spinDirectionProperty = OptionProperty(
       initialValue: <Option>{
@@ -81,6 +82,7 @@ class SpiralEffect extends Effect {
           selected: true,
         ),
       },
+      idn: 'spinDirection',
       name: 'Spin Direction',
     );
     twistDirectionProperty = OptionProperty(
@@ -96,6 +98,7 @@ class SpiralEffect extends Effect {
           selected: true,
         ),
       },
+      idn: 'twistDirection',
       name: 'Twist Direction',
     );
     colorModeProperty = OptionProperty(
@@ -111,6 +114,7 @@ class SpiralEffect extends Effect {
           selected: true,
         ),
       },
+      idn: 'colorMode',
       name: 'Color Mode',
     );
     customColorsProperty = ColorListProperty(
@@ -118,23 +122,9 @@ class SpiralEffect extends Effect {
         Colors.white,
         Colors.black,
       ],
+      idn: 'customColors',
       name: 'Custom Colors',
     );
-  }
-
-  factory SpiralEffect.fromJson(Map<String, Object?> json) {
-    final SpiralEffect effect = SpiralEffect(EffectDictionary.spiralEffect);
-    effect.speed = PropertyFactory.getProperty(json['speed'] as Map<String, Object?>);
-    effect.twist = PropertyFactory.getProperty(json['twist'] as Map<String, Object?>);
-    effect.center = PropertyFactory.getProperty<VectorProperty>(json['center'] as Map<String, Object?>);
-    effect.spinDirectionProperty =
-        PropertyFactory.getProperty<OptionProperty>(json['spinDirection'] as Map<String, Object?>);
-    effect.twistDirectionProperty =
-        PropertyFactory.getProperty<OptionProperty>(json['twistDirection'] as Map<String, Object?>);
-    effect.colorModeProperty = PropertyFactory.getProperty<OptionProperty>(json['colorMode'] as Map<String, Object?>);
-    effect.customColorsProperty = PropertyFactory.getProperty(json['customColors'] as Map<String, Object?>);
-
-    return effect;
   }
 
   @override
@@ -149,19 +139,6 @@ class SpiralEffect extends Effect {
     colorModeProperty.addValueChangeListener(_onColorModeChange);
     customColorsProperty.addValueChangeListener(_onCustomColorChange);
     super.init();
-  }
-
-  @override
-  Map<String, Object?> getData() {
-    return <String, Object>{
-      'twist': twist.toJson(),
-      'speed': speed.toJson(),
-      'center': center.toJson(),
-      'spinDirection': spinDirectionProperty.toJson(),
-      'twistDirection': twistDirectionProperty.toJson(),
-      'colorMode': colorModeProperty.toJson(),
-      'customColors': customColorsProperty.toJson(),
-    };
   }
 
   @override
@@ -268,6 +245,7 @@ class SpiralEffect extends Effect {
     final Option selectedOption = options.firstWhere((Option option) => option.selected);
     customColorsMode = selectedOption.value == 0;
     valueMax = customColorsMode ? speed.max : 360;
+    customColorsProperty.visible = customColorsMode;
 
     _fillWithProperValues();
   }
