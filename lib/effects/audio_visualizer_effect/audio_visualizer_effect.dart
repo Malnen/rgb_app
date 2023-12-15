@@ -50,7 +50,7 @@ class AudioVisualizerEffect extends Effect {
   late OptionProperty backgroundColorMode;
   late List<int> _currentValues;
 
-  final double _dynamicBoostSpeed = 1;
+  final double _dynamicBoostSpeed = 2;
   final double _dynamicBoostCeil = 75;
 
   bool _isBackgroundTransparent = false;

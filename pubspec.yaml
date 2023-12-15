@@ -23,6 +23,7 @@ dependencies:
   path: ^1.8.3
   web_socket_channel: ^2.4.0
   win32: ^2.6.1
+  flutter_hooks: ^0.20.3
 
 dev_dependencies:
   flutter_test:

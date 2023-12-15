@@ -9,11 +9,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class RgbAppService {
   static const String _portKey = '_PORT_';
 
+  String _logs = '';
+  bool _portInitialized = false;
+
   late Process _process;
   late StreamSubscription<List<int>> _getPortSubscription;
   late String _port;
 
-  bool _portInitialized = false;
+  String get logs => _logs;
 
   void init() async {
     final String executablePath = AssetsLoader.getAssetPath(
@@ -35,7 +38,7 @@ class RgbAppService {
     final Uri uri = Uri.parse('ws://localhost:$_port/$channel');
     final WebSocketChannel webSocketChannel = WebSocketChannel.connect(uri);
     webSocketChannel.stream.listen(callback);
-    await Future<void>.delayed(Duration(milliseconds: 100));
+    await Future<void>.delayed(Duration(seconds: 1));
 
     return webSocketChannel;
   }
@@ -53,6 +56,7 @@ class RgbAppService {
 
   void _decode(List<int> data) {
     final String output = String.fromCharCodes(data);
+    _logs += output;
     print(output);
   }
 
