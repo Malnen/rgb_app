@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:rgb_app/classes/fixed_size_list.dart';
 import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rgb_app/utils/rgb_app_service/models/rgb_app_service_request.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -9,16 +11,17 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class RgbAppService {
   static const String _portKey = '_PORT_';
 
-  String _logs = '';
+  final FixedSizeList<String> _logs = FixedSizeList<String>();
+
   bool _portInitialized = false;
 
+  late ValueNotifier<String> logs;
   late Process _process;
   late StreamSubscription<List<int>> _getPortSubscription;
   late String _port;
 
-  String get logs => _logs;
-
   void init() async {
+    logs = ValueNotifier<String>('');
     final String executablePath = AssetsLoader.getAssetPath(
       name: 'rgbAppService/RgbAppService.exe',
       withAbsolutePath: true,
@@ -37,7 +40,7 @@ class RgbAppService {
 
     final Uri uri = Uri.parse('ws://localhost:$_port/$channel');
     final WebSocketChannel webSocketChannel = WebSocketChannel.connect(uri);
-    webSocketChannel.stream.listen(callback);
+    webSocketChannel.stream.listen(callback, onError: print);
     await Future<void>.delayed(Duration(seconds: 1));
 
     return webSocketChannel;
@@ -56,7 +59,8 @@ class RgbAppService {
 
   void _decode(List<int> data) {
     final String output = String.fromCharCodes(data);
-    _logs += output;
+    _logs.add(output);
+    logs.value = _logs.join();
     print(output);
   }
 

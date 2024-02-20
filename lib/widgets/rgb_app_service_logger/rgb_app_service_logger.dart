@@ -28,7 +28,10 @@ class RgbAppServiceLogger extends HookWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Wrap(
                   children: <Widget>[
-                    Text(rgbAppService.logs),
+                    ValueListenableBuilder<String>(
+                      valueListenable: rgbAppService.logs,
+                      builder: (BuildContext context, String value, Widget? child) => Text(value),
+                    )
                   ],
                 ),
               ),
