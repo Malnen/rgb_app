@@ -51,9 +51,6 @@ class AudioSampleRecorder {
       case AudioSampleResponseType.audioData:
         _onAudioData(parsedData);
         break;
-      case AudioSampleResponseType.reInitialized:
-        _getAudioData();
-        break;
       default:
         print(json);
         break;
