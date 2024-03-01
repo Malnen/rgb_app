@@ -12,6 +12,7 @@ import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart'
 import 'package:rgb_app/widgets/main_frame/main_frame.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
 void main() {
   _run();
@@ -20,6 +21,11 @@ void main() {
 Future<void> _run() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
+  await WindowsSingleInstance.ensureSingleInstance(
+    <String>[],
+    'rgb_app',
+    bringWindowToFront: true,
+  );
   final WindowOptions windowOptions = WindowOptions(
     size: Size(1200, 600),
     backgroundColor: Colors.transparent,

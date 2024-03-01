@@ -27,7 +27,7 @@ dependencies:
   web_socket_channel: ^2.4.4
   win32: ^2.6.1
   window_manager: ^0.3.8
-
+  windows_single_instance: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
