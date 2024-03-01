@@ -8,11 +8,11 @@ class AssetsLoader {
   static DynamicLibrary loadLibrary(String name) {
     final String assetsPath = _getCorrectAssetsPath();
     if (Platform.isWindows) {
-      return DynamicLibrary.open('$assetsPath/$name.dll');
+      return DynamicLibrary.open('$assetsPath\\$name.dll');
     } else if (Platform.isMacOS) {
-      return DynamicLibrary.open('$assetsPath/$name.dylib');
+      return DynamicLibrary.open('$assetsPath\\$name.dylib');
     } else if (Platform.isLinux) {
-      return DynamicLibrary.open('$assetsPath/$name.so');
+      return DynamicLibrary.open('$assetsPath\\$name.so');
     }
 
     throw Exception('$name not found');
@@ -20,7 +20,7 @@ class AssetsLoader {
 
   static String getAssetPath({required String name, bool withAbsolutePath = false}) {
     final String assetsPath = _getCorrectAssetsPath(withAbsolutePath: withAbsolutePath);
-    return '$assetsPath/$name';
+    return '$assetsPath\\$name';
   }
 
   static String _getCorrectAssetsPath({bool withAbsolutePath = false}) {
@@ -30,7 +30,7 @@ class AssetsLoader {
     }
 
     final String absolutePath = _getAbsolutePath();
-    return '$absolutePath/$assetsPath';
+    return '$absolutePath\\$assetsPath';
   }
 
   static String _getAssetsPath() {
@@ -44,7 +44,7 @@ class AssetsLoader {
       'assets',
     ];
 
-    return folders.join('/');
+    return folders.join('\\');
   }
 
   static String _getAbsolutePath() {

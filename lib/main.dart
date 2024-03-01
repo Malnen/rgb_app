@@ -11,6 +11,7 @@ import 'package:rgb_app/utils/libusb_loader.dart';
 import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart';
 import 'package:rgb_app/widgets/main_frame/main_frame.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() {
   _run();
@@ -18,25 +19,29 @@ void main() {
 
 Future<void> _run() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kDebugMode) {
-    await _initSystemTray();
-  }
-
+  await windowManager.ensureInitialized();
+  final WindowOptions windowOptions = WindowOptions(
+    size: Size(1200, 600),
+    backgroundColor: Colors.transparent,
+  );
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
   LibusbLoader.initLibusb();
   DependencyInitializer.init();
-
   _initUsbDetector();
   runApp(const MainFrame());
+  await windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await _initSystemTray();
+    if (!kDebugMode) {
+      await windowManager.hide();
+    }
+  });
 }
 
 Future<void> _initSystemTray() async {
-  final AppWindow appWindow = AppWindow();
   final SystemTray systemTray = SystemTray();
   final Menu menu = Menu();
-
   await systemTray.initSystemTray(
     title: 'system tray',
     iconPath: AssetsLoader.getAssetPath(
@@ -48,15 +53,15 @@ Future<void> _initSystemTray() async {
     <MenuItemLabel>[
       MenuItemLabel(
         label: 'Show',
-        onClicked: (MenuItemBase menuItem) => appWindow.show(),
+        onClicked: (MenuItemBase menuItem) => windowManager.show(),
       ),
       MenuItemLabel(
         label: 'Hide',
-        onClicked: (MenuItemBase menuItem) => appWindow.hide(),
+        onClicked: (MenuItemBase menuItem) => windowManager.hide(),
       ),
       MenuItemLabel(
         label: 'Exit',
-        onClicked: (MenuItemBase menuItem) => appWindow.close(),
+        onClicked: (MenuItemBase menuItem) => windowManager.close(),
       ),
     ],
   );
@@ -64,16 +69,13 @@ Future<void> _initSystemTray() async {
   systemTray.registerSystemTrayEventHandler((String eventName) {
     switch (eventName) {
       case kSystemTrayEventClick:
-        appWindow.show();
+        windowManager.show();
         break;
       case kSystemTrayEventRightClick:
         systemTray.popUpContextMenu();
         break;
     }
   });
-  if (!kDebugMode) {
-    await appWindow.hide();
-  }
 }
 
 void _initUsbDetector() {

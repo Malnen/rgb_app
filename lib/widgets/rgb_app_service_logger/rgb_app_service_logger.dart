@@ -31,7 +31,7 @@ class RgbAppServiceLogger extends HookWidget {
                     ValueListenableBuilder<String>(
                       valueListenable: rgbAppService.logs,
                       builder: (BuildContext context, String value, Widget? child) => Text(value),
-                    )
+                    ),
                   ],
                 ),
               ),
