@@ -1,4 +1,4 @@
 enum AudioSampleResponseType {
   audioData,
-  other,
+  captureCreated,
 }

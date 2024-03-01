@@ -38,7 +38,6 @@ class AudioSampleRecorder {
   Future<void> _createWebSocketConnection() async {
     _channel = await _service.connect('audioSample', _channelListener);
     _service.sendCommand(RgbAppServiceRequest(command: AudioSampleCommand.createCapture.name), _channel);
-    _getAudioData();
   }
 
   void _channelListener(Object? data) {
@@ -48,6 +47,9 @@ class AudioSampleRecorder {
       parsedData['responseType'] as String,
     );
     switch (responseType) {
+      case AudioSampleResponseType.captureCreated:
+        _getAudioData();
+        break;
       case AudioSampleResponseType.audioData:
         _onAudioData(parsedData);
         break;
