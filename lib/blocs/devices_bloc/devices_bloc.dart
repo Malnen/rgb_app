@@ -229,6 +229,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       availableDevices: availableDevices,
     );
     add(updateDevices);
+    if (availableDevices.length != state.availableDevices.length) {
+      add(LoadAvailableDevicesEvent());
+    }
   }
 
   void _processDeviceConnectivity({
