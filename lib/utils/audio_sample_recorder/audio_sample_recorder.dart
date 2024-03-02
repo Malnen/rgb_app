@@ -1,51 +1,44 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:get_it/get_it.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/enums/audio_sample_command.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/enums/audio_sample_response_type.dart';
-import 'package:rgb_app/utils/rgb_app_service/models/rgb_app_service_request.dart';
-import 'package:rgb_app/utils/rgb_app_service/rgb_app_service.dart';
+import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
-class AudioSampleRecorder {
-  final RgbAppService _service;
-
+class AudioSampleRecorder with RgbAppServiceListener<AudioSampleResponseType, AudioSampleCommand> {
   late final BehaviorSubject<List<int>> audioDataStream;
-  late final WebSocketChannel _channel;
 
   double _audioGain;
 
-  AudioSampleRecorder()
-      : _audioGain = 0,
-        _service = GetIt.instance.get();
+  AudioSampleRecorder() : _audioGain = 0;
 
-  set audioGain(double value) {
-    _audioGain = value;
-  }
+  @override
+  String get channelName => 'audioSample';
 
-  void init() async {
+  @override
+  void Function(AudioSampleResponseType responseType, Map<String, Object> parsedData) get processResponse =>
+      _channelListener;
+
+  @override
+  Iterable<AudioSampleResponseType> get responseTypes => AudioSampleResponseType.values;
+
+  set audioGain(double value) => _audioGain = value;
+
+  @override
+  Future<void> init() async {
     audioDataStream = BehaviorSubject<List<int>>.seeded(<int>[]);
-    await _createWebSocketConnection();
+    await super.init();
+    sendCommand(AudioSampleCommand.createCapture);
   }
 
+  @override
   void dispose() {
     audioDataStream.close();
-    _channel.sink.close();
+    super.dispose();
   }
 
-  Future<void> _createWebSocketConnection() async {
-    _channel = await _service.connect('audioSample', _channelListener);
-    _service.sendCommand(RgbAppServiceRequest(command: AudioSampleCommand.createCapture.name), _channel);
-  }
-
-  void _channelListener(Object? data) {
-    final String json = data.toString();
-    final Map<String, Object> parsedData = Map<String, Object>.from(jsonDecode(json) as Map<String, Object?>);
-    final AudioSampleResponseType responseType = AudioSampleResponseType.values.byName(
-      parsedData['responseType'] as String,
-    );
+  void _channelListener(AudioSampleResponseType responseType, Map<String, Object> parsedData) {
     switch (responseType) {
       case AudioSampleResponseType.captureCreated:
         _getAudioData();
@@ -66,14 +59,11 @@ class AudioSampleRecorder {
   }
 
   void _getAudioData() {
-    _service.sendCommand(
-      RgbAppServiceRequest(
-        command: AudioSampleCommand.getAudioSample.name,
-        data: <String, Object>{
-          'audioGain': _audioGain,
-        },
-      ),
-      _channel,
+    sendCommand(
+      AudioSampleCommand.getAudioSample,
+      data: <String, Object>{
+        'audioGain': _audioGain,
+      },
     );
   }
 }
