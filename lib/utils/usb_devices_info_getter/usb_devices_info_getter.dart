@@ -31,7 +31,11 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceResponseT
 
   Future<List<DeviceData>> getDeviceProductInfo() async {
     sendCommand(ConnectedUsbDeviceCommand.getUsbDevicesInfo);
-    return deviceData.stream.last;
+    final List<DeviceData> data = await deviceData.stream.last;
+    await deviceData.close();
+    deviceData = BehaviorSubject<List<DeviceData>>();
+
+    return data;
   }
 
   void _channelListener(ConnectedUsbDeviceResponseType responseType, Map<String, Object> parsedData) {
@@ -53,7 +57,5 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceResponseT
     }
 
     deviceData.sink.add(devicesData.where((DeviceData device) => device.isKnownDevice).toList());
-    deviceData.close();
-    deviceData = BehaviorSubject<List<DeviceData>>();
   }
 }
