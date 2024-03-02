@@ -39,8 +39,8 @@ Future<void> _run() async {
   runApp(const MainFrame());
   await windowManager.waitUntilReadyToShow(windowOptions, () async {
     await _initSystemTray();
-    if (!kDebugMode) {
-      await windowManager.hide();
+    if (kDebugMode) {
+      await windowManager.show();
     }
   });
 }
@@ -67,7 +67,10 @@ Future<void> _initSystemTray() async {
       ),
       MenuItemLabel(
         label: 'Exit',
-        onClicked: (MenuItemBase menuItem) => windowManager.close(),
+        onClicked: (MenuItemBase menuItem) async {
+          await windowManager.setPreventClose(false);
+          await windowManager.close();
+        },
       ),
     ],
   );
