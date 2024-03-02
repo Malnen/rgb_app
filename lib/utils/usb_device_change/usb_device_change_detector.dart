@@ -14,7 +14,7 @@ class UsbDeviceChangeDetector with RgbAppServiceListener<UsbDeviceChangeResponse
   Iterable<UsbDeviceChangeResponseType> get responseTypes => UsbDeviceChangeResponseType.values;
 
   @override
-  void Function(UsbDeviceChangeResponseType, Map<String, Object> parsedData) get processResponse =>
+  void Function(UsbDeviceChangeResponseType, Map<String, Object>) get processResponse =>
       (UsbDeviceChangeResponseType responseType, _) => _responseListener(responseType);
 
   void _responseListener(UsbDeviceChangeResponseType responseType) {

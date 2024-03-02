@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/widgets/main_frame/main_scaffold.dart';
 import 'package:window_manager/window_manager.dart';
@@ -15,11 +13,8 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> with WindowListener {
   List<DeviceData> deviceProductInfo = <DeviceData>[];
 
-  late DevicesBloc devicesBloc;
-
   @override
   void initState() {
-    devicesBloc = GetIt.instance.get();
     windowManager.addListener(this);
     windowManager.setPreventClose(true);
     super.initState();

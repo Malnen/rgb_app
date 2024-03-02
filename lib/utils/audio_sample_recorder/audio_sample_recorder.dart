@@ -17,8 +17,7 @@ class AudioSampleRecorder with RgbAppServiceListener<AudioSampleResponseType, Au
   String get channelName => 'audioSample';
 
   @override
-  void Function(AudioSampleResponseType responseType, Map<String, Object> parsedData) get processResponse =>
-      _channelListener;
+  void Function(AudioSampleResponseType, Map<String, Object>) get processResponse => _channelListener;
 
   @override
   Iterable<AudioSampleResponseType> get responseTypes => AudioSampleResponseType.values;

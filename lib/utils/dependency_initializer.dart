@@ -10,18 +10,18 @@ import 'package:rgb_app/utils/tick_provider.dart';
 class DependencyInitializer {
   static final GetIt instance = GetIt.instance;
 
-  static void init() {
-    _initRgbAppService();
+  static Future<void> init() async {
+    await _initRgbAppService();
     _initTickProvider();
-    _initDevicesBloc();
+    await _initDevicesBloc();
     _initKeyBloc();
     _initEffectBloc();
     _initEffectsColorsCubit();
   }
 
-  static void _initRgbAppService() {
+  static Future<void> _initRgbAppService() async {
     final RgbAppService webSocketService = RgbAppService();
-    webSocketService.init();
+    await webSocketService.init();
     instance.registerSingleton(webSocketService);
   }
 
@@ -30,8 +30,9 @@ class DependencyInitializer {
     instance.registerSingleton(tickProvider);
   }
 
-  static void _initDevicesBloc() {
+  static Future<void> _initDevicesBloc() async {
     final DevicesBloc devicesBloc = DevicesBloc(tickProvider: instance.get());
+    await devicesBloc.init();
     instance.registerSingleton(devicesBloc);
 
     final LoadAvailableDevicesEvent loadAvailableDevicesEvent = LoadAvailableDevicesEvent();

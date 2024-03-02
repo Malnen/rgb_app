@@ -20,7 +20,7 @@ class RgbAppService {
   late StreamSubscription<List<int>> _getPortSubscription;
   late String _port;
 
-  void init() async {
+  Future<void> init() async {
     logs = ValueNotifier<String>('');
     final String executablePath = AssetsLoader.getAssetPath(
       name: 'rgbAppService/RgbAppService.exe',
@@ -31,13 +31,12 @@ class RgbAppService {
     stdout.listen(_decode);
     _getPortSubscription = stdout.listen(_getPort);
     _process.stderr.listen(_decode);
-  }
-
-  Future<WebSocketChannel> connect(String channel, void Function(Object?) callback) async {
     while (!_portInitialized) {
       await Future<void>.delayed(Duration(seconds: 1));
     }
+  }
 
+  Future<WebSocketChannel> connect(String channel, void Function(Object?) callback) async {
     final Uri uri = Uri.parse('ws://localhost:$_port/$channel');
     final WebSocketChannel webSocketChannel = WebSocketChannel.connect(uri);
     webSocketChannel.stream.listen(callback, onError: print);

@@ -22,6 +22,14 @@ abstract class DeviceProductVendor extends Equatable {
 
   String get vendorId => productVendor.substring(0, 4);
 
+  static DeviceProductVendor getByProductVendor(Map<String, Object?> data) {
+    final String productId = data['productId'] as String;
+    final String vendorId = data['vendorId'] as String;
+    final String deviceId = '$vendorId:$productId';
+
+    return getType(deviceId);
+  }
+
   static DeviceProductVendor getType(String deviceId) {
     deviceId = deviceId.toLowerCase();
     switch (deviceId) {
@@ -82,14 +90,16 @@ class SteelSeriesRival100ProductVendor extends DeviceProductVendor {
           icon: Icons.mouse,
         );
 }
+
 class SteelSeriesRival3ProductVendor extends DeviceProductVendor {
   SteelSeriesRival3ProductVendor()
       : super(
-    name: 'SteelSeries Rival 3',
-    productVendor: DeviceProductVendor.steelSeriesRival3,
-    icon: Icons.mouse,
-  );
+          name: 'SteelSeries Rival 3',
+          productVendor: DeviceProductVendor.steelSeriesRival3,
+          icon: Icons.mouse,
+        );
 }
+
 class UnknownProductVendor extends DeviceProductVendor {
   UnknownProductVendor()
       : super(
