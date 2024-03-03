@@ -125,11 +125,11 @@ class SpiralEffect extends Effect {
       idn: 'customColors',
       name: 'Custom Colors',
     );
+    _colors = <List<Color>>[];
   }
 
   @override
   void init() {
-    _colors = <List<Color>>[];
     _fillColors();
     effectBloc.stream.listen(_effectGridListener);
     twist.addListener(_fillWithProperValues);
@@ -144,6 +144,10 @@ class SpiralEffect extends Effect {
   @override
   void update() {
     final List<List<Color>> colors = effectsColorsCubit.colors;
+    if (colors.isEmpty) {
+      return;
+    }
+
     for (int i = 0; i < effectBloc.sizeY; i++) {
       for (int j = 0; j < effectBloc.sizeX; j++) {
         _setColors(i, j, colors);

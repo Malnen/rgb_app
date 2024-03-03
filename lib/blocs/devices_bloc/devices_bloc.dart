@@ -8,6 +8,7 @@ import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart';
+import 'package:rgb_app/utils/usb_device_data_sender/usb_device_data_sender.dart';
 import 'package:rgb_app/utils/usb_devices_info_getter/usb_devices_info_getter.dart';
 
 class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
@@ -15,6 +16,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
   late final UsbDeviceChangeDetector usbDeviceChangeDetector;
   late final UsbDeviceInfoGetter usbDeviceInfoGetter;
+  late final UsbDeviceDataSender usbDeviceDataSender;
 
   List<DeviceInterface> get deviceInstances => state.deviceInstances;
 
@@ -29,13 +31,18 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     on<UpdateDevices>(_onUpdateDevicesEvent);
     on<UpdateDeviceOffsetEvent>(_onUpdateDeviceOffsetEvent);
     on<CheckDevicesConnectionStateEvent>(_onCheckDevicesConnectionStateEvent);
+    on<SendDataManuallyEvent>(_onSendDataManually);
   }
 
   Future<void> init() async {
     usbDeviceInfoGetter = UsbDeviceInfoGetter();
-    await usbDeviceInfoGetter.init();
     usbDeviceChangeDetector = UsbDeviceChangeDetector(() => add(CheckDevicesConnectionStateEvent()));
-    await usbDeviceChangeDetector.init();
+    usbDeviceDataSender = UsbDeviceDataSender();
+    await Future.wait(<Future<void>>[
+      usbDeviceInfoGetter.init(),
+      usbDeviceChangeDetector.init(),
+      usbDeviceDataSender.init(),
+    ]);
     await Future<void>.delayed(const Duration(seconds: 2), () {
       final CheckDevicesConnectionStateEvent checkDevicesConnectionStateEvent = CheckDevicesConnectionStateEvent();
       add(checkDevicesConnectionStateEvent);
@@ -43,6 +50,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     _tickProvider.onTick(() {
       for (DeviceInterface device in deviceInstances) {
         device.update();
+        usbDeviceDataSender.sendData(device);
       }
     });
   }
@@ -70,11 +78,11 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   Future<void> _onAddDeviceEvent(AddDeviceEvent event, Emitter<DevicesState> emit) async {
-    final DevicesState newState = _addDeviceIfNew(event);
+    final DevicesState newState = await _addDeviceIfNew(event);
     emit(newState);
   }
 
-  DevicesState _addDeviceIfNew(AddDeviceEvent event) {
+  Future<DevicesState> _addDeviceIfNew(AddDeviceEvent event) async {
     final List<DeviceData> devicesData = state.devicesData;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
     final DeviceData deviceData = event.deviceData;
@@ -91,13 +99,15 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     return state;
   }
 
-  DevicesState _addDevice({
+  Future<DevicesState> _addDevice({
     required DeviceData deviceData,
     required List<DeviceData> devicesData,
     required List<DeviceInterface> deviceInstances,
-  }) {
+  }) async {
     final List<DeviceData> devicesData = state.devicesData;
     final DeviceInterface deviceInterface = DeviceInterface.fromDeviceData(deviceData: deviceData);
+    usbDeviceDataSender.openDevice(deviceInterface);
+    await deviceInterface.isOpen.first;
     deviceInterface.init();
     deviceInstances.add(deviceInterface);
     if (!devicesData.contains(deviceData)) {
@@ -138,6 +148,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       (DeviceInterface deviceInterface) =>
           deviceInterface.deviceData.deviceProductVendor == deviceData.deviceProductVendor,
     );
+    usbDeviceDataSender.closeDevice(deviceInterface);
     deviceInterface.dispose();
     deviceInstances.remove(deviceInterface);
     devicesData.remove(deviceData);
@@ -208,14 +219,14 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   Future<void> _onCheckDevicesConnectionStateEvent(
-    final CheckDevicesConnectionStateEvent event,
-    final Emitter<DevicesState> emit,
+    CheckDevicesConnectionStateEvent event,
+    Emitter<DevicesState> emit,
   ) async {
     final List<DeviceData> availableDevices = await usbDeviceInfoGetter.getDeviceProductInfo();
     final List<DeviceData> devicesData = <DeviceData>[];
     final List<DeviceData> connectedDevices = <DeviceData>[];
     for (DeviceData deviceData in state.devicesData) {
-      _processDeviceConnectivity(
+      await _processDeviceConnectivity(
         availableDevices: availableDevices,
         devicesData: devicesData,
         deviceData: deviceData,
@@ -234,17 +245,17 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     }
   }
 
-  void _processDeviceConnectivity({
+  Future<void> _processDeviceConnectivity({
     required List<DeviceData> availableDevices,
     required List<DeviceData> devicesData,
     required DeviceData deviceData,
     required List<DeviceData> connectedDevices,
-  }) {
+  }) async {
     final bool isDeviceConnected = availableDevices.contains(deviceData);
     final DeviceData updatedDevice = deviceData.copyWith(connected: isDeviceConnected);
     devicesData.add(updatedDevice);
     if (isDeviceConnected) {
-      _processConnectedDevice(
+      await _processConnectedDevice(
         deviceData: deviceData,
         updatedDevice: updatedDevice,
         connectedDevices: connectedDevices,
@@ -252,25 +263,28 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     }
   }
 
-  void _processConnectedDevice({
+  Future<void> _processConnectedDevice({
     required DeviceData deviceData,
     required DeviceData updatedDevice,
     required List<DeviceData> connectedDevices,
-  }) {
+  }) async {
     connectedDevices.add(updatedDevice);
     final DeviceInterface deviceInterface = state.deviceInstances.firstWhere(
-          (DeviceInterface connectedDevice) =>
+      (DeviceInterface connectedDevice) =>
           connectedDevice.deviceData.deviceProductVendor == updatedDevice.deviceProductVendor,
     );
-    _reInitDevHandle(
+    await _reInitDevHandle(
       deviceInterface: deviceInterface,
       deviceData: deviceData,
     );
   }
 
-  void _reInitDevHandle({required DeviceInterface deviceInterface, required DeviceData deviceData}) {
+  Future<void> _reInitDevHandle({required DeviceInterface deviceInterface, required DeviceData deviceData}) async {
     if (!deviceData.connected) {
-      deviceInterface.initDevHandle();
+      usbDeviceDataSender.closeDevice(deviceInterface);
+      await Future<void>.delayed(Duration(milliseconds: 100));
+      usbDeviceDataSender.openDevice(deviceInterface);
+      await deviceInterface.isOpen.stream.firstWhere((bool value) => value);
     }
   }
 
@@ -296,5 +310,12 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       devicesData: devicesData,
     );
     emit(newState);
+  }
+
+  Future<void> _onSendDataManually(
+    SendDataManuallyEvent event,
+    Emitter<DevicesState> emit,
+  ) async {
+    usbDeviceDataSender.sendData(event.deviceInterface);
   }
 }

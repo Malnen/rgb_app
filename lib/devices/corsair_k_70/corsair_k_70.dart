@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -7,17 +6,18 @@ import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
-import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/enums/transfer_type.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
+import 'package:rgb_app/devices/mixins/interrupt_transfer_device.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/extensions/int_iterable_extension.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/packet_managers/corsair_k70_packet_manager.dart';
 import 'package:rgb_app/testers/corsair_k70_tester.dart';
 
-class CorsairK70 extends KeyboardInterface {
+class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
   final KeyBloc keyBloc;
 
   late CorsairK70Tester tester;
@@ -26,26 +26,44 @@ class CorsairK70 extends KeyboardInterface {
     required super.deviceData,
   }) : keyBloc = GetIt.instance.get();
 
-  late Uint8List dataPkt1;
-  late Uint8List rPkt1;
-  late Uint8List gPkt1;
-  late Uint8List bPkt1;
+  late List<int> dataPkt1;
+  late List<int> rPkt1;
+  late List<int> gPkt1;
+  late List<int> bPkt1;
 
-  late Uint8List dataPkt2;
-  late Uint8List rPkt2;
-  late Uint8List gPkt2;
-  late Uint8List bPkt2;
+  late List<int> dataPkt2;
+  late List<int> rPkt2;
+  late List<int> gPkt2;
+  late List<int> bPkt2;
 
-  late Uint8List dataPkt3;
-  late Uint8List rPkt3;
-  late Uint8List gPkt3;
-  late Uint8List bPkt3;
+  late List<int> dataPkt3;
+  late List<int> rPkt3;
+  late List<int> gPkt3;
+  late List<int> bPkt3;
 
-  late List<Uint8List> packets;
+  late List<List<int>> packets;
 
   late CorsairK70PacketManager packetManager;
 
   List<List<KeyboardKey>> keys = <List<KeyboardKey>>[];
+
+  @override
+  int get endpoint => 0x02;
+
+  @override
+  int get length => 64;
+
+  @override
+  int get timeout => 10;
+
+  @override
+  int get configuration => 1;
+
+  @override
+  int get interface => 1;
+
+  @override
+  TransferType get transferType => TransferType.interrupt;
 
   @override
   void init() {
@@ -53,17 +71,11 @@ class CorsairK70 extends KeyboardInterface {
     tester = CorsairK70Tester(
       corsairK70: this,
     );
-    super.init();
     packetManager = CorsairK70PacketManager(this);
     packetManager.fill();
     _storePackets();
     //test();
     //blink();
-  }
-
-  @override
-  void sendData() {
-    packetManager.sendData();
   }
 
   @override
@@ -99,16 +111,12 @@ class CorsairK70 extends KeyboardInterface {
   }
 
   @override
-  void initDevHandle() {
-    devHandle = DeviceInterface.initDeviceHandler(
-      deviceData: deviceData,
-      configuration: 1,
-      interface: 1,
-    );
+  List<List<int>> getPackets() {
+    return packets;
   }
 
   void _storePackets() {
-    packets = <Uint8List>[
+    packets = <List<int>>[
       rPkt1,
       rPkt2,
       rPkt3,

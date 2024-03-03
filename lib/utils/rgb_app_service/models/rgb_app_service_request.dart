@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class RgbAppServiceRequest extends Equatable {
   final String command;
-  final Map<String, Object>? data;
+  final Map<String, Object?>? data;
 
   RgbAppServiceRequest({required this.command, this.data});
 

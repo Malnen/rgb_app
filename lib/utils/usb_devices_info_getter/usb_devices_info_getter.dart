@@ -5,7 +5,7 @@ import 'package:rgb_app/utils/usb_devices_info_getter/enums/connected_usb_device
 import 'package:rgb_app/utils/usb_devices_info_getter/enums/connected_usb_device_response_type.dart';
 import 'package:rxdart/rxdart.dart';
 
-class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceResponseType, ConnectedUsbDeviceCommand> {
+class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceCommand, ConnectedUsbDeviceResponseType> {
   late BehaviorSubject<List<DeviceData>> deviceData;
 
   @override
@@ -31,7 +31,7 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceResponseT
 
   Future<List<DeviceData>> getDeviceProductInfo() async {
     sendCommand(ConnectedUsbDeviceCommand.getUsbDevicesInfo);
-    final List<DeviceData> data = await deviceData.stream.last;
+    final List<DeviceData> data = await deviceData.stream.first;
     await deviceData.close();
     deviceData = BehaviorSubject<List<DeviceData>>();
 

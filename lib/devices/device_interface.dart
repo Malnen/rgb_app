@@ -1,8 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart' as material;
 import 'package:get_it/get_it.dart';
-import 'package:libusb/libusb64.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
@@ -12,28 +9,30 @@ import 'package:rgb_app/devices/steel_series_rival_3/steel_series_rival_3.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
-import 'package:rgb_app/utils/libusb_loader.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class DeviceInterface {
   late EffectBloc effectBloc;
   late EffectsColorsCubit effectsColorsCubit;
-  late Pointer<libusb_device_handle> devHandle;
   late DeviceData deviceData;
-
-  bool get isReady => devHandle.address > 0;
+  late BehaviorSubject<bool> isOpen;
+  late String guid;
 
   int get offsetX => deviceData.offsetX;
 
   int get offsetY => deviceData.offsetY;
+
+  int get interface;
+
+  int get configuration;
 
   DeviceInterface({
     required this.deviceData,
   }) {
     effectBloc = GetIt.instance.get();
     effectsColorsCubit = GetIt.instance.get();
+    isOpen = BehaviorSubject<bool>();
   }
-
-  Libusb get libusb => LibusbLoader.getInstance;
 
   static DeviceInterface fromDeviceData({
     required DeviceData deviceData,
@@ -62,52 +61,21 @@ abstract class DeviceInterface {
     }
   }
 
-  static Pointer<libusb_device_handle> initDeviceHandler({
-    required DeviceData deviceData,
-    required int interface,
-    required int configuration,
-  }) {
-    final Libusb libusb = LibusbLoader.getInstance;
-    final Pointer<libusb_device_handle> devHandle = libusb.libusb_open_device_with_vid_pid(
-      nullptr,
-      int.parse('0x${deviceData.deviceProductVendor.vendorId}'),
-      int.parse('0x${deviceData.deviceProductVendor.productId}'),
-    );
-    if (devHandle.address > 0) {
-      libusb.libusb_claim_interface(devHandle, interface);
-      libusb.libusb_set_configuration(devHandle, configuration);
-    }
+  List<List<int>> getPackets();
 
-    return devHandle;
-  }
+  Map<String, Object> getDataToSend();
 
-  void init() {
-    try {
-      initDevHandle();
-    } catch (_) {
-      print('Failed to init devHandle $runtimeType');
-    }
-  }
-
-  void sendData();
+  void init() {}
 
   void dispose() {
-    if (isReady) {
-      libusb.libusb_close(devHandle);
-    }
+    isOpen.close();
   }
 
   void test();
 
+  void update() {}
+
   void blink();
-
-  void update() {
-    if (isReady) {
-      sendData();
-    }
-  }
-
-  void initDevHandle();
 
   material.Size getSize();
 }

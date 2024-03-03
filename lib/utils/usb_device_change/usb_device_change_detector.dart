@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rgb_app/utils/usb_device_change/enums/usb_device_change_response_type.dart';
 
-class UsbDeviceChangeDetector with RgbAppServiceListener<UsbDeviceChangeResponseType, Enum> {
+class UsbDeviceChangeDetector with RgbAppServiceListener<Enum, UsbDeviceChangeResponseType> {
   final VoidCallback usbDeviceChangedCallback;
 
   UsbDeviceChangeDetector(this.usbDeviceChangedCallback);

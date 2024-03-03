@@ -1,89 +1,79 @@
-import 'dart:ffi';
-import 'dart:typed_data';
-
-import 'package:ffi/ffi.dart' show calloc;
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
-import 'package:rgb_app/extensions/pointer_extension.dart';
-import 'package:rgb_app/extensions/uint_8_list_blob_conversion_extension.dart';
-import 'package:rgb_app/packet_managers/packet_manager.dart';
 
-class CorsairK70PacketManager implements PacketManager {
+class CorsairK70PacketManager {
   final CorsairK70 corsairK70;
 
   CorsairK70PacketManager(this.corsairK70);
 
-  @override
   void fill() {
-    corsairK70.dataPkt1 = Uint8List.fromList(
-      <int>[
-        0x07,
-        0x28,
-        0x01,
-        0x03,
-        0x01,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-      ],
-    );
+    corsairK70.dataPkt1 = <int>[
+      0x07,
+      0x28,
+      0x01,
+      0x03,
+      0x01,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+    ];
 
-    corsairK70.dataPkt2 = Uint8List.fromList(<int>[
+    corsairK70.dataPkt2 = <int>[
       0x07,
       0x28,
       0x02,
@@ -148,9 +138,9 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.dataPkt3 = Uint8List.fromList(<int>[
+    corsairK70.dataPkt3 = <int>[
       0x07,
       0x28,
       0x03,
@@ -215,9 +205,9 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.rPkt1 = Uint8List.fromList(<int>[
+    corsairK70.rPkt1 = <int>[
       0x7F,
       0x01,
       0x3C,
@@ -282,9 +272,9 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.rPkt2 = Uint8List.fromList(<int>[
+    corsairK70.rPkt2 = <int>[
       0x7F,
       0x02,
       0x3C,
@@ -349,9 +339,9 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.rPkt3 = Uint8List.fromList(<int>[
+    corsairK70.rPkt3 = <int>[
       0x7F,
       0x03,
       0x30,
@@ -416,9 +406,9 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.gPkt1 = Uint8List.fromList(<int>[
+    corsairK70.gPkt1 = <int>[
       0x7F,
       0x01,
       0x3C,
@@ -483,9 +473,9 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.gPkt2 = Uint8List.fromList(<int>[
+    corsairK70.gPkt2 = <int>[
       0x7F,
       0x02,
       0x3C,
@@ -550,9 +540,9 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.gPkt3 = Uint8List.fromList(<int>[
+    corsairK70.gPkt3 = <int>[
       0x7F,
       0x03,
       0x30,
@@ -617,9 +607,9 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.bPkt1 = Uint8List.fromList(<int>[
+    corsairK70.bPkt1 = <int>[
       0x7F,
       0x01,
       0x3C,
@@ -684,9 +674,9 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.bPkt2 = Uint8List.fromList(<int>[
+    corsairK70.bPkt2 = <int>[
       0x7F,
       0x02,
       0x3C,
@@ -751,9 +741,9 @@ class CorsairK70PacketManager implements PacketManager {
       0xFF,
       0x00,
       0x00,
-    ]);
+    ];
 
-    corsairK70.bPkt3 = Uint8List.fromList(<int>[
+    corsairK70.bPkt3 = <int>[
       0x7F,
       0x03,
       0x30,
@@ -818,26 +808,6 @@ class CorsairK70PacketManager implements PacketManager {
       0x00,
       0x00,
       0x00,
-    ]);
-  }
-
-  @override
-  void sendData() {
-    corsairK70.packets.forEach(_bulkTransfer);
-  }
-
-  void _bulkTransfer(Uint8List data) {
-    final Pointer<Uint8> pointer = data.allocatePointer();
-    final Pointer<Int32> actualLength = calloc<Int32>();
-    corsairK70.libusb.libusb_bulk_transfer(
-      corsairK70.devHandle,
-      0x02,
-      pointer,
-      64,
-      actualLength,
-      1000,
-    );
-    pointer.free();
-    actualLength.free();
+    ];
   }
 }

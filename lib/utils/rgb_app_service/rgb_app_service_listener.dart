@@ -6,7 +6,7 @@ import 'package:rgb_app/utils/rgb_app_service/models/rgb_app_service_request.dar
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-mixin RgbAppServiceListener<ResponseType extends Enum, Command extends Enum> {
+mixin RgbAppServiceListener<Command extends Enum, ResponseType extends Enum> {
   late final RgbAppService _service;
 
   @protected
@@ -30,7 +30,7 @@ mixin RgbAppServiceListener<ResponseType extends Enum, Command extends Enum> {
   }
 
   @protected
-  void sendCommand(Command command, {Map<String, Object>? data}) {
+  void sendCommand(Command command, {Map<String, Object?>? data}) {
     final RgbAppServiceRequest rgbAppServiceRequest = RgbAppServiceRequest(command: command.name, data: data);
     _service.sendCommand(rgbAppServiceRequest, _channel);
   }

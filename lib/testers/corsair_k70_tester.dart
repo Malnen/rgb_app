@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
@@ -13,7 +13,7 @@ import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/testers/device_tester.dart';
 
-class CorsairK70Tester implements DeviceTester {
+class CorsairK70Tester extends DeviceTester {
   final List<Timer> timers = <Timer>[];
   final CorsairK70 corsairK70;
   final KeyBloc keyBloc;
@@ -52,7 +52,7 @@ class CorsairK70Tester implements DeviceTester {
       Duration(milliseconds: 100),
       (Timer timer) {
         _blink(entries);
-        corsairK70.sendData();
+        devicesBloc.add(SendDataManuallyEvent(corsairK70));
       },
     );
     timers.add(timer);
@@ -72,14 +72,15 @@ class CorsairK70Tester implements DeviceTester {
       if (packetIndex < 0) continue;
       _setBlinkColor(packetIndex, key);
     }
-    corsairK70.sendData();
+
+    devicesBloc.add(SendDataManuallyEvent(corsairK70));
   }
 
   void _setBlinkColor(int packetIndex, KeyboardKey key) {
     final CorsairK70Packets packets = corsairK70.getPacket(packetIndex);
-    final Uint8List rPkt = packets.rPkt;
-    final Uint8List gPkt = packets.gPkt;
-    final Uint8List bPkt = packets.bPkt;
+    final List<int> rPkt = packets.rPkt;
+    final List<int> gPkt = packets.gPkt;
+    final List<int> bPkt = packets.bPkt;
     rPkt[key.index] = value.toInt();
     gPkt[key.index] = value.toInt();
     bPkt[key.index] = value.toInt();
@@ -133,12 +134,12 @@ class CorsairK70Tester implements DeviceTester {
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
           (Timer timer) {
-        _setCurrentIndexValue(
+            _setCurrentIndexValue(
           valueR: value.toInt(),
           valueG: 0,
           valueB: 0,
         );
-        corsairK70.sendData();
+        devicesBloc.add(SendDataManuallyEvent(corsairK70));
       },
     );
     timers.add(timer);

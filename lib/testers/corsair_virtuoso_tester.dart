@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/testers/device_tester.dart';
 
-class CorsairVirtuosoTester implements DeviceTester {
+class CorsairVirtuosoTester extends DeviceTester {
   final List<Timer> timers = <Timer>[];
   final CorsairVirtuoso corsairVirtuoso;
 
@@ -16,7 +17,7 @@ class CorsairVirtuosoTester implements DeviceTester {
       Duration(milliseconds: 100),
       (Timer timer) {
         corsairVirtuoso.color = Color.fromARGB(1, 255, 0, 0);
-        corsairVirtuoso.sendData();
+        devicesBloc.add(SendDataManuallyEvent(corsairVirtuoso));
       },
     );
     timers.add(timer);

@@ -4,7 +4,6 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rgb_app/utils/dependency_initializer.dart';
-import 'package:rgb_app/utils/libusb_loader.dart';
 import 'package:rgb_app/widgets/main_frame/main_frame.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
@@ -29,7 +28,6 @@ Future<void> _run() async {
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
-  LibusbLoader.initLibusb();
   await DependencyInitializer.init();
   runApp(const MainFrame());
   await windowManager.waitUntilReadyToShow(windowOptions, () async {

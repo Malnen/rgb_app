@@ -6,7 +6,7 @@ import 'package:rgb_app/utils/audio_sample_recorder/enums/audio_sample_response_
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AudioSampleRecorder with RgbAppServiceListener<AudioSampleResponseType, AudioSampleCommand> {
+class AudioSampleRecorder with RgbAppServiceListener<AudioSampleCommand, AudioSampleResponseType> {
   late final BehaviorSubject<List<int>> audioDataStream;
 
   double _audioGain;

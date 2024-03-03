@@ -1,0 +1,1 @@
+enum TransferType { control, interrupt }

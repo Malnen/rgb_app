@@ -10,15 +10,12 @@ dependencies:
   collection: ^1.18.0
   cupertino_icons: ^1.0.6
   equatable: ^2.0.5
-  ffi: ^1.2.1
-  ffigen: ^6.0.0
   flutter_bloc: ^8.1.4
   flutter_hooks: ^0.20.5
   get_it: ^7.6.7
   hydrated_bloc: ^9.1.4
   image: ^4.1.7
   keyboard_event: ^0.3.4
-  libusb: ^0.3.23+2
   path: ^1.9.0
   path_provider: ^2.0.15
   rxdart: ^0.27.7
@@ -35,12 +32,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/libusb-1.0.dll
     - assets/app_icon.ico
     - assets/rgbAppService/
     - assets/rgbAppService/runtimes/
     - assets/rgbAppService/runtimes/win/
     - assets/rgbAppService/runtimes/win/lib/
     - assets/rgbAppService/runtimes/win/lib/net7.0/
-ffigen:
-  output: 'generated_bindings.dart'

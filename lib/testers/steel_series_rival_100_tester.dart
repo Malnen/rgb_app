@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
 import 'package:rgb_app/testers/device_tester.dart';
 
-class SteelSeriesRival100Tester implements DeviceTester {
+class SteelSeriesRival100Tester extends DeviceTester {
   final List<Timer> timers = <Timer>[];
   final SteelSeriesRival100 steelSeriesRival100;
 
@@ -18,7 +19,7 @@ class SteelSeriesRival100Tester implements DeviceTester {
   @override
   void test() {
     steelSeriesRival100.color = Color.fromARGB(1, 255, 255, 255);
-    steelSeriesRival100.sendData();
+    devicesBloc.add(SendDataManuallyEvent(steelSeriesRival100));
   }
 
   @override
@@ -28,7 +29,7 @@ class SteelSeriesRival100Tester implements DeviceTester {
       Duration(milliseconds: 100),
       (Timer timer) {
         steelSeriesRival100.color = Color.fromARGB(1, value.toInt(), value.toInt(), value.toInt());
-        steelSeriesRival100.sendData();
+        devicesBloc.add(SendDataManuallyEvent(steelSeriesRival100));
       },
     );
     timers.add(timer);

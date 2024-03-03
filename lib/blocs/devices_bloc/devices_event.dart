@@ -84,3 +84,14 @@ class UpdateDeviceOffsetEvent extends DevicesEvent {
 }
 
 class CheckDevicesConnectionStateEvent extends DevicesEvent {}
+
+class SendDataManuallyEvent extends DevicesEvent {
+  final DeviceInterface deviceInterface;
+
+  SendDataManuallyEvent(this.deviceInterface);
+
+  @override
+  List<Object> get props => <Object>[
+        deviceInterface,
+      ];
+}

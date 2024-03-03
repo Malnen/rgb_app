@@ -8,9 +8,6 @@ class UnknownDevice extends DeviceInterface {
   void init() {}
 
   @override
-  void sendData() {}
-
-  @override
   void test() {}
 
   @override
@@ -20,10 +17,23 @@ class UnknownDevice extends DeviceInterface {
   void update() {}
 
   @override
-  void initDevHandle() {}
-
-  @override
   Size getSize() {
     return Size(0, 0);
+  }
+
+  @override
+  int get configuration => throw UnimplementedError();
+
+  @override
+  int get interface => throw UnimplementedError();
+
+  @override
+  Map<String, Object> getDataToSend() {
+    throw UnimplementedError();
+  }
+
+  @override
+  List<List<int>> getPackets() {
+    throw UnimplementedError();
   }
 }
