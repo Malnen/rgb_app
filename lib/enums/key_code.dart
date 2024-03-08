@@ -120,726 +120,366 @@ enum KeyCode {
 }
 
 extension KeyCodeExtension on KeyCode {
-  int get keyCode {
-    switch (this) {
-      case KeyCode.key0:
-        return 48;
-      case KeyCode.key1:
-        return 49;
-      case KeyCode.key2:
-        return 50;
-      case KeyCode.key3:
-        return 51;
-      case KeyCode.key4:
-        return 52;
-      case KeyCode.key5:
-        return 53;
-      case KeyCode.key6:
-        return 54;
-      case KeyCode.key7:
-        return 55;
-      case KeyCode.key8:
-        return 56;
-      case KeyCode.key9:
-        return 57;
-      case KeyCode.a:
-        return 65;
-      case KeyCode.b:
-        return 66;
-      case KeyCode.c:
-        return 67;
-      case KeyCode.d:
-        return 68;
-      case KeyCode.e:
-        return 69;
-      case KeyCode.f:
-        return 70;
-      case KeyCode.g:
-        return 71;
-      case KeyCode.h:
-        return 72;
-      case KeyCode.i:
-        return 73;
-      case KeyCode.j:
-        return 74;
-      case KeyCode.k:
-        return 75;
-      case KeyCode.l:
-        return 76;
-      case KeyCode.m:
-        return 77;
-      case KeyCode.n:
-        return 78;
-      case KeyCode.o:
-        return 79;
-      case KeyCode.p:
-        return 80;
-      case KeyCode.q:
-        return 81;
-      case KeyCode.r:
-        return 82;
-      case KeyCode.s:
-        return 83;
-      case KeyCode.t:
-        return 84;
-      case KeyCode.u:
-        return 85;
-      case KeyCode.v:
-        return 86;
-      case KeyCode.w:
-        return 87;
-      case KeyCode.x:
-        return 88;
-      case KeyCode.y:
-        return 89;
-      case KeyCode.z:
-        return 90;
-      case KeyCode.numpad_0:
-        return 96;
-      case KeyCode.numpad_1:
-        return 97;
-      case KeyCode.numpad_2:
-        return 98;
-      case KeyCode.numpad_3:
-        return 99;
-      case KeyCode.numpad_4:
-        return 100;
-      case KeyCode.numpad_5:
-        return 101;
-      case KeyCode.numpad_6:
-        return 102;
-      case KeyCode.numpad_7:
-        return 103;
-      case KeyCode.numpad_8:
-        return 104;
-      case KeyCode.numpad_9:
-        return 105;
-      case KeyCode.multiply:
-        return 106;
-      case KeyCode.add:
-        return 107;
-      case KeyCode.enter:
-        return 13;
-      case KeyCode.subtract:
-        return 109;
-      case KeyCode.decimal:
-        return 110;
-      case KeyCode.divide:
-        return 111;
-      case KeyCode.f1:
-        return 112;
-      case KeyCode.f2:
-        return 113;
-      case KeyCode.f3:
-        return 114;
-      case KeyCode.f4:
-        return 115;
-      case KeyCode.f5:
-        return 116;
-      case KeyCode.f6:
-        return 117;
-      case KeyCode.f7:
-        return 118;
-      case KeyCode.f8:
-        return 119;
-      case KeyCode.f9:
-        return 120;
-      case KeyCode.f10:
-        return 121;
-      case KeyCode.f11:
-        return 122;
-      case KeyCode.f12:
-        return 123;
-      case KeyCode.f13:
-        return 124;
-      case KeyCode.f14:
-        return 125;
-      case KeyCode.f15:
-        return 126;
-      case KeyCode.backSpace:
-        return 8;
-      case KeyCode.tab:
-        return 9;
-      case KeyCode.shift:
-        return 16;
-      case KeyCode.control:
-        return 17;
-      case KeyCode.capsLock:
-        return 20;
-      case KeyCode.esc:
-        return 27;
-      case KeyCode.spacebar:
-        return 32;
-      case KeyCode.pageUp:
-        return 33;
-      case KeyCode.pageDown:
-        return 34;
-      case KeyCode.end:
-        return 35;
-      case KeyCode.home:
-        return 36;
-      case KeyCode.leftArrow:
-        return 37;
-      case KeyCode.upArrow:
-        return 38;
-      case KeyCode.rightArrow:
-        return 39;
-      case KeyCode.downArrow:
-        return 40;
-      case KeyCode.insert:
-        return 45;
-      case KeyCode.delete:
-        return 46;
-      case KeyCode.numLock:
-        return 144;
-      case KeyCode.scrollLock:
-        return 145;
-      case KeyCode.pauseBreak:
-        return 19;
-      case KeyCode.semicolon:
-        return 186;
-      case KeyCode.equal:
-        return 187;
-      case KeyCode.minus:
-        return 189;
-      case KeyCode.slash:
-        return 191;
-      case KeyCode.backQuote:
-        return 192;
-      case KeyCode.openBracket:
-        return 219;
-      case KeyCode.backSlash:
-        return 220;
-      case KeyCode.closeBracket:
-        return 221;
-      case KeyCode.quote:
-        return 222;
-      case KeyCode.comma:
-        return 188;
-      case KeyCode.period:
-        return 190;
-      case KeyCode.printScreen:
-        return 44;
-      case KeyCode.volumeUp:
-        return 175;
-      case KeyCode.volumeDown:
-        return 174;
-      case KeyCode.leftShift:
-        return 160;
-      case KeyCode.rightShift:
-        return 161;
-      case KeyCode.leftControl:
-        return 162;
-      case KeyCode.rightControl:
-        return 163;
-      case KeyCode.leftAlt:
-        return 164;
-      case KeyCode.rightAlt:
-        return 165;
-      case KeyCode.leftWin:
-        return 91;
-      case KeyCode.rightWin:
-        return 92;
-      case KeyCode.contextMenu:
-        return 93;
-      case KeyCode.pause:
-        return 178;
-      case KeyCode.resumeStop:
-        return 179;
-      case KeyCode.next:
-        return 176;
-      case KeyCode.previous:
-        return 177;
-      case KeyCode.leftBackSlash:
-        return 226;
-      case KeyCode.mute:
-        return 173;
-      case KeyCode.corsairStar:
-        return -100;
-      default:
-        return -1;
-    }
-  }
+  int get keyCode => switch (this) {
+        KeyCode.key0 => 48,
+        KeyCode.key1 => 49,
+        KeyCode.key2 => 50,
+        KeyCode.key3 => 51,
+        KeyCode.key4 => 52,
+        KeyCode.key5 => 53,
+        KeyCode.key6 => 54,
+        KeyCode.key7 => 55,
+        KeyCode.key8 => 56,
+        KeyCode.key9 => 57,
+        KeyCode.a => 65,
+        KeyCode.b => 66,
+        KeyCode.c => 67,
+        KeyCode.d => 68,
+        KeyCode.e => 69,
+        KeyCode.f => 70,
+        KeyCode.g => 71,
+        KeyCode.h => 72,
+        KeyCode.i => 73,
+        KeyCode.j => 74,
+        KeyCode.k => 75,
+        KeyCode.l => 76,
+        KeyCode.m => 77,
+        KeyCode.n => 78,
+        KeyCode.o => 79,
+        KeyCode.p => 80,
+        KeyCode.q => 81,
+        KeyCode.r => 82,
+        KeyCode.s => 83,
+        KeyCode.t => 84,
+        KeyCode.u => 85,
+        KeyCode.v => 86,
+        KeyCode.w => 87,
+        KeyCode.x => 88,
+        KeyCode.y => 89,
+        KeyCode.z => 90,
+        KeyCode.numpad_0 => 96,
+        KeyCode.numpad_1 => 97,
+        KeyCode.numpad_2 => 98,
+        KeyCode.numpad_3 => 99,
+        KeyCode.numpad_4 => 100,
+        KeyCode.numpad_5 => 101,
+        KeyCode.numpad_6 => 102,
+        KeyCode.numpad_7 => 103,
+        KeyCode.numpad_8 => 104,
+        KeyCode.numpad_9 => 105,
+        KeyCode.multiply => 106,
+        KeyCode.add => 107,
+        KeyCode.enter => 13,
+        KeyCode.subtract => 109,
+        KeyCode.decimal => 110,
+        KeyCode.divide => 111,
+        KeyCode.f1 => 112,
+        KeyCode.f2 => 113,
+        KeyCode.f3 => 114,
+        KeyCode.f4 => 115,
+        KeyCode.f5 => 116,
+        KeyCode.f6 => 117,
+        KeyCode.f7 => 118,
+        KeyCode.f8 => 119,
+        KeyCode.f9 => 120,
+        KeyCode.f10 => 121,
+        KeyCode.f11 => 122,
+        KeyCode.f12 => 123,
+        KeyCode.f13 => 124,
+        KeyCode.f14 => 125,
+        KeyCode.f15 => 126,
+        KeyCode.backSpace => 8,
+        KeyCode.tab => 9,
+        KeyCode.shift => 16,
+        KeyCode.control => 17,
+        KeyCode.capsLock => 20,
+        KeyCode.esc => 27,
+        KeyCode.spacebar => 32,
+        KeyCode.pageUp => 33,
+        KeyCode.pageDown => 34,
+        KeyCode.end => 35,
+        KeyCode.home => 36,
+        KeyCode.leftArrow => 37,
+        KeyCode.upArrow => 38,
+        KeyCode.rightArrow => 39,
+        KeyCode.downArrow => 40,
+        KeyCode.insert => 45,
+        KeyCode.delete => 46,
+        KeyCode.numLock => 144,
+        KeyCode.scrollLock => 145,
+        KeyCode.pauseBreak => 19,
+        KeyCode.semicolon => 186,
+        KeyCode.equal => 187,
+        KeyCode.minus => 189,
+        KeyCode.slash => 191,
+        KeyCode.backQuote => 192,
+        KeyCode.openBracket => 219,
+        KeyCode.backSlash => 220,
+        KeyCode.closeBracket => 221,
+        KeyCode.quote => 222,
+        KeyCode.comma => 188,
+        KeyCode.period => 190,
+        KeyCode.printScreen => 44,
+        KeyCode.volumeUp => 175,
+        KeyCode.volumeDown => 174,
+        KeyCode.leftShift => 160,
+        KeyCode.rightShift => 161,
+        KeyCode.leftControl => 162,
+        KeyCode.rightControl => 163,
+        KeyCode.leftAlt => 164,
+        KeyCode.rightAlt => 165,
+        KeyCode.leftWin => 91,
+        KeyCode.rightWin => 92,
+        KeyCode.contextMenu => 93,
+        KeyCode.pause => 178,
+        KeyCode.resumeStop => 179,
+        KeyCode.next => 176,
+        KeyCode.previous => 177,
+        KeyCode.leftBackSlash => 226,
+        KeyCode.mute => 173,
+        KeyCode.corsairStar => -100,
+        KeyCode.unknown => -1,
+      };
 
-  static KeyCode fromKeyCode(int keyCode) {
-    switch (keyCode) {
-      case 48:
-        return KeyCode.key0;
-      case 49:
-        return KeyCode.key1;
-      case 50:
-        return KeyCode.key2;
-      case 51:
-        return KeyCode.key3;
-      case 52:
-        return KeyCode.key4;
-      case 53:
-        return KeyCode.key5;
-      case 54:
-        return KeyCode.key6;
-      case 55:
-        return KeyCode.key7;
-      case 56:
-        return KeyCode.key8;
-      case 57:
-        return KeyCode.key9;
-      case 65:
-        return KeyCode.a;
-      case 66:
-        return KeyCode.b;
-      case 67:
-        return KeyCode.c;
-      case 68:
-        return KeyCode.d;
-      case 69:
-        return KeyCode.e;
-      case 70:
-        return KeyCode.f;
-      case 71:
-        return KeyCode.g;
-      case 72:
-        return KeyCode.h;
-      case 73:
-        return KeyCode.i;
-      case 74:
-        return KeyCode.j;
-      case 75:
-        return KeyCode.k;
-      case 76:
-        return KeyCode.l;
-      case 77:
-        return KeyCode.m;
-      case 78:
-        return KeyCode.n;
-      case 79:
-        return KeyCode.o;
-      case 80:
-        return KeyCode.p;
-      case 81:
-        return KeyCode.q;
-      case 82:
-        return KeyCode.r;
-      case 83:
-        return KeyCode.s;
-      case 84:
-        return KeyCode.t;
-      case 85:
-        return KeyCode.u;
-      case 86:
-        return KeyCode.v;
-      case 87:
-        return KeyCode.w;
-      case 88:
-        return KeyCode.x;
-      case 89:
-        return KeyCode.y;
-      case 90:
-        return KeyCode.z;
-      case 96:
-        return KeyCode.numpad_0;
-      case 97:
-        return KeyCode.numpad_1;
-      case 98:
-        return KeyCode.numpad_2;
-      case 99:
-        return KeyCode.numpad_3;
-      case 100:
-        return KeyCode.numpad_4;
-      case 101:
-        return KeyCode.numpad_5;
-      case 102:
-        return KeyCode.numpad_6;
-      case 103:
-        return KeyCode.numpad_7;
-      case 104:
-        return KeyCode.numpad_8;
-      case 105:
-        return KeyCode.numpad_9;
-      case 106:
-        return KeyCode.multiply;
-      case 107:
-        return KeyCode.add;
-      case 13:
-        return KeyCode.enter;
-      case 109:
-        return KeyCode.subtract;
-      case 110:
-        return KeyCode.decimal;
-      case 111:
-        return KeyCode.divide;
-      case 112:
-        return KeyCode.f1;
-      case 113:
-        return KeyCode.f2;
-      case 114:
-        return KeyCode.f3;
-      case 115:
-        return KeyCode.f4;
-      case 116:
-        return KeyCode.f5;
-      case 117:
-        return KeyCode.f6;
-      case 118:
-        return KeyCode.f7;
-      case 119:
-        return KeyCode.f8;
-      case 120:
-        return KeyCode.f9;
-      case 121:
-        return KeyCode.f10;
-      case 122:
-        return KeyCode.f11;
-      case 123:
-        return KeyCode.f12;
-      case 124:
-        return KeyCode.f13;
-      case 125:
-        return KeyCode.f14;
-      case 126:
-        return KeyCode.f15;
-      case 8:
-        return KeyCode.backSpace;
-      case 9:
-        return KeyCode.tab;
-      case 16:
-        return KeyCode.shift;
-      case 17:
-        return KeyCode.control;
-      case 20:
-        return KeyCode.capsLock;
-      case 27:
-        return KeyCode.esc;
-      case 32:
-        return KeyCode.spacebar;
-      case 33:
-        return KeyCode.pageUp;
-      case 34:
-        return KeyCode.pageDown;
-      case 35:
-        return KeyCode.end;
-      case 36:
-        return KeyCode.home;
-      case 37:
-        return KeyCode.leftArrow;
-      case 38:
-        return KeyCode.upArrow;
-      case 39:
-        return KeyCode.rightArrow;
-      case 40:
-        return KeyCode.downArrow;
-      case 45:
-        return KeyCode.insert;
-      case 46:
-        return KeyCode.delete;
-      case 144:
-        return KeyCode.numLock;
-      case 145:
-        return KeyCode.scrollLock;
-      case 19:
-        return KeyCode.pauseBreak;
-      case 186:
-        return KeyCode.semicolon;
-      case 187:
-        return KeyCode.equal;
-      case 189:
-        return KeyCode.minus;
-      case 191:
-        return KeyCode.slash;
-      case 192:
-        return KeyCode.backQuote;
-      case 219:
-        return KeyCode.openBracket;
-      case 220:
-        return KeyCode.backSlash;
-      case 221:
-        return KeyCode.closeBracket;
-      case 222:
-        return KeyCode.quote;
-      case 188:
-        return KeyCode.comma;
-      case 190:
-        return KeyCode.period;
-      case 44:
-        return KeyCode.printScreen;
-      case 175:
-        return KeyCode.volumeUp;
-      case 174:
-        return KeyCode.volumeDown;
-      case 160:
-        return KeyCode.leftShift;
-      case 161:
-        return KeyCode.rightShift;
-      case 162:
-        return KeyCode.leftControl;
-      case 163:
-        return KeyCode.rightControl;
-      case 164:
-        return KeyCode.leftAlt;
-      case 165:
-        return KeyCode.rightAlt;
-      case 91:
-        return KeyCode.leftWin;
-      case 92:
-        return KeyCode.rightWin;
-      case 93:
-        return KeyCode.contextMenu;
-      case 178:
-        return KeyCode.pause;
-      case 179:
-        return KeyCode.resumeStop;
-      case 176:
-        return KeyCode.next;
-      case 177:
-        return KeyCode.previous;
-      case 226:
-        return KeyCode.leftBackSlash;
-      case 173:
-        return KeyCode.mute;
-      case -100:
-        return KeyCode.corsairStar;
-      default:
-        return KeyCode.unknown;
-    }
-  }
+  static KeyCode fromKeyCode(int keyCode) => switch (keyCode) {
+        48 => KeyCode.key0,
+        49 => KeyCode.key1,
+        50 => KeyCode.key2,
+        51 => KeyCode.key3,
+        52 => KeyCode.key4,
+        53 => KeyCode.key5,
+        54 => KeyCode.key6,
+        55 => KeyCode.key7,
+        56 => KeyCode.key8,
+        57 => KeyCode.key9,
+        65 => KeyCode.a,
+        66 => KeyCode.b,
+        67 => KeyCode.c,
+        68 => KeyCode.d,
+        69 => KeyCode.e,
+        70 => KeyCode.f,
+        71 => KeyCode.g,
+        72 => KeyCode.h,
+        73 => KeyCode.i,
+        74 => KeyCode.j,
+        75 => KeyCode.k,
+        76 => KeyCode.l,
+        77 => KeyCode.m,
+        78 => KeyCode.n,
+        79 => KeyCode.o,
+        80 => KeyCode.p,
+        81 => KeyCode.q,
+        82 => KeyCode.r,
+        83 => KeyCode.s,
+        84 => KeyCode.t,
+        85 => KeyCode.u,
+        86 => KeyCode.v,
+        87 => KeyCode.w,
+        88 => KeyCode.x,
+        89 => KeyCode.y,
+        90 => KeyCode.z,
+        96 => KeyCode.numpad_0,
+        97 => KeyCode.numpad_1,
+        98 => KeyCode.numpad_2,
+        99 => KeyCode.numpad_3,
+        100 => KeyCode.numpad_4,
+        101 => KeyCode.numpad_5,
+        102 => KeyCode.numpad_6,
+        103 => KeyCode.numpad_7,
+        104 => KeyCode.numpad_8,
+        105 => KeyCode.numpad_9,
+        106 => KeyCode.multiply,
+        107 => KeyCode.add,
+        13 => KeyCode.enter,
+        109 => KeyCode.subtract,
+        110 => KeyCode.decimal,
+        111 => KeyCode.divide,
+        112 => KeyCode.f1,
+        113 => KeyCode.f2,
+        114 => KeyCode.f3,
+        115 => KeyCode.f4,
+        116 => KeyCode.f5,
+        117 => KeyCode.f6,
+        118 => KeyCode.f7,
+        119 => KeyCode.f8,
+        120 => KeyCode.f9,
+        121 => KeyCode.f10,
+        122 => KeyCode.f11,
+        123 => KeyCode.f12,
+        124 => KeyCode.f13,
+        125 => KeyCode.f14,
+        126 => KeyCode.f15,
+        8 => KeyCode.backSpace,
+        9 => KeyCode.tab,
+        16 => KeyCode.shift,
+        17 => KeyCode.control,
+        20 => KeyCode.capsLock,
+        27 => KeyCode.esc,
+        32 => KeyCode.spacebar,
+        33 => KeyCode.pageUp,
+        34 => KeyCode.pageDown,
+        35 => KeyCode.end,
+        36 => KeyCode.home,
+        37 => KeyCode.leftArrow,
+        38 => KeyCode.upArrow,
+        39 => KeyCode.rightArrow,
+        40 => KeyCode.downArrow,
+        45 => KeyCode.insert,
+        46 => KeyCode.delete,
+        144 => KeyCode.numLock,
+        145 => KeyCode.scrollLock,
+        19 => KeyCode.pauseBreak,
+        186 => KeyCode.semicolon,
+        187 => KeyCode.equal,
+        189 => KeyCode.minus,
+        191 => KeyCode.slash,
+        192 => KeyCode.backQuote,
+        219 => KeyCode.openBracket,
+        220 => KeyCode.backSlash,
+        221 => KeyCode.closeBracket,
+        222 => KeyCode.quote,
+        188 => KeyCode.comma,
+        190 => KeyCode.period,
+        44 => KeyCode.printScreen,
+        175 => KeyCode.volumeUp,
+        174 => KeyCode.volumeDown,
+        160 => KeyCode.leftShift,
+        161 => KeyCode.rightShift,
+        162 => KeyCode.leftControl,
+        163 => KeyCode.rightControl,
+        164 => KeyCode.leftAlt,
+        165 => KeyCode.rightAlt,
+        91 => KeyCode.leftWin,
+        92 => KeyCode.rightWin,
+        93 => KeyCode.contextMenu,
+        178 => KeyCode.pause,
+        179 => KeyCode.resumeStop,
+        176 => KeyCode.next,
+        177 => KeyCode.previous,
+        226 => KeyCode.leftBackSlash,
+        173 => KeyCode.mute,
+        -100 => KeyCode.corsairStar,
+        _ => KeyCode.unknown,
+      };
 
-  static String name(int keyCode) {
-    switch (keyCode) {
-      case 65:
-        return 'a';
-      case 66:
-        return 'b';
-      case 67:
-        return 'c';
-      case 68:
-        return 'd';
-      case 69:
-        return 'e';
-      case 70:
-        return 'f';
-      case 71:
-        return 'g';
-      case 72:
-        return 'h';
-      case 73:
-        return 'i';
-      case 74:
-        return 'j';
-      case 75:
-        return 'k';
-      case 76:
-        return 'l';
-      case 77:
-        return 'm';
-      case 78:
-        return 'n';
-      case 79:
-        return 'o';
-      case 80:
-        return 'p';
-      case 81:
-        return 'q';
-      case 82:
-        return 'r';
-      case 83:
-        return 's';
-      case 84:
-        return 't';
-      case 85:
-        return 'u';
-      case 86:
-        return 'v';
-      case 87:
-        return 'w';
-      case 88:
-        return 'x';
-      case 89:
-        return 'y';
-      case 90:
-        return 'z';
-      case 48:
-        return '0';
-      case 49:
-        return '1';
-      case 50:
-        return '2';
-      case 51:
-        return '3';
-      case 52:
-        return '4';
-      case 53:
-        return '5';
-      case 54:
-        return '6';
-      case 55:
-        return '7';
-      case 56:
-        return '8';
-      case 57:
-        return '9';
-      case 96:
-        return 'Num Pad 0';
-      case 97:
-        return 'Num Pad 1';
-      case 98:
-        return 'Num Pad 2';
-      case 99:
-        return 'Num Pad 3';
-      case 100:
-        return 'Num Pad 4';
-      case 101:
-        return 'Num Pad 5';
-      case 102:
-        return 'Num Pad 6';
-      case 103:
-        return 'Num Pad 7';
-      case 104:
-        return 'Num Pad 8';
-      case 105:
-        return 'Num Pad 9';
-      case 106:
-        return 'Multiply';
-      case 107:
-        return 'Add';
-      case 109:
-        return 'Subtract';
-      case 110:
-        return 'Decimal';
-      case 111:
-        return 'Divide';
-      case 112:
-        return 'F1';
-      case 113:
-        return 'F2';
-      case 114:
-        return 'F3';
-      case 115:
-        return 'F4';
-      case 116:
-        return 'F5';
-      case 117:
-        return 'F6';
-      case 118:
-        return 'F7';
-      case 119:
-        return 'F8';
-      case 120:
-        return 'F9';
-      case 121:
-        return 'F10';
-      case 122:
-        return 'F11';
-      case 123:
-        return 'F12';
-      case 124:
-        return 'F13';
-      case 125:
-        return 'F14';
-      case 126:
-        return 'F15';
-      case 8:
-        return 'Backspace';
-      case 9:
-        return 'Tab';
-      case 13:
-        return 'Enter';
-      case 16:
-        return 'Shift';
-      case 17:
-        return 'Control';
-      case 20:
-        return 'Caps Lock';
-      case 27:
-        return 'Esc';
-      case 32:
-        return 'Spacebar';
-      case 33:
-        return 'Page Up';
-      case 34:
-        return 'Page Down';
-      case 35:
-        return 'End';
-      case 36:
-        return 'Home';
-      case 37:
-        return 'Left Arrow';
-      case 38:
-        return 'Up Arrow';
-      case 39:
-        return 'Right Arrow';
-      case 40:
-        return 'Down Arrow';
-      case 45:
-        return 'Insert';
-      case 46:
-        return 'Delete';
-      case 144:
-        return 'Num Lock';
-      case 145:
-        return 'ScrLk';
-      case 19:
-        return 'Pause/Break';
-      case 186:
-        return 'Semicolon';
-      case 187:
-        return 'Equal';
-      case 189:
-        return 'Minus';
-      case 191:
-        return 'Slash';
-      case 192:
-        return 'Back Quote';
-      case 219:
-        return 'Open Bracket';
-      case 220:
-        return 'Back Slash';
-      case 221:
-        return 'Close Bracket';
-      case 222:
-        return 'Quote';
-      case 188:
-        return 'Comma';
-      case 190:
-        return 'Period';
-      case 44:
-        return 'PrintScreen';
-      case 175:
-        return 'Volume Up';
-      case 174:
-        return 'Volume Down';
-      case 160:
-        return 'Left Shift';
-      case 161:
-        return 'Right Shift';
-      case 162:
-        return 'Left Control';
-      case 163:
-        return 'Right Control';
-      case 164:
-        return 'Left Alt';
-      case 165:
-        return 'Right Alt';
-      case 91:
-        return 'Left Win';
-      case 92:
-        return 'Right Win';
-      case 93:
-        return 'ContextMenu';
-      case 178:
-        return 'Pause';
-      case 179:
-        return 'Resume/Stop';
-      case 176:
-        return 'Next';
-      case 177:
-        return 'Previous';
-      case 226:
-        return 'Left Back Slash';
-      case 173:
-        return 'Mute';
-      case -100:
-        return 'Corsair Star';
-      default:
-        return 'Unknown';
-    }
-  }
+  static String name(int keyCode) => switch (keyCode) {
+        65 => 'a',
+        66 => 'b',
+        67 => 'c',
+        68 => 'd',
+        69 => 'e',
+        70 => 'f',
+        71 => 'g',
+        72 => 'h',
+        73 => 'i',
+        74 => 'j',
+        75 => 'k',
+        76 => 'l',
+        77 => 'm',
+        78 => 'n',
+        79 => 'o',
+        80 => 'p',
+        81 => 'q',
+        82 => 'r',
+        83 => 's',
+        84 => 't',
+        85 => 'u',
+        86 => 'v',
+        87 => 'w',
+        88 => 'x',
+        89 => 'y',
+        90 => 'z',
+        48 => '0',
+        49 => '1',
+        50 => '2',
+        51 => '3',
+        52 => '4',
+        53 => '5',
+        54 => '6',
+        55 => '7',
+        56 => '8',
+        57 => '9',
+        96 => 'Num Pad 0',
+        97 => 'Num Pad 1',
+        98 => 'Num Pad 2',
+        99 => 'Num Pad 3',
+        100 => 'Num Pad 4',
+        101 => 'Num Pad 5',
+        102 => 'Num Pad 6',
+        103 => 'Num Pad 7',
+        104 => 'Num Pad 8',
+        105 => 'Num Pad 9',
+        106 => 'Multiply',
+        107 => 'Add',
+        109 => 'Subtract',
+        110 => 'Decimal',
+        111 => 'Divide',
+        112 => 'F1',
+        113 => 'F2',
+        114 => 'F3',
+        115 => 'F4',
+        116 => 'F5',
+        117 => 'F6',
+        118 => 'F7',
+        119 => 'F8',
+        120 => 'F9',
+        121 => 'F10',
+        122 => 'F11',
+        123 => 'F12',
+        124 => 'F13',
+        125 => 'F14',
+        126 => 'F15',
+        8 => 'Backspace',
+        9 => 'Tab',
+        13 => 'Enter',
+        16 => 'Shift',
+        17 => 'Control',
+        20 => 'Caps Lock',
+        27 => 'Esc',
+        32 => 'Spacebar',
+        33 => 'Page Up',
+        34 => 'Page Down',
+        35 => 'End',
+        36 => 'Home',
+        37 => 'Left Arrow',
+        38 => 'Up Arrow',
+        39 => 'Right Arrow',
+        40 => 'Down Arrow',
+        45 => 'Insert',
+        46 => 'Delete',
+        144 => 'Num Lock',
+        145 => 'ScrLk',
+        19 => 'Pause/Break',
+        186 => 'Semicolon',
+        187 => 'Equal',
+        189 => 'Minus',
+        191 => 'Slash',
+        192 => 'Back Quote',
+        219 => 'Open Bracket',
+        220 => 'Back Slash',
+        221 => 'Close Bracket',
+        222 => 'Quote',
+        188 => 'Comma',
+        190 => 'Period',
+        44 => 'PrintScreen',
+        175 => 'Volume Up',
+        174 => 'Volume Down',
+        160 => 'Left Shift',
+        161 => 'Right Shift',
+        162 => 'Left Control',
+        163 => 'Right Control',
+        164 => 'Left Alt',
+        165 => 'Right Alt',
+        91 => 'Left Win',
+        92 => 'Right Win',
+        93 => 'ContextMenu',
+        178 => 'Pause',
+        179 => 'Resume/Stop',
+        176 => 'Next',
+        177 => 'Previous',
+        226 => 'Left Back Slash',
+        173 => 'Mute',
+        -100 => 'Corsair Star',
+        _ => 'Unknown',
+      };
 }

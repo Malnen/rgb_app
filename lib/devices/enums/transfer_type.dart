@@ -1,1 +1,4 @@
-enum TransferType { control, interrupt }
+enum TransferType {
+  control,
+  interrupt,
+}

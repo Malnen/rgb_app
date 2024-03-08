@@ -1,5 +1,5 @@
-import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rgb_app/utils/usb_devices_info_getter/enums/connected_usb_device_command.dart';
 import 'package:rgb_app/utils/usb_devices_info_getter/enums/connected_usb_device_response_type.dart';

@@ -4,6 +4,7 @@ import 'package:path/path.dart' as path;
 
 void main() {
   copyAssets();
+  generateFiles();
   runFlutterBuildWindows();
 }
 
@@ -14,6 +15,25 @@ void copyAssets() {
   Directory(destinationDir).createSync(recursive: true);
   copyDirectory(Directory(sourceDir), Directory(destinationDir));
   print('Copied');
+}
+
+void generateFiles() {
+  print('Generating files...');
+  final ProcessResult result = executeCommand(<String>[
+    'pub',
+    'run',
+    'build_runner',
+    'build',
+    '--delete-conflicting-outputs',
+    'models:generated',
+  ]);
+  if (result.exitCode == 0) {
+    print('Flutter build windows completed successfully.');
+    print('Done');
+  } else {
+    print('Error: Flutter build windows failed. Exit code: ${result.exitCode}');
+    print('Stderr: ${result.stderr}');
+  }
 }
 
 void copyDirectory(Directory source, Directory destination) {
@@ -34,6 +54,16 @@ void copyDirectory(Directory source, Directory destination) {
 
 void runFlutterBuildWindows() {
   print('Running flutter build...');
+  final ProcessResult result = executeCommand(<String>['build', 'windows']);
+  if (result.exitCode == 0) {
+    print('Done');
+  } else {
+    print('Error, exit code: ${result.exitCode}');
+    print('Stderr: ${result.stderr}');
+  }
+}
+
+ProcessResult executeCommand(List<String> params) {
   late String flutterExecutable;
   final ProcessResult where = Process.runSync('where', <String>['flutter.bat']);
   if (where.exitCode == 0) {
@@ -41,12 +71,6 @@ void runFlutterBuildWindows() {
     flutterExecutable = stdout.trim();
   }
 
-  final ProcessResult result = Process.runSync(flutterExecutable, <String>['build', 'windows']);
-  if (result.exitCode == 0) {
-    print('Flutter build windows completed successfully.');
-    print('Done');
-  } else {
-    print('Error: Flutter build windows failed. Exit code: ${result.exitCode}');
-    print('Stderr: ${result.stderr}');
-  }
+  final ProcessResult result = Process.runSync(flutterExecutable, params);
+  return result;
 }

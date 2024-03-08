@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EffectGridApplyButton extends StatefulWidget {
-  final void Function() onTap;
+  final VoidCallback onTap;
 
   const EffectGridApplyButton({required this.onTap});
 
@@ -10,11 +10,6 @@ class EffectGridApplyButton extends StatefulWidget {
 }
 
 class _EffectGridApplyButtonState extends State<EffectGridApplyButton> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

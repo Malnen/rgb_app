@@ -7,8 +7,8 @@ import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
 import 'package:rgb_app/devices/steel_series_rival_3/steel_series_rival_3.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
-import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class DeviceInterface {
@@ -26,40 +26,20 @@ abstract class DeviceInterface {
 
   int get configuration;
 
-  DeviceInterface({
-    required this.deviceData,
-  }) {
+  DeviceInterface({required this.deviceData}) {
     effectBloc = GetIt.instance.get();
     effectsColorsCubit = GetIt.instance.get();
     isOpen = BehaviorSubject<bool>();
   }
 
-  static DeviceInterface fromDeviceData({
-    required DeviceData deviceData,
-  }) {
-    final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
-    final String productVendor = deviceProductVendor.productVendor;
-    switch (productVendor) {
-      case DeviceProductVendor.corsairK70:
-        return CorsairK70(
-          deviceData: deviceData,
-        );
-      case DeviceProductVendor.corsairVirtuoso:
-        return CorsairVirtuoso(
-          deviceData: deviceData,
-        );
-      case DeviceProductVendor.steelSeriesRival100:
-        return SteelSeriesRival100(
-          deviceData: deviceData,
-        );
-      case DeviceProductVendor.steelSeriesRival3:
-        return SteelSeriesRival3(
-          deviceData: deviceData,
-        );
-      default:
-        return UnknownDevice(deviceData: deviceData);
-    }
-  }
+  static DeviceInterface fromDeviceData({required DeviceData deviceData}) =>
+      switch (deviceData.deviceProductVendor.productVendor) {
+        DeviceProductVendor.corsairK70 => CorsairK70(deviceData: deviceData),
+        DeviceProductVendor.corsairVirtuoso => CorsairVirtuoso(deviceData: deviceData),
+        DeviceProductVendor.steelSeriesRival100 => SteelSeriesRival100(deviceData: deviceData),
+        DeviceProductVendor.steelSeriesRival3 => SteelSeriesRival3(deviceData: deviceData),
+        _ => UnknownDevice(deviceData: deviceData),
+      } as DeviceInterface;
 
   List<List<int>> getPackets();
 

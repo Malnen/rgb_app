@@ -10,15 +10,15 @@ import 'package:rgb_app/blocs/key_bloc/key_event.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
-import 'package:rgb_app/enums/device_product_vendor.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
 
 class DevicesListContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.devicesData.length);
-    context.select<DevicesBloc, List<DeviceData>>((DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices);
+    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices.length);
     context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
 
     final DevicesBloc devicesBloc = GetIt.instance.get();
@@ -70,13 +70,16 @@ class DevicesListContainer extends StatelessWidget {
     final List<DeviceInterface> deviceInstances = devicesBloc.deviceInstances;
     final KeyboardInterface? firstKeyboard = deviceInstances
         .firstWhereOrNull((DeviceInterface element) => element is KeyboardInterface) as KeyboardInterface?;
-    final SetKeyboardDeviceEvent event = SetKeyboardDeviceEvent(keyboardInterface: firstKeyboard);
+    final SetKeyboardDeviceEvent event = SetKeyboardDeviceEvent(
+      keyboardInterface: firstKeyboard,
+      key: UniqueKey(),
+    );
     keyBloc.add(event);
   }
 
   IconData _getIcon(DeviceData value) {
     final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
-    return deviceProductVendor.icon;
+    return deviceProductVendor.icon!;
   }
 
   String _getName(DeviceData value) {
@@ -95,7 +98,7 @@ class DevicesListContainer extends StatelessWidget {
     required DevicesBloc devicesBloc,
     required DeviceData deviceData,
   }) {
-    final AddDeviceEvent addDeviceEvent = AddDeviceEvent(deviceData: deviceData);
+    final AddDeviceEvent addDeviceEvent = DevicesEvent.addDevice(deviceData) as AddDeviceEvent;
     devicesBloc.add(addDeviceEvent);
   }
 
@@ -103,7 +106,7 @@ class DevicesListContainer extends StatelessWidget {
     required DevicesBloc devicesBloc,
     required DeviceData deviceData,
   }) {
-    final RemoveDeviceEvent removeDeviceEvent = RemoveDeviceEvent(deviceData: deviceData);
+    final RemoveDeviceEvent removeDeviceEvent = DevicesEvent.removeDevice(deviceData) as RemoveDeviceEvent;
     devicesBloc.add(removeDeviceEvent);
   }
 }

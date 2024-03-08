@@ -1,72 +1,55 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/json_converters/unique_key_converter.dart';
 import 'package:rgb_app/models/device_data.dart';
 
-class DevicesState extends Equatable {
-  final List<DeviceData> connectedDevices;
-  final List<DeviceData> devicesData;
-  final List<DeviceData> availableDevices;
-  final List<DeviceInterface> deviceInstances;
-  final Key key;
+part '../../generated/blocs/devices_bloc/devices_state.freezed.dart';
+part '../../generated/blocs/devices_bloc/devices_state.g.dart';
 
-  DevicesState({
-    required this.devicesData,
-    required this.deviceInstances,
-    required this.availableDevices,
-    List<DeviceData>? connectedDevices,
-  })  : connectedDevices = connectedDevices ?? <DeviceData>[],
-        key = UniqueKey();
+@Freezed(makeCollectionsUnmodifiable: false)
+class DevicesState with _$DevicesState {
+  factory DevicesState({
+    required List<DeviceData> devicesData,
+    @UniqueKeyConverter() required UniqueKey key,
+    @JsonKey(
+      includeFromJson: false,
+      includeToJson: false,
+    )
+    @Default(<DeviceData>[])
+    List<DeviceData> availableDevices,
+    @JsonKey(
+      includeFromJson: false,
+      includeToJson: false,
+    )
+    @Default(<DeviceInterface>[])
+    List<DeviceInterface> deviceInstances,
+    @JsonKey(
+      includeFromJson: false,
+      includeToJson: false,
+    )
+    @Default(<DeviceData>[])
+    List<DeviceData> connectedDevices,
+  }) = _DevicesState;
 
-  factory DevicesState.empty() {
+  factory DevicesState.empty() => DevicesState(
+        devicesData: <DeviceData>[],
+        deviceInstances: <DeviceInterface>[],
+        availableDevices: <DeviceData>[],
+        connectedDevices: <DeviceData>[],
+        key: UniqueKey(),
+      );
+
+  factory DevicesState.fromJson(Map<String, Object?> json) => _$DevicesStateFromJson(json);
+
+  factory DevicesState.fromJsonWithModifiableLists(Map<String, Object?> json) {
+    final DevicesState state = DevicesState.fromJson(json);
     return DevicesState(
-      devicesData: <DeviceData>[],
-      deviceInstances: <DeviceInterface>[],
-      availableDevices: <DeviceData>[],
+      devicesData: <DeviceData>[...state.devicesData],
+      deviceInstances: <DeviceInterface>[...state.deviceInstances],
+      availableDevices: <DeviceData>[...state.availableDevices],
+      connectedDevices: <DeviceData>[...state.connectedDevices],
+      key: UniqueKey(),
     );
   }
-
-  DevicesState copyWith({
-    List<DeviceData>? devicesData,
-    List<DeviceData>? availableDevices,
-    List<DeviceInterface>? deviceInstances,
-    List<DeviceData>? connectedDevices,
-  }) {
-    return DevicesState(
-      devicesData: devicesData ?? this.devicesData,
-      availableDevices: availableDevices ?? this.availableDevices,
-      deviceInstances: deviceInstances ?? this.deviceInstances,
-      connectedDevices: connectedDevices ?? this.connectedDevices,
-    );
-  }
-
-  static DevicesState fromJson(Map<String, Object?> json) {
-    return DevicesState(
-      devicesData: _mapDeviceData(json['devicesData'] as List<Object?>),
-      availableDevices: <DeviceData>[],
-      deviceInstances: <DeviceInterface>[],
-    );
-  }
-
-  Map<String, Object?> toJson() {
-    return <String, Object?>{
-      'devicesData': devicesData,
-    };
-  }
-
-  static List<DeviceData> _mapDeviceData(List<Object?> json) {
-    return json
-        .map(
-          (Object? element) => DeviceData.fromJson(element as Map<String, Object?>),
-        )
-        .toList();
-  }
-
-  @override
-  List<Object> get props => <Object>[
-        devicesData,
-        availableDevices,
-        deviceInstances,
-        key,
-      ];
 }

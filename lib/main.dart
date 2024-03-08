@@ -68,14 +68,11 @@ Future<void> _initSystemTray() async {
     ],
   );
   await systemTray.setContextMenu(menu);
-  systemTray.registerSystemTrayEventHandler((String eventName) {
-    switch (eventName) {
-      case kSystemTrayEventClick:
-        windowManager.show();
-        break;
-      case kSystemTrayEventRightClick:
-        systemTray.popUpContextMenu();
-        break;
-    }
-  });
+  systemTray.registerSystemTrayEventHandler(
+    (String eventName) => switch (eventName) {
+      kSystemTrayEventClick => windowManager.show(),
+      kSystemTrayEventRightClick => systemTray.popUpContextMenu(),
+      _ => throw UnimplementedError(),
+    },
+  );
 }

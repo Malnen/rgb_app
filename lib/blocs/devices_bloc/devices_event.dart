@@ -1,97 +1,37 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 
-abstract class DevicesEvent extends Equatable {
-  @override
-  List<Object?> get props => <Object>[];
-}
+part '../../generated/blocs/devices_bloc/devices_event.freezed.dart';
 
-class AddDeviceEvent extends DevicesEvent {
-  final DeviceData deviceData;
+@freezed
+abstract class DevicesEvent with _$DevicesEvent {
+  const factory DevicesEvent.addDevice(DeviceData deviceData) = AddDeviceEvent;
 
-  AddDeviceEvent({required this.deviceData});
+  const factory DevicesEvent.removeDevice(DeviceData deviceData) = RemoveDeviceEvent;
 
-  @override
-  List<Object?> get props => <Object>[deviceData];
-}
+  const factory DevicesEvent.restoreDevices() = RestoreDevicesEvent;
 
-class RemoveDeviceEvent extends DevicesEvent {
-  final DeviceData deviceData;
+  const factory DevicesEvent.loadAvailableDevices() = LoadAvailableDevicesEvent;
 
-  RemoveDeviceEvent({required this.deviceData});
+  const factory DevicesEvent.updateDevices({
+    required List<DeviceData> devicesData,
+    required List<DeviceData> connectedDevices,
+    required List<DeviceData> availableDevices,
+  }) = UpdateDevices;
 
-  @override
-  List<Object> get props => <Object>[deviceData];
-}
+  const factory DevicesEvent.reorderDevices({
+    required int oldIndex,
+    required int newIndex,
+  }) = ReorderDevicesEvent;
 
-class RestoreDevicesEvent extends DevicesEvent {}
+  const factory DevicesEvent.updateDeviceOffset({
+    required int offsetX,
+    required int offsetY,
+    required DeviceInterface deviceInterface,
+  }) = UpdateDeviceOffsetEvent;
 
-class LoadAvailableDevicesEvent extends DevicesEvent {}
+  const factory DevicesEvent.checkDevicesConnectionState() = CheckDevicesConnectionStateEvent;
 
-class UpdateDevices extends DevicesEvent {
-  final List<DeviceData> devicesData;
-  final List<DeviceData> connectedDevices;
-  final List<DeviceData> availableDevices;
-
-  UpdateDevices({
-    required this.devicesData,
-    required this.connectedDevices,
-    required this.availableDevices,
-  });
-
-  @override
-  List<Object> get props => <Object>[
-        devicesData,
-        connectedDevices,
-        availableDevices,
-      ];
-}
-
-class ReorderDevicesEvent extends DevicesEvent {
-  final int oldIndex;
-  final int newIndex;
-
-  ReorderDevicesEvent({
-    required this.oldIndex,
-    required this.newIndex,
-  });
-
-  @override
-  List<Object> get props => <Object>[
-        oldIndex,
-        newIndex,
-      ];
-}
-
-class UpdateDeviceOffsetEvent extends DevicesEvent {
-  final int offsetX;
-  final int offsetY;
-  final DeviceInterface deviceInterface;
-
-  UpdateDeviceOffsetEvent({
-    required this.offsetX,
-    required this.offsetY,
-    required this.deviceInterface,
-  });
-
-  @override
-  List<Object> get props => <Object>[
-        offsetX,
-        offsetY,
-        deviceInterface,
-      ];
-}
-
-class CheckDevicesConnectionStateEvent extends DevicesEvent {}
-
-class SendDataManuallyEvent extends DevicesEvent {
-  final DeviceInterface deviceInterface;
-
-  SendDataManuallyEvent(this.deviceInterface);
-
-  @override
-  List<Object> get props => <Object>[
-        deviceInterface,
-      ];
+  const factory DevicesEvent.sendDataManually(DeviceInterface deviceInterface) = SendDataManuallyEvent;
 }

@@ -12,32 +12,22 @@ class RightPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object>>>[
-        BlocProvider<EffectBloc>.value(
-          value: GetIt.instance.get(),
-        ),
-        BlocProvider<EffectsColorsCubit>.value(
-          value: GetIt.instance.get(),
-        ),
-        BlocProvider<DevicesBloc>.value(
-          value: GetIt.instance.get(),
-        ),
+        BlocProvider<EffectBloc>.value(value: GetIt.instance.get()),
+        BlocProvider<EffectsColorsCubit>.value(value: GetIt.instance.get()),
+        BlocProvider<DevicesBloc>.value(value: GetIt.instance.get()),
       ],
-      child: _body(),
-    );
-  }
-
-  Flexible _body() {
-    return Flexible(
-      child: ListView(
-        controller: ScrollController(),
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              EffectGrid(),
-              EffectConfigurator(),
-            ],
-          ),
-        ],
+      child: Flexible(
+        child: ListView(
+          controller: ScrollController(),
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                EffectGrid(),
+                EffectConfigurator(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

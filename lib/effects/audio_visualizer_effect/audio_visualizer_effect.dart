@@ -1,53 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rgb_app/effects/audio_visualizer_effect/audio_visualizer_effect_properties.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
-import 'package:rgb_app/models/color_property.dart' as color;
-import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
-import 'package:rgb_app/models/options_property.dart';
-import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/audio_sample_recorder.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AudioVisualizerEffect extends Effect {
+class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties {
   static const String className = 'AudioVisualizerEffect';
   static const String name = 'Audio Visualizer';
 
   late AudioSampleRecorder recorder;
 
-  @override
-  List<Property<Object>> get properties => <Property<Object>>[
-        audioGain,
-        boost,
-        dynamicBoost,
-        pulseRate,
-        spectrumSize,
-        spectrumShift,
-        displayMode,
-        disabledOnIdle,
-        barsColorMode,
-        barsColor,
-        backgroundColorMode,
-        backgroundColor,
-      ];
-
   final ValueNotifier<bool> _disabled = ValueNotifier<bool>(false);
-
-  late NumericProperty audioGain;
-  late NumericProperty boost;
-  late NumericProperty pulseRate;
-  late NumericProperty spectrumSize;
-  late NumericProperty spectrumShift;
-  late OptionProperty displayMode;
-  late OptionProperty dynamicBoost;
-  late color.ColorProperty barsColor;
-  late color.ColorProperty backgroundColor;
-  late OptionProperty barsColorMode;
-  late OptionProperty disabledOnIdle;
-  late OptionProperty backgroundColorMode;
   late List<int> _currentValues;
 
   final double _dynamicBoostSpeed = 2;
@@ -65,133 +32,8 @@ class AudioVisualizerEffect extends Effect {
   Timer? _idleTimer;
   Timer? _transitionTimer;
 
-  AudioVisualizerEffect(super.effectData)
-      : audioGain = NumericProperty(
-    initialValue: 150,
-          name: 'AudioGain',
-          idn: 'audioGain',
-          min: -200,
-          max: 500,
-          propertyType: NumericPropertyType.textField,
-        ),
-        boost = NumericProperty(
-          initialValue: -100,
-          name: 'Boost',
-          idn: 'boost',
-          min: -200,
-          max: 200,
-        ),
-        pulseRate = NumericProperty(
-          initialValue: 25,
-          name: 'Pulse Rate',
-          idn: 'pulseRate',
-          min: 1,
-          max: 50,
-        ),
-        spectrumSize = NumericProperty(
-          initialValue: 25,
-          name: 'Spectrum Size',
-          idn: 'spectrumSize',
-          min: 1,
-          max: 512,
-        ),
-        spectrumShift = NumericProperty(
-          initialValue: 25,
-          name: 'Spectrum Shift',
-          idn: 'spectrumShift',
-          min: 0,
-          max: 512,
-        ),
-        barsColor = color.ColorProperty(
-          initialValue: Colors.white,
-          name: 'Bars Color',
-          idn: 'barsColor',
-        ),
-        backgroundColor = color.ColorProperty(
-          initialValue: Colors.white,
-          name: 'Background Color',
-          idn: 'backgroundColor',
-        ),
-        disabledOnIdle = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'Yes',
-              selected: false,
-            ),
-            Option(
-              value: 1,
-              name: 'No',
-              selected: true,
-            ),
-          },
-          name: 'Disable On Idle',
-          idn: 'disabledOnIdle',
-        ),
-        displayMode = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'Bottom',
-              selected: false,
-            ),
-            Option(
-              value: 1,
-              name: 'Middle',
-              selected: true,
-            ),
-          },
-          name: 'Display Mode',
-          idn: 'displayMode',
-        ),
-        barsColorMode = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'Transparent',
-              selected: false,
-            ),
-            Option(
-              value: 1,
-              name: 'Color',
-              selected: true,
-            ),
-          },
-          name: 'Bars Color Mode',
-          idn: 'barsColorMode',
-        ),
-        backgroundColorMode = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'Transparent',
-              selected: true,
-            ),
-            Option(
-              value: 1,
-              name: 'Color',
-              selected: false,
-            ),
-          },
-          name: 'Background Color Mode',
-          idn: 'backgroundColorMode',
-        ),
-        dynamicBoost = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'On',
-              selected: true,
-            ),
-            Option(
-              value: 1,
-              name: 'Off',
-              selected: false,
-            ),
-          },
-          name: 'Dynamic Boost',
-          idn: 'dynamicBoost',
-        ) {
+  AudioVisualizerEffect(super.effectData) {
+    initProperties();
     recorder = AudioSampleRecorder();
     recorder.init();
     _currentValues = <int>[];
@@ -387,7 +229,7 @@ class AudioVisualizerEffect extends Effect {
         _setColor(step, j, i, value, sizeY, colors, y, currentColor);
         if (_duringTransition) {
           final Color currentNewColor = colors[y][i];
-          colors[y][i] = ColorExtension.mix(currentNewColor, currentColor, _transitionOpacity);
+          colors[y][i] = currentNewColor.mix(currentColor, _transitionOpacity);
         }
       }
     }
@@ -406,7 +248,7 @@ class AudioVisualizerEffect extends Effect {
     final double opacity = _calculateOpacity(step, j, value);
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors[y][i] = ColorExtension.mix(barsColorValue, backgroundColorValue, opacity);
+    colors[y][i] = barsColorValue.mix(backgroundColorValue, opacity);
   }
 
   void _onMirroredDisplay(int step, int j, int value, Color currentColor, List<List<Color>> colors, int y, int i) {
@@ -420,7 +262,7 @@ class AudioVisualizerEffect extends Effect {
 
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors[y][i] = ColorExtension.mix(barsColorValue, backgroundColorValue, opacity);
+    colors[y][i] = barsColorValue.mix(backgroundColorValue, opacity);
   }
 
   double _calculateOpacity(int step, int j, int value) {

@@ -17,9 +17,7 @@ class UnknownDevice extends DeviceInterface {
   void update() {}
 
   @override
-  Size getSize() {
-    return Size(0, 0);
-  }
+  Size getSize() => Size(0, 0);
 
   @override
   int get configuration => throw UnimplementedError();
@@ -28,12 +26,8 @@ class UnknownDevice extends DeviceInterface {
   int get interface => throw UnimplementedError();
 
   @override
-  Map<String, Object> getDataToSend() {
-    throw UnimplementedError();
-  }
+  Map<String, Object> getDataToSend() => throw UnimplementedError();
 
   @override
-  List<List<int>> getPackets() {
-    throw UnimplementedError();
-  }
+  List<List<int>> getPackets() => throw UnimplementedError();
 }

@@ -63,7 +63,6 @@ class DropShapePainter extends CustomPainter {
       ..quadraticBezierTo(width, height * 0.25, width, 0)
       ..close();
     path = path.shift(offset);
-
     canvas.drawPath(path, paint);
   }
 
@@ -81,7 +80,5 @@ class DropShapePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

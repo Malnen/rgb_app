@@ -1,15 +1,20 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class EffectsColorsState extends Equatable {
-  final List<List<Color>> colors;
-  final Key key;
+part '../../generated/cubits/effects_colors_cubit/effects_colors_state.freezed.dart';
 
-  EffectsColorsState({required this.colors}) : key = UniqueKey();
+@freezed
+class EffectsColorsState with _$EffectsColorsState {
+  const factory EffectsColorsState({
+    required List<List<Color>> colors,
+    required Key key,
+  }) = _EffectsColorsState;
 
-  @override
-  List<Object> get props => <Object>[
-        colors,
-        key,
-      ];
+  factory EffectsColorsState.withRandomKey({
+    required List<List<Color>> colors,
+  }) =>
+      EffectsColorsState(
+        colors: colors,
+        key: UniqueKey(),
+      );
 }

@@ -1,18 +1,14 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class RgbAppServiceRequest extends Equatable {
-  final String command;
-  final Map<String, Object?>? data;
+part '../../../generated/utils/rgb_app_service/models/rgb_app_service_request.freezed.dart';
+part '../../../generated/utils/rgb_app_service/models/rgb_app_service_request.g.dart';
 
-  RgbAppServiceRequest({required this.command, this.data});
+@freezed
+class RgbAppServiceRequest with _$RgbAppServiceRequest {
+  const factory RgbAppServiceRequest({
+    required String command,
+    Map<String, Object?>? data,
+  }) = _RgbAppServiceRequest;
 
-  @override
-  List<Object> get props => <Object>[];
-
-  Map<String, Object?> toJson() {
-    return <String, Object?>{
-      'command': command,
-      'data': data,
-    };
-  }
+  factory RgbAppServiceRequest.fromJson(Map<String, Object?> json) => _$RgbAppServiceRequestFromJson(json);
 }

@@ -1,56 +1,23 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class EffectGridData extends Equatable {
-  final int sizeX;
-  final int sizeY;
-  final int minSizeX;
-  final int minSizeY;
+part '../generated/models/effect_grid_data.freezed.dart';
+part '../generated/models/effect_grid_data.g.dart';
 
-  EffectGridData({
-    required this.sizeX,
-    required this.sizeY,
-    required this.minSizeX,
-    required this.minSizeY,
-  });
+@freezed
+class EffectGridData with _$EffectGridData {
+  const factory EffectGridData({
+    required int sizeX,
+    required int sizeY,
+    required int minSizeX,
+    required int minSizeY,
+  }) = _EffectGridData;
 
-  @override
-  List<Object> get props => <Object>[];
+  factory EffectGridData.initial() => const EffectGridData(
+        sizeX: 26,
+        sizeY: 11,
+        minSizeX: 20,
+        minSizeY: 9,
+      );
 
-  factory EffectGridData.initial() {
-    return EffectGridData(
-      sizeX: 20,
-      sizeY: 20,
-      minSizeX: 20,
-      minSizeY: 9,
-    );
-  }
-
-  factory EffectGridData.fromJson(Map<String, Object?> json) {
-    return EffectGridData(
-      sizeX: json['sizeX'] as int,
-      sizeY: json['sizeY'] as int,
-      minSizeY: 10,
-      minSizeX: 20,
-    );
-  }
-
-  Map<String, Object?>? toJson() {
-    return <String, Object?>{'sizeX': sizeX, 'sizeY': sizeY};
-  }
-
-  EffectGridData copyWith({
-    final int? sizeX,
-    final int? sizeY,
-    final List<List<Color>>? colors,
-    final int? minSizeX,
-    final int? minSizeY,
-  }) {
-    return EffectGridData(
-      sizeX: sizeX ?? this.sizeX,
-      sizeY: sizeY ?? this.sizeY,
-      minSizeX: minSizeX ?? this.minSizeX,
-      minSizeY: minSizeY ?? this.minSizeY,
-    );
-  }
+  factory EffectGridData.fromJson(Map<String, Object?> json) => _$EffectGridDataFromJson(json);
 }

@@ -9,21 +9,7 @@ class VectorProperty extends Property<Vector> {
   });
 
   @override
-  Map<String, Object> getData() {
-    return <String, Object>{
-      'value': value.toJson(),
-    };
-  }
-
-  VectorProperty copyWith({
-    final Vector? initialValue,
-    final String? idn,
-    final String? name,
-  }) {
-    return VectorProperty(
-      initialValue: initialValue ?? value,
-      name: name ?? this.name,
-      idn: idn ?? this.idn,
-    );
-  }
+  Map<String, Object> getData() => <String, Object>{
+        'value': value.toJson(),
+      };
 }

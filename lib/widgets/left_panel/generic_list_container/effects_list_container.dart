@@ -60,7 +60,7 @@ class _EffectsListContainerState extends State<EffectsListContainer> {
     final EffectState state = bloc.state;
     final List<Effect> effects = state.effects;
     final Effect effect = effects.firstWhere((Effect element) => element.effectData == effectData);
-    final SelectEffectEvent event = SelectEffectEvent(effect);
+    final EffectEvent event = EffectEvent.selectEffect(effect: effect);
 
     bloc.add(event);
   }

@@ -14,29 +14,25 @@ class MainScaffold extends StatelessWidget {
       body: BlocProvider<PopupCubit>(
         create: (_) => PopupCubit(),
         child: PopupWrapper(
-          child: _body(),
-        ),
-      ),
-    );
-  }
-
-  Widget _body() {
-    return Stack(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Expanded(
-              child: Row(
+          child: Stack(
+            children: <Widget>[
+              Column(
                 children: <Widget>[
-                  LeftPanel(),
-                  RightPanel(),
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        LeftPanel(),
+                        RightPanel(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
+              RgbAppServiceLogger(),
+            ],
+          ),
         ),
-        RgbAppServiceLogger(),
-      ],
+      ),
     );
   }
 }

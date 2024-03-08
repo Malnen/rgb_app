@@ -9,9 +9,7 @@ class ColorProperty extends Property<Color> {
   });
 
   @override
-  Map<String, Object> getData() {
-    return <String, Object>{
-      'value': value.value,
+  Map<String, Object> getData() => <String, Object>{
+        'value': value.value,
     };
-  }
 }

@@ -1,38 +1,34 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/enums/color_picker_update_source.dart';
 
-class ColorPickerState extends Equatable {
-  final Color color;
-  final ColorPickerUpdateSource source;
-  final double hue;
-  final double saturation;
-  final double value;
+part '../../generated/cubits/color_picker_cubit/color_picker_state.freezed.dart';
 
-  ColorPickerState({
-    required this.color,
-    required this.source,
-    required this.hue,
-    required this.saturation,
-    required this.value,
-  });
+@freezed
+class ColorPickerState with _$ColorPickerState {
+  ColorPickerState._();
 
-  factory ColorPickerState.empty() {
-    return ColorPickerState(
-      color: Colors.black,
-      source: ColorPickerUpdateSource.initial,
-      hue: 0,
-      saturation: 1,
-      value: 1,
-    );
-  }
+  factory ColorPickerState({
+    required Color color,
+    required ColorPickerUpdateSource source,
+    required double hue,
+    required double saturation,
+    required double value,
+  }) = _ColorPickerState;
+
+  factory ColorPickerState.empty() => ColorPickerState(
+        color: Colors.black,
+        source: ColorPickerUpdateSource.initial,
+        hue: 0,
+        saturation: 1,
+        value: 1,
+      );
 
   factory ColorPickerState.fromColor({
     required Color color,
     required ColorPickerUpdateSource source,
   }) {
     final HSVColor hsvColor = HSVColor.fromColor(color);
-
     return ColorPickerState(
       color: color,
       source: source,
@@ -70,11 +66,4 @@ class ColorPickerState extends Equatable {
       value: hsvColor.value,
     );
   }
-
-  @override
-  List<Object> get props => <Object>[
-        color,
-        source,
-        hue,
-      ];
 }

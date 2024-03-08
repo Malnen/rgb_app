@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
@@ -23,7 +24,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   DevicesBloc({required TickProvider tickProvider})
       : _tickProvider = tickProvider,
         super(DevicesState.empty()) {
-    on<AddDeviceEvent>(_onAddDeviceEvent);
+    on<AddDeviceEvent>(_onAddDeviceEvent, transformer: concurrent());
     on<RemoveDeviceEvent>(_onRemoveDeviceEvent);
     on<RestoreDevicesEvent>(_onRestoreDevices);
     on<LoadAvailableDevicesEvent>(_onLoadAvailableDevicesEvent);
@@ -43,7 +44,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       usbDeviceChangeDetector.init(),
       usbDeviceDataSender.init(),
     ]);
-    await Future<void>.delayed(const Duration(seconds: 2), () {
+    Future<void>.delayed(const Duration(seconds: 5), () {
       final CheckDevicesConnectionStateEvent checkDevicesConnectionStateEvent = CheckDevicesConnectionStateEvent();
       add(checkDevicesConnectionStateEvent);
     });
@@ -56,26 +57,10 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   @override
-  DevicesState fromJson(Map<String, Object?> json) {
-    final DevicesState state = DevicesState.fromJson(
-      json['devicesState'] as Map<String, Object?>,
-    );
-    final List<DeviceData> devicesData = state.devicesData;
-    return DevicesState(
-      availableDevices: <DeviceData>[],
-      deviceInstances: <DeviceInterface>[],
-      devicesData: devicesData,
-    );
-  }
+  DevicesState fromJson(Map<String, Object?> json) => DevicesState.fromJsonWithModifiableLists(json);
 
   @override
-  Map<String, Object?> toJson(DevicesState state) {
-    return <String, Object?>{
-      'devicesState': <String, Object?>{
-        'devicesData': state.devicesData,
-      },
-    };
-  }
+  Map<String, Object?> toJson(DevicesState state) => state.toJson();
 
   Future<void> _onAddDeviceEvent(AddDeviceEvent event, Emitter<DevicesState> emit) async {
     final DevicesState newState = await _addDeviceIfNew(event);
@@ -117,6 +102,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     return state.copyWith(
       devicesData: devicesData,
       deviceInstances: deviceInstances,
+      key: UniqueKey(),
     );
   }
 
@@ -136,6 +122,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     return state.copyWith(
       devicesData: devicesData,
       deviceInstances: deviceInstances,
+      key: UniqueKey(),
     );
   }
 
@@ -156,6 +143,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     return state.copyWith(
       devicesData: devicesData,
       deviceInstances: deviceInstances,
+      key: UniqueKey(),
     );
   }
 
@@ -165,7 +153,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   ) async {
     final List<DeviceData> devicesData = state.devicesData;
     for (DeviceData deviceData in devicesData) {
-      final AddDeviceEvent event = AddDeviceEvent(deviceData: deviceData);
+      final AddDeviceEvent event = DevicesEvent.addDevice(deviceData) as AddDeviceEvent;
       add(event);
     }
   }
@@ -175,7 +163,10 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final Emitter<DevicesState> emit,
   ) async {
     final List<DeviceData> deviceProductInfo = await usbDeviceInfoGetter.getDeviceProductInfo();
-    final DevicesState newState = state.copyWith(availableDevices: deviceProductInfo);
+    final DevicesState newState = state.copyWith(
+      availableDevices: deviceProductInfo,
+      key: UniqueKey(),
+    );
 
     emit(newState);
   }
@@ -190,6 +181,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
     final DevicesState newState = state.copyWith(
       devicesData: devicesData,
+      key: UniqueKey(),
     );
 
     emit(newState);
@@ -212,6 +204,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
         devicesData: event.devicesData,
         connectedDevices: connectedDevices,
         availableDevices: event.availableDevices,
+        key: UniqueKey(),
       );
 
       emit(newState);
@@ -251,7 +244,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     required DeviceData deviceData,
     required List<DeviceData> connectedDevices,
   }) async {
-    final bool isDeviceConnected = availableDevices.contains(deviceData);
+    final bool isDeviceConnected = availableDevices
+        .map((DeviceData deviceData) => deviceData.deviceProductVendor.productVendor)
+        .contains(deviceData.deviceProductVendor.productVendor);
     final DeviceData updatedDevice = deviceData.copyWith(connected: isDeviceConnected);
     devicesData.add(updatedDevice);
     if (isDeviceConnected) {
@@ -282,7 +277,6 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   Future<void> _reInitDevHandle({required DeviceInterface deviceInterface, required DeviceData deviceData}) async {
     if (!deviceData.connected) {
       usbDeviceDataSender.closeDevice(deviceInterface);
-      await Future<void>.delayed(Duration(milliseconds: 100));
       usbDeviceDataSender.openDevice(deviceInterface);
       await deviceInterface.isOpen.stream.firstWhere((bool value) => value);
     }
@@ -308,6 +302,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final DevicesState newState = state.copyWith(
       deviceInstances: deviceInstances,
       devicesData: devicesData,
+      key: UniqueKey(),
     );
     emit(newState);
   }

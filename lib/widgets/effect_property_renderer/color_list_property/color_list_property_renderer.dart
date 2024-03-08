@@ -85,6 +85,7 @@ class _ColorListPropertyRendererState extends State<ColorListPropertyRenderer> {
           () {
             value[index] = newColor;
             property.value = value;
+            property.notify();
           },
         );
       },

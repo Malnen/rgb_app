@@ -1,10 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/effects/effect_dictionary.dart';
-import 'package:rgb_app/factories/effect_factory.dart';
-import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
 
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
@@ -31,32 +29,18 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   }
 
   @override
-  EffectState fromJson(Map<String, Object?> json) {
-    final List<Map<String, Object?>> effectsJson = List<Map<String, Object?>>.from(json['effects'] as List<Object?>);
-    final EffectGridData effectGridData = EffectGridData.fromJson(
-      json['effectGridData'] as Map<String, Object?>,
-    );
-    final List<Effect> effects = effectsJson.map(EffectFactory.getEffectFromJson).toList();
-
-    return EffectState(
-      effectGridData: effectGridData,
-      effects: effects,
-      availableEffects: EffectDictionary.availableEffects,
-    );
-  }
+  EffectState fromJson(Map<String, Object?> json) => EffectState.fromJson(json);
 
   @override
   Map<String, Object?> toJson(EffectState state) {
-    return <String, Object?>{
-      'effectGridData': state.effectGridData,
-      'effects': state.effects.map((Effect effect) => effect.toJson()).toList(),
-    };
+    return state.toJson();
   }
 
   Future<void> _onSetGridSizeEvent(SetGridSizeEvent event, Emitter<EffectState> emit) async {
     final EffectState newState = state.copyWith(
       effectGridData: event.effectGridData,
       sizeChanged: true,
+      key: UniqueKey(),
     );
 
     emit(newState);
@@ -70,7 +54,10 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       effects.add(effect);
     }
 
-    final EffectState newState = state.copyWith(effects: effects);
+    final EffectState newState = state.copyWith(
+      effects: effects,
+      key: UniqueKey(),
+    );
     emit(newState);
   }
 
@@ -83,15 +70,20 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       effects.remove(effect);
     }
 
+    final bool clearSelectedEffect = state.selectedEffect == effect;
+    final Effect? selectedEffectValue = clearSelectedEffect ? null : state.selectedEffect;
     final EffectState newState = state.copyWith(
       effects: effects,
-      clearSelectedEffect: state.selectedEffect == effect,
+      selectedEffect: selectedEffectValue,
+      key: UniqueKey(),
     );
     emit(newState);
   }
 
-  Future<void> _onReorderEffectsEvent(final ReorderEffectsEvent event,
-      final Emitter<EffectState> emit,) async {
+  Future<void> _onReorderEffectsEvent(
+    final ReorderEffectsEvent event,
+    final Emitter<EffectState> emit,
+  ) async {
     final int oldIndex = event.oldIndex;
     final int newIndex = event.newIndex;
     final List<Effect> effects = state.effects;
@@ -100,6 +92,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
 
     final EffectState newState = state.copyWith(
       effects: effects,
+      key: UniqueKey(),
     );
 
     emit(newState);
@@ -111,6 +104,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   ) async {
     final EffectState newState = state.copyWith(
       selectedEffect: event.effect,
+      key: UniqueKey(),
     );
     emit(newState);
   }
@@ -119,7 +113,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     final EffectPropertyChangedEvent event,
     final Emitter<EffectState> emit,
   ) async {
-    final EffectState newState = state.copyWith();
+    final EffectState newState = state.copyWith(key: UniqueKey());
     emit(newState);
   }
 }

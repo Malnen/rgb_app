@@ -22,14 +22,12 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
   late EffectBloc effectBloc;
   late DevicesBloc devicesBloc;
   late List<Effect> effects;
-  late GlobalKey cellsKey;
 
   @override
   void initState() {
     super.initState();
     effectBloc = GetIt.instance.get();
     devicesBloc = GetIt.instance.get();
-    cellsKey = GlobalKey();
   }
 
   @override

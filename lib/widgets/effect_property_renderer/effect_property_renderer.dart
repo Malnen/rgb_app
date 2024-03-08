@@ -49,24 +49,15 @@ class EffectPropertyRenderer extends StatelessWidget {
     );
   }
 
-  Widget _getProperRenderer() {
-    final Type runtimeType = property.runtimeType;
-    switch (runtimeType) {
-      case const (NumericProperty):
-        return NumericPropertyRenderer(property: property as NumericProperty);
-      case const (VectorProperty):
-        return VectorPropertyRenderer(property: property as VectorProperty);
-      case const (OptionProperty):
-        return OptionPropertyRenderer(
-          property: property as OptionProperty,
-          updateRenderer: updateRenderer,
-        );
-      case const (ColorListProperty):
-        return ColorListPropertyRenderer(property: property as ColorListProperty);
-      case const (color.ColorProperty):
-        return ColorPropertyRenderer(property: property as color.ColorProperty);
-      default:
-        throw Exception('Unsupported property type: $runtimeType');
-    }
-  }
+  Widget _getProperRenderer() => switch (property) {
+        final NumericProperty property => NumericPropertyRenderer(property: property),
+        final VectorProperty property => VectorPropertyRenderer(property: property),
+        final OptionProperty property => OptionPropertyRenderer(
+            property: property,
+            updateRenderer: updateRenderer,
+          ),
+        final ColorListProperty property => ColorListPropertyRenderer(property: property),
+        final color.ColorProperty property => ColorPropertyRenderer(property: property),
+        _ => throw Exception('Unsupported property type: $runtimeType'),
+      };
 }

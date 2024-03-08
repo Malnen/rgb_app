@@ -1,48 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Option extends Equatable {
-  final int value;
-  final String name;
-  final bool selected;
+part '../generated/models/option.freezed.dart';
+part '../generated/models/option.g.dart';
 
-  Option({
-    required this.value,
-    required this.name,
-    required this.selected,
-  });
+@freezed
+class Option with _$Option {
+  const factory Option({
+    required int value,
+    required String name,
+    required bool selected,
+  }) = _Option;
 
-  Map<String, Object> toJson() {
-    return <String, Object>{
-      'value': value,
-      'name': name,
-      'selected': selected,
-    };
-  }
-
-  Option copyWith({
-    int? value,
-    String? name,
-    bool? selected,
-  }) {
-    return Option(
-      value: value ?? this.value,
-      name: name ?? this.name,
-      selected: selected ?? this.selected,
-    );
-  }
-
-  factory Option.fromJson(Map<String, Object?> json) {
-    return Option(
-      value: json['value'] as int,
-      name: json['name'] as String,
-      selected: json['selected'] as bool,
-    );
-  }
-
-  @override
-  List<Object> get props => <Object>[
-        value,
-        name,
-        selected,
-      ];
+  factory Option.fromJson(Map<String, Object?> json) => _$OptionFromJson(json);
 }

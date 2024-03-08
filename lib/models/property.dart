@@ -19,9 +19,7 @@ abstract class Property<T> extends ValueNotifier<T> {
     addListener(() => onChange(value));
   }
 
-  void notify() {
-    notifyListeners();
-  }
+  void notify() => notifyListeners();
 
   void updateProperty(covariant Property<T> property) {
     value = property.value;

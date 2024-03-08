@@ -185,12 +185,10 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
       return getLockedX();
     }
 
-    switch (widget.draggableCenter) {
-      case DraggableCenter.topLeft:
-        return getTopLeftLeft(newLeft);
-      case DraggableCenter.center:
-        return getCenterLeft(newLeft);
-    }
+    return switch (widget.draggableCenter) {
+      DraggableCenter.topLeft => getTopLeftLeft(newLeft),
+      DraggableCenter.center => getCenterLeft(newLeft)
+    };
   }
 
   double getTopLeftLeft(double newLeft) {
@@ -219,12 +217,10 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
       return getLockedY();
     }
 
-    switch (widget.draggableCenter) {
-      case DraggableCenter.topLeft:
-        return getTopLeftTop(newTop);
-      case DraggableCenter.center:
-        return getCenterTop(newTop);
-    }
+    return switch (widget.draggableCenter) {
+      DraggableCenter.topLeft => getTopLeftTop(newTop),
+      DraggableCenter.center => getCenterTop(newTop)
+    };
   }
 
   double getLockedY() {
@@ -258,12 +254,10 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
 
   double getOffset(double value, double dimensionValue) {
     final double dividedValue = getDividedValue(value);
-    switch (widget.draggableCenter) {
-      case DraggableCenter.topLeft:
-        return dividedValue;
-      case DraggableCenter.center:
-        return dividedValue + dimensionValue / 2;
-    }
+    return switch (widget.draggableCenter) {
+      DraggableCenter.topLeft => dividedValue,
+      DraggableCenter.center => dividedValue + dimensionValue / 2
+    };
   }
 
   double getDividedValue(double value) {

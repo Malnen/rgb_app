@@ -41,31 +41,13 @@ class NumericProperty extends Property<double> {
         _max = max;
 
   @override
-  Map<String, Object> getData() {
-    return <String, Object>{
-      'min': _getUnmodifiedValue(min),
+  Map<String, Object> getData() => <String, Object>{
+        'min': _getUnmodifiedValue(min),
       'max': _getUnmodifiedValue(max),
       'value': _getUnmodifiedValue(value),
       'debugArtificialValue': debugArtificialValue,
       'propertyType': propertyType.name,
     };
-  }
-
-  NumericProperty copyWith({
-    final double? initialValue,
-    final String? name,
-    final String? idn,
-    final double? min,
-    final double? max,
-  }) {
-    return NumericProperty(
-      initialValue: initialValue ?? value,
-      name: name ?? this.name,
-      idn: idn ?? this.idn,
-      min: min ?? this.min,
-      max: max ?? this.max,
-    );
-  }
 
   @override
   void updateProperty(NumericProperty property) {

@@ -46,11 +46,9 @@ class _MainFrameState extends State<MainFrame> with WindowListener {
 
   @override
   void onWindowFocus() {
-    setState(() {});
+    // setState(() {});
   }
 
   @override
-  void onWindowClose() {
-    windowManager.hide();
-  }
+  void onWindowClose() => windowManager.hide();
 }

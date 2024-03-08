@@ -1,48 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Vector extends Equatable {
-  final double x;
-  final double y;
+part '../generated/models/vector.freezed.dart';
+part '../generated/models/vector.g.dart';
 
-  Vector({
-    required this.x,
-    required this.y,
-  });
+@freezed
+class Vector with _$Vector {
+  Vector._();
 
-  @override
-  List<Object> get props => <Object>[
-        x,
-        y,
-      ];
+  factory Vector({
+    required double x,
+    required double y,
+  }) = _Vector;
 
-  Map<String, Object> toJson() {
-    return <String, Object>{
-      'x': x,
-      'y': y,
-    };
-  }
+  factory Vector.fromJson(Map<String, Object?> json) => _$VectorFromJson(json);
 
   Vector withPadding(double padding) {
     return Vector(
       x: x + padding,
       y: y + padding,
     );
-  }
-
-  Vector copyWith({
-    double? x,
-    double? y,
-  }) {
-    return Vector(
-      x: x ?? this.x,
-      y: y ?? this.y,
-    );
-  }
-
-  factory Vector.fromJson(Map<String, Object> json) {
-    final double x = json['x'] as double;
-    final double y = json['y'] as double;
-
-    return Vector(x: x, y: y);
   }
 }

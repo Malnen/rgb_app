@@ -22,9 +22,7 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
 
   late CorsairK70Tester tester;
 
-  CorsairK70({
-    required super.deviceData,
-  }) : keyBloc = GetIt.instance.get();
+  CorsairK70({required super.deviceData}) : keyBloc = GetIt.instance.get();
 
   late List<int> dataPkt1;
   late List<int> rPkt1;
@@ -79,14 +77,10 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
   }
 
   @override
-  void test() {
-    tester.test();
-  }
+  void test() => tester.test();
 
   @override
-  void blink() {
-    tester.blink();
-  }
+  void blink() => tester.blink();
 
   @override
   void dispose() {
@@ -106,14 +100,10 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
   }
 
   @override
-  Size getSize() {
-    return Size(23, 7);
-  }
+  Size getSize() => Size(23, 7);
 
   @override
-  List<List<int>> getPackets() {
-    return packets;
-  }
+  List<List<int>> getPackets() => packets;
 
   void _storePackets() {
     packets = <List<int>>[
@@ -162,30 +152,24 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
     corsairK70Packets.bPkt[index] = b;
   }
 
-  CorsairK70Packets getPacket(int index) {
-    switch (index) {
-      case 0:
-        return CorsairK70Packets(
-          rPkt: rPkt1,
-          gPkt: gPkt1,
-          bPkt: bPkt1,
-        );
-      case 1:
-        return CorsairK70Packets(
-          rPkt: rPkt2,
-          gPkt: gPkt2,
-          bPkt: bPkt2,
-        );
-      case 2:
-        return CorsairK70Packets(
-          rPkt: rPkt3,
-          gPkt: gPkt3,
-          bPkt: bPkt3,
-        );
-    }
-
-    return CorsairK70Packets.empty();
-  }
+  CorsairK70Packets getPacket(int index) => switch (index) {
+        0 => CorsairK70Packets(
+            rPkt: rPkt1,
+            gPkt: gPkt1,
+            bPkt: bPkt1,
+          ),
+        1 => CorsairK70Packets(
+            rPkt: rPkt2,
+            gPkt: gPkt2,
+            bPkt: bPkt2,
+          ),
+        2 => CorsairK70Packets(
+            rPkt: rPkt3,
+            gPkt: gPkt3,
+            bPkt: bPkt3,
+          ),
+        _ => CorsairK70Packets.empty(),
+      };
 
   void _setKeys() {
     final Map<Point<int>, KeyboardKey> keys = KeyDictionary.keys;
@@ -244,7 +228,6 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
 
   int _getMaxX(Iterable<MapEntry<Point<int>, KeyboardKey>> keyEntries) {
     final List<int> xValues = keyEntries.map((MapEntry<Point<int>, KeyboardKey> entry) => entry.key.x).toList();
-
     return xValues.max;
   }
 }

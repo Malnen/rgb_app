@@ -73,16 +73,18 @@ class _HuePickerState extends State<HuePicker> {
   }
 
   Vector? getForcePosition(ColorPickerState state) {
-    switch (state.source) {
-      case ColorPickerUpdateSource.textField:
-      case ColorPickerUpdateSource.initial:
-        return Vector(
-          x: sizeX / 2 + padding,
-          y: getUpdatedTop(state),
-        );
-      default:
-        return null;
-    }
+    return switch (state.source) {
+      ColorPickerUpdateSource.textField => getUpdatedPosition(state),
+      ColorPickerUpdateSource.initial => getUpdatedPosition(state),
+      _ => null
+    };
+  }
+
+  Vector getUpdatedPosition(ColorPickerState state) {
+    return Vector(
+      x: sizeX / 2 + padding,
+      y: getUpdatedTop(state),
+    );
   }
 
   double getUpdatedTop(ColorPickerState state) {

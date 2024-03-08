@@ -1,42 +1,35 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rgb_app/json_converters/icon_data_converter.dart';
+import 'package:rgb_app/json_converters/unique_key_converter.dart';
 
-class EffectData extends Equatable {
-  final String name;
-  final String className;
-  final IconData iconData;
-  final Key key;
+part '../generated/effects/effect_data.freezed.dart';
+part '../generated/effects/effect_data.g.dart';
 
-  EffectData({
-    required this.name,
-    required this.className,
-    required this.iconData,
-    final Key? key,
-  }) : key = key ?? UniqueKey();
+@freezed
+class EffectData with _$EffectData {
+  EffectData._();
 
-  EffectData getWithNewKey() {
-    return copyWith(key: UniqueKey());
-  }
+  factory EffectData({
+    required String name,
+    required String className,
+    @IconDataConverter() required IconData iconData,
+    @UniqueKeyConverter() required UniqueKey key,
+  }) = _EffectData;
 
-  EffectData copyWith({
-    final String? name,
-    final String? className,
-    final IconData? iconData,
-    final Key? key,
-  }) {
-    return EffectData(
-      name: name ?? this.name,
-      className: className ?? this.className,
-      iconData: iconData ?? this.iconData,
-      key: key ?? this.key,
-    );
-  }
+  factory EffectData.withRandomKey({
+    required String name,
+    required String className,
+    required IconData iconData,
+  }) =>
+      EffectData(
+        name: name,
+        className: className,
+        iconData: iconData,
+        key: UniqueKey(),
+      );
 
-  @override
-  List<Object> get props => <Object>[
-        name,
-        className,
-        iconData,
-        key,
-      ];
+  factory EffectData.fromJson(Map<String, Object?> json) => _$EffectDataFromJson(json);
+
+  factory EffectData.getWithNewKey(EffectData effectData) => effectData.copyWith(key: UniqueKey());
 }

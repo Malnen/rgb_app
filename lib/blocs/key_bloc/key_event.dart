@@ -1,54 +1,28 @@
-import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 
-abstract class KeyEvent extends Equatable {}
+part '../../generated/blocs/key_bloc/key_event.freezed.dart';
 
-class KeyPressedEvent extends KeyEvent {
-  final int keyCode;
-  final String keyName;
-  final UniqueKey key;
+@freezed
+class KeyEvent with _$KeyEvent {
+  const KeyEvent._();
 
-  KeyPressedEvent({
-    required this.keyCode,
-    required this.keyName,
-  }) : key = UniqueKey();
+  const factory KeyEvent.keyPressed({
+    required int keyCode,
+    required String keyName,
+    required Key key,
+  }) = KeyPressedEvent;
 
-  @override
-  List<Object> get props => <Object>[
-        keyCode,
-        key,
-        keyName,
-      ];
-}
+  const factory KeyEvent.keyReleased({
+    required int keyCode,
+    required String keyName,
+    required Key key,
+  }) = KeyReleasedEvent;
 
-class KeyReleasedEvent extends KeyEvent {
-  final int keyCode;
-  final String keyName;
-  final UniqueKey key;
-
-  KeyReleasedEvent({
-    required this.keyCode,
-    required this.keyName,
-  }) : key = UniqueKey();
-
-  @override
-  List<Object> get props => <Object>[
-        keyCode,
-        key,
-        keyName,
-      ];
-}
-
-class SetKeyboardDeviceEvent extends KeyEvent {
-  final KeyboardInterface? keyboardInterface;
-
-  SetKeyboardDeviceEvent({
-    required this.keyboardInterface,
-  });
-
-  @override
-  List<Object?> get props => <Object?>[
-        keyboardInterface,
-      ];
+  const factory KeyEvent.setKeyboardDevice({
+    required KeyboardInterface? keyboardInterface,
+    required Key key,
+  }) = SetKeyboardDeviceEvent;
 }

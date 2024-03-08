@@ -61,13 +61,11 @@ class BrightnessPicker extends StatelessWidget {
   }
 
   Vector? getForcePosition(ColorPickerState state) {
-    switch (state.source) {
-      case ColorPickerUpdateSource.textField:
-      case ColorPickerUpdateSource.initial:
-        return getUpdatedPosition(state);
-      default:
-        return null;
-    }
+    return switch (state.source) {
+      ColorPickerUpdateSource.textField => getUpdatedPosition(state),
+      ColorPickerUpdateSource.initial => getUpdatedPosition(state),
+      _ => null
+    };
   }
 
   Vector getUpdatedPosition(ColorPickerState state) {

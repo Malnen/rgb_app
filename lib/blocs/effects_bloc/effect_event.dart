@@ -1,62 +1,31 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
-abstract class EffectEvent extends Equatable {
-  @override
-  List<Object> get props => <Object>[];
+part '../../generated/blocs/effects_bloc/effect_event.freezed.dart';
+
+@freezed
+class EffectEvent with _$EffectEvent {
+  const factory EffectEvent.setGridSize({
+    required EffectGridData effectGridData,
+  }) = SetGridSizeEvent;
+
+  const factory EffectEvent.addEffect({
+    required Effect effect,
+  }) = AddEffectEvent;
+
+  const factory EffectEvent.removeEffect({
+    required Effect effect,
+  }) = RemoveEffectEvent;
+
+  const factory EffectEvent.reorderEffects({
+    required int oldIndex,
+    required int newIndex,
+  }) = ReorderEffectsEvent;
+
+  const factory EffectEvent.selectEffect({
+    required Effect effect,
+  }) = SelectEffectEvent;
+
+  const factory EffectEvent.effectPropertyChanged() = EffectPropertyChangedEvent;
 }
-
-class SetGridSizeEvent extends EffectEvent {
-  final EffectGridData effectGridData;
-
-  SetGridSizeEvent({required this.effectGridData});
-
-  @override
-  List<Object> get props => <Object>[effectGridData];
-}
-
-class AddEffectEvent extends EffectEvent {
-  final Effect effect;
-
-  AddEffectEvent({required this.effect});
-
-  @override
-  List<Object> get props => <Object>[effect];
-}
-
-class RemoveEffectEvent extends EffectEvent {
-  final Effect effect;
-
-  RemoveEffectEvent({required this.effect});
-
-  @override
-  List<Object> get props => <Object>[effect];
-}
-
-class ReorderEffectsEvent extends EffectEvent {
-  final int oldIndex;
-  final int newIndex;
-
-  ReorderEffectsEvent({
-    required this.oldIndex,
-    required this.newIndex,
-  });
-
-  @override
-  List<Object> get props => <Object>[
-        oldIndex,
-        newIndex,
-      ];
-}
-
-class SelectEffectEvent extends EffectEvent {
-  final Effect effect;
-
-  SelectEffectEvent(this.effect);
-
-  @override
-  List<Object> get props => <Object>[effect];
-}
-
-class EffectPropertyChangedEvent extends EffectEvent {}

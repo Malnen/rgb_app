@@ -5,11 +5,9 @@ import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_state.dart';
 class EffectsColorsCubit extends Cubit<EffectsColorsState> {
   List<List<Color>> get colors => state.colors;
 
-  EffectsColorsCubit() : super(EffectsColorsState(colors: <List<Color>>[]));
+  EffectsColorsCubit() : super(EffectsColorsState.withRandomKey(colors: <List<Color>>[]));
 
-  void updateColors(List<List<Color>> colors) {
-    emitColors(colors);
-  }
+  void updateColors(List<List<Color>> colors) => _emitColors(colors);
 
   void updateColorsSize(int sizeX, int sizeY) {
     final List<List<Color>> colors = List<List<Color>>.generate(
@@ -19,11 +17,11 @@ class EffectsColorsCubit extends Cubit<EffectsColorsState> {
         (int index) => Colors.white,
       ),
     );
-    emitColors(colors);
+    _emitColors(colors);
   }
 
-  void emitColors(List<List<Color>> colors) {
-    final EffectsColorsState state = EffectsColorsState(colors: colors);
+  void _emitColors(List<List<Color>> colors) {
+    final EffectsColorsState state = EffectsColorsState.withRandomKey(colors: colors);
     emit(state);
   }
 }

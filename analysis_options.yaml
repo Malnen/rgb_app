@@ -1,7 +1,9 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  exclude: [ build/**, generated_bindings.dart ]
+  errors:
+    invalid_annotation_target: ignore
+  exclude: [ build/** ]
   language:
     strict-casts: true
     strict-inference: true

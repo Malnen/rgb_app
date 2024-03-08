@@ -18,9 +18,7 @@ class OptionProperty extends Property<Set<Option>> {
   Option get selectedOption => _selectedOption ?? value.first;
 
   @override
-  Map<String, Object> getData() {
-    return <String, Object>{
-      'value': value.map((Option option) => option.toJson()).toList(),
+  Map<String, Object> getData() => <String, Object>{
+        'value': value.map((Option option) => option.toJson()).toList(),
     };
-  }
 }

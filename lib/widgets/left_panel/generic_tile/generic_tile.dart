@@ -30,7 +30,7 @@ class GenericTile<T> extends StatelessWidget {
       color: disabled ? Color.fromARGB(255, 31, 31, 31) : Color.fromARGB(255, 70, 70, 70),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
-        onTap: () => _onTap(context),
+        onTap: () => onTap(value),
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -42,10 +42,6 @@ class GenericTile<T> extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onTap(BuildContext context) {
-    onTap(value);
   }
 
   Widget _icon() {

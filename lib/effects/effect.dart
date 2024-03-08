@@ -4,6 +4,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/effects/effect_data.dart';
+import 'package:rgb_app/factories/effect_factory.dart';
 import 'package:rgb_app/factories/property_factory.dart';
 import 'package:rgb_app/models/property.dart';
 
@@ -12,10 +13,8 @@ abstract class Effect {
   EffectBloc? _effectBloc;
   EffectsColorsCubit? _effectsColorsCubit;
 
-  Effect(EffectData effectData) : effectData = effectData.getWithNewKey() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      init();
-    });
+  Effect(EffectData effectData) : effectData = EffectData.getWithNewKey(effectData) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => init());
   }
 
   List<Property<Object>> get properties => <Property<Object>>[];
@@ -64,6 +63,8 @@ abstract class Effect {
 
     return json;
   }
+
+  factory Effect.fromJson(Map<String, Object?> json) => EffectFactory.getEffectFromJson(json);
 
   Map<String, Object?> _getData() {
     return <String, Object?>{

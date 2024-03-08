@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/effects/effect.dart';
-import 'package:rgb_app/models/color_list_property.dart';
+import 'package:rgb_app/effects/wave/wave_effect_properties.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
-import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
-import 'package:rgb_app/models/options_property.dart';
-import 'package:rgb_app/models/property.dart';
 
-class WaveEffect extends Effect {
+class WaveEffect extends Effect with WaveEffectProperties {
   static const String className = 'WaveEffect';
   static const String name = 'Wave';
 
-  late NumericProperty size;
-  late NumericProperty speed;
-  late Property<Set<Option>> waveDirection;
-  late Property<Set<Option>> colorModeProperty;
-  late ColorListProperty customColorsProperty;
   late List<Color> gradientColors;
   late List<Color> shiftedColors;
   late int colorsIncrementMax;
@@ -26,70 +18,9 @@ class WaveEffect extends Effect {
   bool customColorsMode = false;
   int customColorIndex = 0;
 
-  @override
-  List<Property<Object>> get properties => <Property<Object>>[
-        size,
-        speed,
-        waveDirection,
-        colorModeProperty,
-        customColorsProperty,
-      ];
-
-  WaveEffect(super.effectData)
-      : size = NumericProperty(
-    initialValue: 15,
-          name: 'Size',
-          idn: 'size',
-          min: 1,
-          max: 20,
-        ),
-        speed = NumericProperty(
-          initialValue: 2.5,
-          name: 'Speed',
-          idn: 'speed',
-          min: 1,
-          max: 20,
-        ),
-        waveDirection = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'Left',
-              selected: false,
-            ),
-            Option(
-              value: 1,
-              name: 'Right',
-              selected: true,
-            ),
-          },
-          idn: 'waveDirection',
-          name: 'Wave Direction',
-        ),
-        colorModeProperty = OptionProperty(
-          initialValue: <Option>{
-            Option(
-              value: 0,
-              name: 'Custom',
-              selected: false,
-            ),
-            Option(
-              value: 1,
-              name: 'Rainbow',
-              selected: true,
-            ),
-          },
-          idn: 'colorMode',
-          name: 'Color Mode',
-        ),
-        customColorsProperty = ColorListProperty(
-          initialValue: <Color>[
-            Colors.white,
-            Colors.black,
-          ],
-          idn: 'customColors',
-          name: 'Custom Colors',
-        );
+  WaveEffect(super.effectData) {
+    initProperties();
+  }
 
   @override
   void init() {

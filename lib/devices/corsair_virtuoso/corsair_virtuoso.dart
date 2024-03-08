@@ -8,9 +8,7 @@ class CorsairVirtuoso extends DeviceInterface with InterruptTransferDevice {
 
   late CorsairVirtuosoTester tester;
 
-  CorsairVirtuoso({
-    required super.deviceData,
-  });
+  CorsairVirtuoso({required super.deviceData});
 
   @override
   int get endpoint => 0x02;
@@ -39,9 +37,7 @@ class CorsairVirtuoso extends DeviceInterface with InterruptTransferDevice {
   }
 
   @override
-  void test() {
-    tester.test();
-  }
+  void test() => tester.test();
 
   @override
   void update() {
@@ -50,14 +46,11 @@ class CorsairVirtuoso extends DeviceInterface with InterruptTransferDevice {
   }
 
   @override
-  Size getSize() {
-    return Size(1, 1);
-  }
+  Size getSize() => Size(1, 1);
 
   @override
-  List<List<int>> getPackets() {
-    return <List<int>>[
-      <int>[
+  List<List<int>> getPackets() => <List<int>>[
+        <int>[
         0x02,
         0x09,
         0x06,
@@ -124,5 +117,4 @@ class CorsairVirtuoso extends DeviceInterface with InterruptTransferDevice {
         0x00,
       ],
     ];
-  }
 }

@@ -40,9 +40,7 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
     Color.fromARGB(1, 0, 0, 0),
   ];
 
-  SteelSeriesRival3({
-    required super.deviceData,
-  });
+  SteelSeriesRival3({required super.deviceData});
 
   @override
   void init() {
@@ -53,9 +51,7 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
   }
 
   @override
-  Size getSize() {
-    return Size(1, 3);
-  }
+  Size getSize() => Size(1, 3);
 
   @override
   List<List<int>> getPackets() {
@@ -98,14 +94,10 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
   }
 
   @override
-  void test() {
-    tester.test();
-  }
+  void test() => tester.test();
 
   @override
-  void blink() {
-    tester.blink();
-  }
+  void blink() => tester.blink();
 
   @override
   void dispose() {

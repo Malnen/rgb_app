@@ -4,563 +4,563 @@ import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 
 class KeyDictionary {
-  static KeyboardKey esc = KeyboardKey(
+  static KeyboardKey esc = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 4,
     keyCode: KeyCode.esc,
   );
-  static KeyboardKey backQuote = KeyboardKey(
+  static KeyboardKey backQuote = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 5,
     keyCode: KeyCode.backQuote,
   );
-  static KeyboardKey tab = KeyboardKey(
+  static KeyboardKey tab = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 6,
     keyCode: KeyCode.tab,
   );
-  static KeyboardKey capsLock = KeyboardKey(
+  static KeyboardKey capsLock = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 7,
     keyCode: KeyCode.capsLock,
   );
-  static KeyboardKey leftShift = KeyboardKey(
+  static KeyboardKey leftShift = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 8,
     keyCode: KeyCode.leftShift,
   );
-  static KeyboardKey leftControl = KeyboardKey(
+  static KeyboardKey leftControl = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 9,
     keyCode: KeyCode.leftControl,
   );
-  static KeyboardKey f12 = KeyboardKey(
+  static KeyboardKey f12 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 10,
     keyCode: KeyCode.f12,
   );
-  static KeyboardKey equal = KeyboardKey(
+  static KeyboardKey equal = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 11,
     keyCode: KeyCode.equal,
   );
-  static KeyboardKey num7 = KeyboardKey(
+  static KeyboardKey num7 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 13,
     keyCode: KeyCode.numpad_7,
   );
-  static KeyboardKey f1 = KeyboardKey(
+  static KeyboardKey f1 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 16,
     keyCode: KeyCode.f1,
   );
-  static KeyboardKey key1 = KeyboardKey(
+  static KeyboardKey key1 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 17,
     keyCode: KeyCode.key1,
   );
-  static KeyboardKey q = KeyboardKey(
+  static KeyboardKey q = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 18,
     keyCode: KeyCode.q,
   );
-  static KeyboardKey a = KeyboardKey(
+  static KeyboardKey a = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 19,
     keyCode: KeyCode.a,
   );
-  static KeyboardKey leftBackSlash = KeyboardKey(
+  static KeyboardKey leftBackSlash = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 20,
     keyCode: KeyCode.leftBackSlash,
   );
-  static KeyboardKey leftWin = KeyboardKey(
+  static KeyboardKey leftWin = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 21,
     keyCode: KeyCode.leftWin,
   );
-  static KeyboardKey printScreen = KeyboardKey(
+  static KeyboardKey printScreen = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 22,
     keyCode: KeyCode.printScreen,
   );
-  static KeyboardKey mute = KeyboardKey(
+  static KeyboardKey mute = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 24,
     keyCode: KeyCode.mute,
   );
-  static KeyboardKey num8 = KeyboardKey(
+  static KeyboardKey num8 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 25,
     keyCode: KeyCode.numpad_8,
   );
-  static KeyboardKey f2 = KeyboardKey(
+  static KeyboardKey f2 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 28,
     keyCode: KeyCode.f2,
   );
-  static KeyboardKey key2 = KeyboardKey(
+  static KeyboardKey key2 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 29,
     keyCode: KeyCode.key2,
   );
-  static KeyboardKey w = KeyboardKey(
+  static KeyboardKey w = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 30,
     keyCode: KeyCode.w,
   );
-  static KeyboardKey s = KeyboardKey(
+  static KeyboardKey s = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 31,
     keyCode: KeyCode.s,
   );
-  static KeyboardKey z = KeyboardKey(
+  static KeyboardKey z = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 32,
     keyCode: KeyCode.z,
   );
-  static KeyboardKey leftAlt = KeyboardKey(
+  static KeyboardKey leftAlt = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 33,
     keyCode: KeyCode.leftAlt,
   );
-  static KeyboardKey scrollLock = KeyboardKey(
+  static KeyboardKey scrollLock = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 34,
     keyCode: KeyCode.scrollLock,
   );
-  static KeyboardKey backSpace = KeyboardKey(
+  static KeyboardKey backSpace = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 35,
     keyCode: KeyCode.backSpace,
   );
-  static KeyboardKey pause = KeyboardKey(
+  static KeyboardKey pause = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 36,
     keyCode: KeyCode.pause,
   );
-  static KeyboardKey num9 = KeyboardKey(
+  static KeyboardKey num9 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 37,
     keyCode: KeyCode.numpad_9,
   );
-  static KeyboardKey f3 = KeyboardKey(
+  static KeyboardKey f3 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 40,
     keyCode: KeyCode.f3,
   );
-  static KeyboardKey key3 = KeyboardKey(
+  static KeyboardKey key3 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 41,
     keyCode: KeyCode.key3,
   );
-  static KeyboardKey e = KeyboardKey(
+  static KeyboardKey e = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 42,
     keyCode: KeyCode.e,
   );
-  static KeyboardKey d = KeyboardKey(
+  static KeyboardKey d = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 43,
     keyCode: KeyCode.d,
   );
-  static KeyboardKey x = KeyboardKey(
+  static KeyboardKey x = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 44,
     keyCode: KeyCode.x,
   );
-  static KeyboardKey pauseBreak = KeyboardKey(
+  static KeyboardKey pauseBreak = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 46,
     keyCode: KeyCode.pauseBreak,
   );
-  static KeyboardKey delete = KeyboardKey(
+  static KeyboardKey delete = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 47,
     keyCode: KeyCode.delete,
   );
-  static KeyboardKey previous = KeyboardKey(
+  static KeyboardKey previous = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 48,
     keyCode: KeyCode.previous,
   );
-  static KeyboardKey f4 = KeyboardKey(
+  static KeyboardKey f4 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 52,
     keyCode: KeyCode.f4,
   );
-  static KeyboardKey key4 = KeyboardKey(
+  static KeyboardKey key4 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 53,
     keyCode: KeyCode.key4,
   );
-  static KeyboardKey r = KeyboardKey(
+  static KeyboardKey r = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 54,
     keyCode: KeyCode.r,
   );
-  static KeyboardKey f = KeyboardKey(
+  static KeyboardKey f = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 55,
     keyCode: KeyCode.f,
   );
-  static KeyboardKey c = KeyboardKey(
+  static KeyboardKey c = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 56,
     keyCode: KeyCode.c,
   );
-  static KeyboardKey space = KeyboardKey(
+  static KeyboardKey space = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 57,
     keyCode: KeyCode.spacebar,
   );
-  static KeyboardKey insert = KeyboardKey(
+  static KeyboardKey insert = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 58,
     keyCode: KeyCode.insert,
   );
-  static KeyboardKey end = KeyboardKey(
+  static KeyboardKey end = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 59,
     keyCode: KeyCode.end,
   );
-  static KeyboardKey resumeStop = KeyboardKey(
+  static KeyboardKey resumeStop = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 60,
     keyCode: KeyCode.resumeStop,
   );
-  static KeyboardKey num4 = KeyboardKey(
+  static KeyboardKey num4 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 61,
     keyCode: KeyCode.numpad_4,
   );
-  static KeyboardKey f5 = KeyboardKey(
+  static KeyboardKey f5 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 4,
     keyCode: KeyCode.f5,
   );
-  static KeyboardKey key5 = KeyboardKey(
+  static KeyboardKey key5 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 5,
     keyCode: KeyCode.key5,
   );
-  static KeyboardKey t = KeyboardKey(
+  static KeyboardKey t = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 6,
     keyCode: KeyCode.t,
   );
-  static KeyboardKey g = KeyboardKey(
+  static KeyboardKey g = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 7,
     keyCode: KeyCode.g,
   );
-  static KeyboardKey v = KeyboardKey(
+  static KeyboardKey v = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 8,
     keyCode: KeyCode.v,
   );
-  static KeyboardKey home = KeyboardKey(
+  static KeyboardKey home = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 10,
     keyCode: KeyCode.home,
   );
-  static KeyboardKey pageDown = KeyboardKey(
+  static KeyboardKey pageDown = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 11,
     keyCode: KeyCode.pageDown,
   );
-  static KeyboardKey next = KeyboardKey(
+  static KeyboardKey next = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 12,
     keyCode: KeyCode.next,
   );
-  static KeyboardKey num5 = KeyboardKey(
+  static KeyboardKey num5 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 13,
     keyCode: KeyCode.numpad_5,
   );
-  static KeyboardKey f6 = KeyboardKey(
+  static KeyboardKey f6 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 16,
     keyCode: KeyCode.f6,
   );
-  static KeyboardKey key6 = KeyboardKey(
+  static KeyboardKey key6 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 17,
     keyCode: KeyCode.key6,
   );
-  static KeyboardKey y = KeyboardKey(
+  static KeyboardKey y = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 18,
     keyCode: KeyCode.y,
   );
-  static KeyboardKey h = KeyboardKey(
+  static KeyboardKey h = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 19,
     keyCode: KeyCode.h,
   );
-  static KeyboardKey b = KeyboardKey(
+  static KeyboardKey b = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 20,
     keyCode: KeyCode.b,
   );
-  static KeyboardKey pageUp = KeyboardKey(
+  static KeyboardKey pageUp = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 22,
     keyCode: KeyCode.pageUp,
   );
-  static KeyboardKey rightShift = KeyboardKey(
+  static KeyboardKey rightShift = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 23,
     keyCode: KeyCode.rightShift,
   );
-  static KeyboardKey numLock = KeyboardKey(
+  static KeyboardKey numLock = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 24,
     keyCode: KeyCode.numLock,
   );
-  static KeyboardKey num6 = KeyboardKey(
+  static KeyboardKey num6 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 25,
     keyCode: KeyCode.numpad_6,
   );
-  static KeyboardKey f7 = KeyboardKey(
+  static KeyboardKey f7 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 28,
     keyCode: KeyCode.f7,
   );
-  static KeyboardKey key7 = KeyboardKey(
+  static KeyboardKey key7 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 29,
     keyCode: KeyCode.key7,
   );
-  static KeyboardKey u = KeyboardKey(
+  static KeyboardKey u = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 30,
     keyCode: KeyCode.u,
   );
-  static KeyboardKey j = KeyboardKey(
+  static KeyboardKey j = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 31,
     keyCode: KeyCode.j,
   );
-  static KeyboardKey n = KeyboardKey(
+  static KeyboardKey n = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 32,
     keyCode: KeyCode.n,
   );
-  static KeyboardKey rightAlt = KeyboardKey(
+  static KeyboardKey rightAlt = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 33,
     keyCode: KeyCode.rightAlt,
   );
-  static KeyboardKey closeBracket = KeyboardKey(
+  static KeyboardKey closeBracket = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 34,
     keyCode: KeyCode.closeBracket,
   );
-  static KeyboardKey rightControl = KeyboardKey(
+  static KeyboardKey rightControl = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 35,
     keyCode: KeyCode.rightControl,
   );
-  static KeyboardKey divide = KeyboardKey(
+  static KeyboardKey divide = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 36,
     keyCode: KeyCode.divide,
   );
-  static KeyboardKey num1 = KeyboardKey(
+  static KeyboardKey num1 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 37,
     keyCode: KeyCode.numpad_1,
   );
-  static KeyboardKey f8 = KeyboardKey(
+  static KeyboardKey f8 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 40,
     keyCode: KeyCode.f8,
   );
-  static KeyboardKey key8 = KeyboardKey(
+  static KeyboardKey key8 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 41,
     keyCode: KeyCode.key8,
   );
-  static KeyboardKey i = KeyboardKey(
+  static KeyboardKey i = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 42,
     keyCode: KeyCode.i,
   );
-  static KeyboardKey k = KeyboardKey(
+  static KeyboardKey k = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 43,
     keyCode: KeyCode.k,
   );
-  static KeyboardKey m = KeyboardKey(
+  static KeyboardKey m = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 44,
     keyCode: KeyCode.m,
   );
-  static KeyboardKey rightWin = KeyboardKey(
+  static KeyboardKey rightWin = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 45,
     keyCode: KeyCode.rightWin,
   );
-  static KeyboardKey upArrow = KeyboardKey(
+  static KeyboardKey upArrow = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 47,
     keyCode: KeyCode.upArrow,
   );
-  static KeyboardKey multiply = KeyboardKey(
+  static KeyboardKey multiply = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 48,
     keyCode: KeyCode.multiply,
   );
-  static KeyboardKey num2 = KeyboardKey(
+  static KeyboardKey num2 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 49,
     keyCode: KeyCode.numpad_2,
   );
-  static KeyboardKey f9 = KeyboardKey(
+  static KeyboardKey f9 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 52,
     keyCode: KeyCode.f9,
   );
-  static KeyboardKey key9 = KeyboardKey(
+  static KeyboardKey key9 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 53,
     keyCode: KeyCode.key9,
   );
-  static KeyboardKey o = KeyboardKey(
+  static KeyboardKey o = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 54,
     keyCode: KeyCode.o,
   );
-  static KeyboardKey l = KeyboardKey(
+  static KeyboardKey l = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 55,
     keyCode: KeyCode.l,
   );
-  static KeyboardKey comma = KeyboardKey(
+  static KeyboardKey comma = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 56,
     keyCode: KeyCode.comma,
   );
-  static KeyboardKey contextMenu = KeyboardKey(
+  static KeyboardKey contextMenu = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 57,
     keyCode: KeyCode.contextMenu,
   );
-  static KeyboardKey backSlash = KeyboardKey(
+  static KeyboardKey backSlash = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 58,
     keyCode: KeyCode.backSlash,
   );
-  static KeyboardKey leftArrow = KeyboardKey(
+  static KeyboardKey leftArrow = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 59,
     keyCode: KeyCode.leftArrow,
   );
-  static KeyboardKey subtract = KeyboardKey(
+  static KeyboardKey subtract = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 60,
     keyCode: KeyCode.subtract,
   );
-  static KeyboardKey num3 = KeyboardKey(
+  static KeyboardKey num3 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 61,
     keyCode: KeyCode.numpad_3,
   );
-  static KeyboardKey f10 = KeyboardKey(
+  static KeyboardKey f10 = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 4,
     keyCode: KeyCode.f10,
   );
-  static KeyboardKey key0 = KeyboardKey(
+  static KeyboardKey key0 = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 5,
     keyCode: KeyCode.key0,
   );
-  static KeyboardKey p = KeyboardKey(
+  static KeyboardKey p = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 6,
     keyCode: KeyCode.p,
   );
-  static KeyboardKey semicolon = KeyboardKey(
+  static KeyboardKey semicolon = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 7,
     keyCode: KeyCode.semicolon,
   );
-  static KeyboardKey period = KeyboardKey(
+  static KeyboardKey period = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 8,
     keyCode: KeyCode.period,
   );
-  static KeyboardKey enter = KeyboardKey(
+  static KeyboardKey enter = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 10,
     keyCode: KeyCode.enter,
   );
-  static KeyboardKey downArrow = KeyboardKey(
+  static KeyboardKey downArrow = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 11,
     keyCode: KeyCode.downArrow,
   );
-  static KeyboardKey add = KeyboardKey(
+  static KeyboardKey add = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 12,
     keyCode: KeyCode.add,
   );
-  static KeyboardKey num0 = KeyboardKey(
+  static KeyboardKey num0 = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 13,
     keyCode: KeyCode.numpad_0,
   );
-  static KeyboardKey f11 = KeyboardKey(
+  static KeyboardKey f11 = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 16,
     keyCode: KeyCode.f11,
   );
-  static KeyboardKey minus = KeyboardKey(
+  static KeyboardKey minus = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 17,
     keyCode: KeyCode.minus,
   );
-  static KeyboardKey openBracket = KeyboardKey(
+  static KeyboardKey openBracket = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 18,
     keyCode: KeyCode.openBracket,
   );
-  static KeyboardKey quote = KeyboardKey(
+  static KeyboardKey quote = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 19,
     keyCode: KeyCode.quote,
   );
-  static KeyboardKey slash = KeyboardKey(
+  static KeyboardKey slash = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 20,
     keyCode: KeyCode.slash,
   );
-  static KeyboardKey corsairStar = KeyboardKey(
+  static KeyboardKey corsairStar = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 21,
     keyCode: KeyCode.corsairStar,
   );
-  static KeyboardKey rightArrow = KeyboardKey(
+  static KeyboardKey rightArrow = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 23,
     keyCode: KeyCode.rightArrow,
   );
-  static KeyboardKey rightEnter = KeyboardKey(
+  static KeyboardKey rightEnter = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 24,
     keyCode: KeyCode.enter,
   );
-  static KeyboardKey decimal = KeyboardKey(
+  static KeyboardKey decimal = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 25,
     keyCode: KeyCode.decimal,
   );
 
-  static KeyboardKey get emptyKey => KeyboardKey(
+  static KeyboardKey get emptyKey => KeyboardKey.withRandomKey(
         packetIndex: -1,
         index: -1,
         keyCode: KeyCode.unknown,

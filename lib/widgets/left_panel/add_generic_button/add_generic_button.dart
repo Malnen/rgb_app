@@ -3,7 +3,7 @@ import 'package:rgb_app/widgets/dialogs/dialog_manager.dart';
 import 'package:rgb_app/widgets/left_panel/add_generic_button/add_button.dart';
 import 'package:rgb_app/widgets/left_panel/generic_tile/generic_tile.dart';
 
-class AddGenericButton<T> extends StatefulWidget {
+class AddGenericButton<T> extends StatelessWidget {
   final void Function(T value) onTap;
   final String dialogLabel;
   final List<T> values;
@@ -19,34 +19,24 @@ class AddGenericButton<T> extends StatefulWidget {
   });
 
   @override
-  State<AddGenericButton<T>> createState() => _AddGenericButtonState<T>();
-}
-
-class _AddGenericButtonState<T> extends State<AddGenericButton<T>> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AddButton(onTap: _onTap);
+    return AddButton(onTap: () => _onTap(context));
   }
 
-  void _onTap() {
+  void _onTap(BuildContext context) {
     Navigator.of(context).push(
       DialogManager.showDialog(
         context: context,
-        title: widget.dialogLabel,
+        title: dialogLabel,
         child: Column(
           children: <Widget>[
-            ...widget.values.map(
-                  (T value) => GenericTile<T>(
+            ...values.map(
+              (T value) => GenericTile<T>(
                 disabled: false,
                 value: value,
-                onTap: _addEvent,
-                iconData: widget.getIcon(value),
-                name: widget.getName(value),
+                onTap: (T value) => _addEvent(value, context),
+                iconData: getIcon(value),
+                name: getName(value),
               ),
             ),
           ],
@@ -55,8 +45,8 @@ class _AddGenericButtonState<T> extends State<AddGenericButton<T>> {
     );
   }
 
-  void _addEvent(T value) {
-    widget.onTap(value);
+  void _addEvent(T value, BuildContext context) {
+    onTap(value);
     Navigator.of(context).pop();
   }
 }

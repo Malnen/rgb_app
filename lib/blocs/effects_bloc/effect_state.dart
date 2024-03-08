@@ -1,62 +1,50 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/effects/effect_dictionary.dart';
+import 'package:rgb_app/json_converters/effect_converter.dart';
+import 'package:rgb_app/json_converters/unique_key_converter.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 
-class EffectState extends Equatable {
-  final Key key;
-  final EffectGridData effectGridData;
-  final List<Effect> effects;
-  final List<EffectData> availableEffects;
-  final Effect? selectedEffect;
-  final bool sizeChanged;
+part '../../generated/blocs/effects_bloc/effect_state.freezed.dart';
+part '../../generated/blocs/effects_bloc/effect_state.g.dart';
 
-  EffectState({
-    required this.effectGridData,
-    required this.availableEffects,
-    required this.effects,
-    this.selectedEffect,
-    this.sizeChanged = false,
-  }) : key = UniqueKey();
+@Freezed(makeCollectionsUnmodifiable: false)
+class EffectState with _$EffectState {
+  EffectState._();
 
-  @override
-  List<Object?> get props =>
-      <Object?>[
-        effectGridData,
-        availableEffects,
-        effects,
-        key,
-        selectedEffect,
-        sizeChanged,
-      ];
+  factory EffectState({
+    required EffectGridData effectGridData,
+    @EffectConverter() required List<Effect> effects,
+    @UniqueKeyConverter() required UniqueKey key,
+    @JsonKey(
+      includeFromJson: false,
+      includeToJson: false,
+    )
+    @Default(<EffectData>[])
+    List<EffectData> availableEffects,
+    @JsonKey(
+      includeFromJson: false,
+      includeToJson: false,
+    )
+    Effect? selectedEffect,
+    @JsonKey(
+      includeFromJson: false,
+      includeToJson: false,
+    )
+    @Default(false)
+    bool sizeChanged,
+  }) = _EffectState;
 
-  factory EffectState.initial() {
-    return EffectState(
-      effectGridData: EffectGridData.initial(),
-      effects: <Effect>[],
-      availableEffects: EffectDictionary.availableEffects,
-    );
-  }
+  factory EffectState.initial() => EffectState(
+        effectGridData: EffectGridData.initial(),
+        effects: <Effect>[],
+        availableEffects: EffectDictionary.availableEffects,
+        key: UniqueKey(),
+      );
 
-  EffectState copyWith({
-    final EffectGridData? effectGridData,
-    final List<Effect>? effects,
-    final List<EffectData>? availableEffects,
-    final Effect? selectedEffect,
-    final bool? sizeChanged,
-    final bool clearSelectedEffect = false,
-  }) {
-    final Effect? selectedEffectValue = clearSelectedEffect ? null : selectedEffect ?? this.selectedEffect;
-    return EffectState(
-      effectGridData: effectGridData ?? this.effectGridData,
-      effects: effects ?? this.effects,
-      availableEffects: availableEffects ?? this.availableEffects,
-      selectedEffect: selectedEffectValue,
-      sizeChanged: sizeChanged ?? false,
-    );
-  }
+  factory EffectState.fromJson(Map<String, Object?> json) => _$EffectStateFromJson(json);
 
   bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
     final EffectGridData effectGridData = state.effectGridData;

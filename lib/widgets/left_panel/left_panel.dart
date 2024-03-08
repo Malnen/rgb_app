@@ -11,12 +11,8 @@ class LeftPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<BlocBase<Object>>>[
-        BlocProvider<DevicesBloc>.value(
-          value: GetIt.instance.get(),
-        ),
-        BlocProvider<EffectBloc>.value(
-          value: GetIt.instance.get(),
-        ),
+        BlocProvider<DevicesBloc>.value(value: GetIt.instance.get()),
+        BlocProvider<EffectBloc>.value(value: GetIt.instance.get()),
       ],
       child: Container(
         width: 380,
