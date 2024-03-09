@@ -28,10 +28,9 @@ void generateFiles() {
     'models:generated',
   ]);
   if (result.exitCode == 0) {
-    print('Flutter build windows completed successfully.');
-    print('Done');
+    print('Files generated');
   } else {
-    print('Error: Flutter build windows failed. Exit code: ${result.exitCode}');
+    print('Error: Files generation failed. Exit code: ${result.exitCode}');
     print('Stderr: ${result.stderr}');
   }
 }

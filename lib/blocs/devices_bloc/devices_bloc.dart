@@ -7,6 +7,7 @@ import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/services/loading_service.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/usb_device_data_sender.dart';
@@ -92,7 +93,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final List<DeviceData> devicesData = state.devicesData;
     final DeviceInterface deviceInterface = DeviceInterface.fromDeviceData(deviceData: deviceData);
     usbDeviceDataSender.openDevice(deviceInterface);
+    loadingService.showLoading();
     await deviceInterface.isOpen.first;
+    loadingService.hideLoading();
     deviceInterface.init();
     deviceInstances.add(deviceInterface);
     if (!devicesData.contains(deviceData)) {

@@ -4,7 +4,7 @@ import 'package:rgb_app/models/device_data.dart';
 
 part '../../generated/blocs/devices_bloc/devices_event.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 abstract class DevicesEvent with _$DevicesEvent {
   const factory DevicesEvent.addDevice(DeviceData deviceData) = AddDeviceEvent;
 

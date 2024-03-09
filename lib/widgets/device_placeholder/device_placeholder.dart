@@ -81,11 +81,15 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
   }
 
   void updateOffset(double offsetX, double offsetY) {
-    final UpdateDeviceOffsetEvent event = UpdateDeviceOffsetEvent(
-      offsetX: offsetX.toInt(),
-      offsetY: offsetY.toInt(),
-      deviceInterface: deviceInterface,
-    );
-    devicesBloc.add(event);
+    final int intX = offsetX.toInt();
+    final int intY = offsetY.toInt();
+    if (intX != this.offsetX || intY != this.offsetY) {
+      final UpdateDeviceOffsetEvent event = UpdateDeviceOffsetEvent(
+        offsetX: intX,
+        offsetY: intY,
+        deviceInterface: deviceInterface,
+      );
+      devicesBloc.add(event);
+    }
   }
 }
