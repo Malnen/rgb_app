@@ -34,7 +34,6 @@ mixin SpiralEffectProperties {
       idn: 'speed',
       min: 1,
       max: 20,
-      debugArtificialValue: true,
     );
     twist = NumericProperty(
       initialValue: 0,

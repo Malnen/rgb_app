@@ -24,7 +24,6 @@ mixin KeyStrokeEffectProperties {
       name: 'Duration',
       idn: 'duration',
       initialValue: 4,
-      debugArtificialValue: true,
     );
     expansion = NumericProperty(
       min: 0.01,
@@ -32,7 +31,6 @@ mixin KeyStrokeEffectProperties {
       name: 'Expansion',
       idn: 'expansion',
       initialValue: 0.75,
-      debugArtificialValue: true,
     );
     fadeSpeed = NumericProperty(
       min: 0.01,
@@ -40,7 +38,6 @@ mixin KeyStrokeEffectProperties {
       name: 'Fade Speed',
       idn: 'fadeSpeed',
       initialValue: 0.15,
-      debugArtificialValue: true,
     );
     colorsProperty = ColorListProperty(
       initialValue: <Color>[

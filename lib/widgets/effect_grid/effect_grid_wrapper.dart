@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
-import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_container.dart';
 
 class EffectGridWrapper extends StatefulWidget {
@@ -25,10 +24,6 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
     colors = buildColors();
     effectsColorsCubit = GetIt.instance.get();
     devicesBloc = GetIt.instance.get();
-    final TickProvider tickProvider = GetIt.instance.get();
-    tickProvider.onTick(() {
-      effectsColorsCubit.updateColors(colors);
-    });
   }
 
   @override

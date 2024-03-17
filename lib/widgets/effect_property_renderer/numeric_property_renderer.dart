@@ -26,7 +26,7 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
   @override
   Widget build(BuildContext context) => switch (property.propertyType) {
         NumericPropertyType.slider => Slider(
-            value: property.currentValue,
+            value: property.value,
             max: property.max,
             min: property.min,
             onChanged: onChanged,
@@ -42,7 +42,7 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
               maxValue: property.max,
               focusNode: focusNode,
               controller: TextEditingController(
-                text: property.currentValue.toString(),
+                text: property.value.toString(),
               ),
               onSubmit: onChanged,
             ),

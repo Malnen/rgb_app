@@ -7,14 +7,12 @@ class TickProvider {
 
   TickProvider() : _listeners = <VoidCallback>[] {
     Timer.periodic(
-      Duration(milliseconds: kDebugMode ? 100 : 25),
+      Duration(milliseconds: 25),
       (_) => _processCallbacks(),
     );
   }
 
-  void onTick(VoidCallback callback) {
-    _listeners.add(callback);
-  }
+  void onTick(VoidCallback callback) => _listeners.add(callback);
 
   void _processCallbacks() {
     for (VoidCallback callback in _listeners) {
