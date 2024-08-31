@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_use/flutter_use.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
@@ -14,17 +15,15 @@ import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
 
-class DevicesListContainer extends StatelessWidget {
+class DevicesListContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.devicesData.length);
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices.length);
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
-
     final DevicesBloc devicesBloc = GetIt.instance.get();
+    final ListAction<DeviceData> availableDevices = useList(devicesBloc.state.availableDevices);
+    useList(devicesBloc.state.devicesData);
+    useList(devicesBloc.state.connectedDevices);
     final KeyBloc keyBloc = GetIt.instance.get();
     final DevicesState state = devicesBloc.state;
-    final List<DeviceData> availableDevices = state.availableDevices;
     _updateKeyBloc(keyBloc: keyBloc, devicesBloc: devicesBloc);
 
     return GenericListContainer<DeviceData>(
@@ -43,7 +42,7 @@ class DevicesListContainer extends StatelessWidget {
         devicesBloc: devicesBloc,
         deviceData: deviceData,
       ),
-      availableValues: availableDevices,
+      availableValues: availableDevices.list,
     );
   }
 
