@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
-void main() {
+void main() async {
   copyAssets();
-  generateFiles();
-  runFlutterBuildWindows();
+  await generateFiles();
+  await runFlutterBuildWindows();
 }
 
 void copyAssets() {
@@ -17,9 +17,9 @@ void copyAssets() {
   print('Copied');
 }
 
-void generateFiles() {
+Future<void> generateFiles() async {
   print('Generating files...');
-  final ProcessResult result = executeCommand(<String>[
+  final ProcessResult result = await executeCommand(<String>[
     'pub',
     'run',
     'build_runner',
@@ -51,9 +51,9 @@ void copyDirectory(Directory source, Directory destination) {
   });
 }
 
-void runFlutterBuildWindows() {
+Future<void> runFlutterBuildWindows() async {
   print('Running flutter build...');
-  final ProcessResult result = executeCommand(<String>['build', 'windows']);
+  final ProcessResult result = await executeCommand(<String>['build', 'windows']);
   if (result.exitCode == 0) {
     print('Done');
   } else {
@@ -62,7 +62,17 @@ void runFlutterBuildWindows() {
   }
 }
 
-ProcessResult executeCommand(List<String> params) {
+Future<ProcessResult> executeCommand(List<String> params) async {
+  final Directory fvmDirectory = Directory('./.fvm');
+  final bool useFvm = await fvmDirectory.exists();
+  if (useFvm) {
+    return Process.runSync('fvm', <String>['flutter', ...params]);
+  }
+
+  return runCommandWithGlobalFlutter(params);
+}
+
+ProcessResult runCommandWithGlobalFlutter(List<String> params) {
   late String flutterExecutable;
   final ProcessResult where = Process.runSync('where', <String>['flutter.bat']);
   if (where.exitCode == 0) {
@@ -70,6 +80,5 @@ ProcessResult executeCommand(List<String> params) {
     flutterExecutable = stdout.trim();
   }
 
-  final ProcessResult result = Process.runSync(flutterExecutable, params);
-  return result;
+  return Process.runSync(flutterExecutable, params);
 }

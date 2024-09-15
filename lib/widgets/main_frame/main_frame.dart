@@ -37,7 +37,7 @@ class _MainFrameState extends State<MainFrame> with WindowListener {
           backgroundColor: Color.fromARGB(255, 25, 25, 25),
         ),
         colorScheme: ColorScheme.dark(
-          background: Color.fromARGB(255, 30, 30, 30),
+          surface: Color.fromARGB(255, 30, 30, 30),
         ),
       ),
       home: MainScaffold(),

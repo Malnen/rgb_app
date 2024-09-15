@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
@@ -134,12 +135,15 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final List<DeviceData> devicesData,
     final List<DeviceInterface> deviceInstances,
   ) {
-    final DeviceInterface deviceInterface = state.deviceInstances.firstWhere(
+    final DeviceInterface? deviceInterface = state.deviceInstances.firstWhereOrNull(
       (DeviceInterface deviceInterface) =>
           deviceInterface.deviceData.deviceProductVendor == deviceData.deviceProductVendor,
     );
-    usbDeviceDataSender.closeDevice(deviceInterface);
-    deviceInterface.dispose();
+    if (deviceInterface != null) {
+      usbDeviceDataSender.closeDevice(deviceInterface);
+      deviceInterface.dispose();
+    }
+
     deviceInstances.remove(deviceInterface);
     devicesData.remove(deviceData);
 
