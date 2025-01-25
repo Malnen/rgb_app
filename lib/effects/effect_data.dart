@@ -6,7 +6,7 @@ import 'package:rgb_app/json_converters/unique_key_converter.dart';
 part '../generated/effects/effect_data.freezed.dart';
 part '../generated/effects/effect_data.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class EffectData with _$EffectData {
   EffectData._();
 

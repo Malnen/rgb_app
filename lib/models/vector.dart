@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part '../generated/models/vector.freezed.dart';
 part '../generated/models/vector.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class Vector with _$Vector {
   Vector._();
 

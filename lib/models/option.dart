@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part '../generated/models/option.freezed.dart';
 part '../generated/models/option.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class Option with _$Option {
   const factory Option({
     required int value,

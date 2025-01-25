@@ -4,7 +4,7 @@ import 'package:rgb_app/enums/key_code.dart';
 
 part '../generated/devices/keyboard_key.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class KeyboardKey with _$KeyboardKey {
   const factory KeyboardKey({
     required int packetIndex,

@@ -4,7 +4,7 @@ import 'package:rgb_app/enums/color_picker_update_source.dart';
 
 part '../../generated/cubits/color_picker_cubit/color_picker_state.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class ColorPickerState with _$ColorPickerState {
   ColorPickerState._();
 

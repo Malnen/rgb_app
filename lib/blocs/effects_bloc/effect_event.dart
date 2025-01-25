@@ -4,7 +4,7 @@ import 'package:rgb_app/models/effect_grid_data.dart';
 
 part '../../generated/blocs/effects_bloc/effect_event.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class EffectEvent with _$EffectEvent {
   const factory EffectEvent.setGridSize({
     required EffectGridData effectGridData,

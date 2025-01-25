@@ -1,21 +1,21 @@
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
-import 'package:rgb_app/utils/usb_devices_info_getter/enums/connected_usb_device_command.dart';
-import 'package:rgb_app/utils/usb_devices_info_getter/enums/connected_usb_device_response_type.dart';
+import 'package:rgb_app/utils/usb_devices_info_getter/enums/usb_device_info_command.dart';
+import 'package:rgb_app/utils/usb_devices_info_getter/enums/usb_device_info_response_type.dart';
 import 'package:rxdart/rxdart.dart';
 
-class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceCommand, ConnectedUsbDeviceResponseType> {
+class UsbDeviceInfoGetter with RgbAppServiceListener<UsbDeviceInfoCommand, UsbDeviceInfoResponseType> {
   late BehaviorSubject<List<DeviceData>> deviceData;
 
   @override
-  String get channelName => 'connectedUsbDevicesInfo';
+  String get channelName => 'usbDevicesInfo';
 
   @override
-  Iterable<ConnectedUsbDeviceResponseType> get responseTypes => ConnectedUsbDeviceResponseType.values;
+  Iterable<UsbDeviceInfoResponseType> get responseTypes => UsbDeviceInfoResponseType.values;
 
   @override
-  void Function(ConnectedUsbDeviceResponseType, Map<String, Object>) get processResponse => _channelListener;
+  void Function(UsbDeviceInfoResponseType, Map<String, Object>) get processResponse => _channelListener;
 
   @override
   Future<void> init() async {
@@ -30,7 +30,7 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceCommand, 
   }
 
   Future<List<DeviceData>> getDeviceProductInfo() async {
-    sendCommand(ConnectedUsbDeviceCommand.getUsbDevicesInfo);
+    sendCommand(UsbDeviceInfoCommand.getUsbDevicesInfo);
     final List<DeviceData> data = await deviceData.stream.first;
     await deviceData.close();
     deviceData = BehaviorSubject<List<DeviceData>>();
@@ -38,9 +38,9 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<ConnectedUsbDeviceCommand, 
     return data;
   }
 
-  void _channelListener(ConnectedUsbDeviceResponseType responseType, Map<String, Object> parsedData) {
+  void _channelListener(UsbDeviceInfoResponseType responseType, Map<String, Object> parsedData) {
     switch (responseType) {
-      case ConnectedUsbDeviceResponseType.usbDeviceInfo:
+      case UsbDeviceInfoResponseType.usbDeviceInfo:
         _onUsbDeviceInfo(parsedData);
         break;
     }

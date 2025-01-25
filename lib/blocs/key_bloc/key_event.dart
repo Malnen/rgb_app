@@ -5,7 +5,7 @@ import 'package:rgb_app/devices/keyboard_interface.dart';
 
 part '../../generated/blocs/key_bloc/key_event.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class KeyEvent with _$KeyEvent {
   const KeyEvent._();
 

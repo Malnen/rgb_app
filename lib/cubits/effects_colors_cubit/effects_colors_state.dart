@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part '../../generated/cubits/effects_colors_cubit/effects_colors_state.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class EffectsColorsState with _$EffectsColorsState {
   const factory EffectsColorsState({
     required List<List<Color>> colors,

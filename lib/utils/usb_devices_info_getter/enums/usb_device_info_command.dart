@@ -1,0 +1,3 @@
+enum UsbDeviceInfoCommand {
+  getUsbDevicesInfo,
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' as material;
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
+import 'package:rgb_app/devices/aura_led_controller/aura_led_controller.dart';
 import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
 import 'package:rgb_app/devices/steel_series_rival_100/steel_series_rival_100.dart';
@@ -38,6 +39,7 @@ abstract class DeviceInterface {
         DeviceProductVendor.corsairVirtuoso => CorsairVirtuoso(deviceData: deviceData),
         DeviceProductVendor.steelSeriesRival100 => SteelSeriesRival100(deviceData: deviceData),
         DeviceProductVendor.steelSeriesRival3 => SteelSeriesRival3(deviceData: deviceData),
+        DeviceProductVendor.auraLEDController => AuraLEDController(deviceData: deviceData),
         _ => UnknownDevice(deviceData: deviceData),
       } as DeviceInterface;
 

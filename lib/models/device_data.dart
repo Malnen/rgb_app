@@ -4,7 +4,7 @@ import 'package:rgb_app/models/device_product_vendor.dart';
 part '../generated/models/device_data.freezed.dart';
 part '../generated/models/device_data.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class DeviceData with _$DeviceData {
   DeviceData._();
 

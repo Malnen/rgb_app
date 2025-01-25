@@ -37,7 +37,10 @@ class _EffectGridState extends State<EffectGrid> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         top(),
-        EffectGridWrapper(),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: EffectGridWrapper(),
+        ),
       ],
     );
   }

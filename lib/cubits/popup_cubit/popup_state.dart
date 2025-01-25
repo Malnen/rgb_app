@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part '../../generated/cubits/popup_cubit/popup_state.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class PopupState with _$PopupState {
   const factory PopupState({
     required bool show,

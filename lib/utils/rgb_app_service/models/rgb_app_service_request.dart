@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part '../../../generated/utils/rgb_app_service/models/rgb_app_service_request.freezed.dart';
 part '../../../generated/utils/rgb_app_service/models/rgb_app_service_request.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class RgbAppServiceRequest with _$RgbAppServiceRequest {
   const factory RgbAppServiceRequest({
     required String command,
