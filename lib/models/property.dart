@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 abstract class Property<T> extends ValueNotifier<T> {
   final String name;

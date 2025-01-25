@@ -19,24 +19,8 @@ class DevicesListContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final DevicesBloc devicesBloc = GetIt.instance.get();
-    useBlocComparativeBuilder(
-      devicesBloc,
-      buildWhen: (DevicesState previousState, DevicesState currentState) =>
-          previousState.devicesData != currentState.devicesData,
-    );
-    useBlocComparativeBuilder(
-      devicesBloc,
-      buildWhen: (DevicesState previousState, DevicesState currentState) =>
-          previousState.connectedDevices != currentState.connectedDevices,
-    );
-    useBlocComparativeBuilder(
-      devicesBloc,
-      buildWhen: (DevicesState previousState, DevicesState currentState) =>
-          previousState.availableDevices != currentState.availableDevices,
-    );
-
     final KeyBloc keyBloc = GetIt.instance.get();
-    final DevicesState state = devicesBloc.state;
+    final DevicesState state = useBlocBuilder(devicesBloc);
     final List<DeviceData> availableDevices = state.availableDevices;
     _updateKeyBloc(keyBloc: keyBloc, devicesBloc: devicesBloc);
 

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';

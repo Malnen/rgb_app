@@ -30,11 +30,15 @@ extension ColorExtension on Color {
     return random.nextInt(256);
   }
 
-  int get redInt => r.toInt();
+  int get redInt => _doubleToInt8(r);
 
-  int get greenInt => g.toInt();
+  int get greenInt => _doubleToInt8(g);
 
-  int get blueInt => b.toInt();
+  int get blueInt => _doubleToInt8(b);
+
+  int _doubleToInt8(double x) {
+    return (x * 255.0).round() & 0xff;
+  }
 
   int _getMixed(int value, int valueToMix, double fraction) {
     final double mixedValue = (value - valueToMix) * fraction + valueToMix;

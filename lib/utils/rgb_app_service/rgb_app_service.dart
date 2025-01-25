@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rgb_app/classes/fixed_size_list.dart';
 import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rgb_app/utils/rgb_app_service/models/rgb_app_service_request.dart';

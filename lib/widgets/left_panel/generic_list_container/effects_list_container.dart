@@ -16,16 +16,7 @@ class EffectsListContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final EffectBloc effectBloc = GetIt.instance.get();
-    useBlocComparativeBuilder(
-      effectBloc,
-      buildWhen: (EffectState previousState, EffectState currentState) => previousState.effects != currentState.effects,
-    );
-    useBlocComparativeBuilder(
-      effectBloc,
-      buildWhen: (EffectState previousState, EffectState currentState) =>
-          previousState.availableEffects != currentState.availableEffects,
-    );
-    final EffectState state = effectBloc.state;
+    final EffectState state = useBlocBuilder(effectBloc);
 
     return GenericListContainer<EffectData>(
       dialogLabel: 'Choose effect',

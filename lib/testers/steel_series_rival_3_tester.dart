@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/devices/steel_series_rival_3/steel_series_rival_3.dart';
 import 'package:rgb_app/testers/device_tester.dart';

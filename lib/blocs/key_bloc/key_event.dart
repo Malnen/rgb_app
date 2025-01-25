@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
