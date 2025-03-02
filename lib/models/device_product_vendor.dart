@@ -5,6 +5,7 @@ part '../generated/models/device_product_vendor.freezed.dart';
 part '../generated/models/device_product_vendor.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class DeviceProductVendor with _$DeviceProductVendor {
   static const String corsairK70 = '1b1c:1b33';
   static const String corsairVirtuoso = '1b1c:0a40';
@@ -13,22 +14,20 @@ class DeviceProductVendor with _$DeviceProductVendor {
   static const String auraLEDController = '0b05:19af';
   static const String unknown = '';
 
-  DeviceProductVendor._();
+  @override
+  final String productVendor;
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final String name;
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final IconData? icon;
 
-  factory DeviceProductVendor({
-    required String productVendor,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    @Default('')
-    String name,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    IconData? icon,
-  }) = _DeviceProductVendor;
+  DeviceProductVendor({
+    required this.productVendor,
+    this.name = '',
+    this.icon,
+  });
 
   factory DeviceProductVendor.unknownProductVendor() => DeviceProductVendor(
         name: 'Unknown',
@@ -83,4 +82,6 @@ class DeviceProductVendor with _$DeviceProductVendor {
   }
 
   factory DeviceProductVendor.fromJson(Map<String, Object?> json) => getType(json['productVendor'] as String);
+
+  Map<String, Object?> toJson() => _$DeviceProductVendorToJson(this);
 }

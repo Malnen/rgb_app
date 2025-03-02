@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -25,8 +27,9 @@ Future<void> _run() async {
     size: Size(1200, 600),
     backgroundColor: Colors.transparent,
   );
+  final Directory directory = await getApplicationDocumentsDirectory();
   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
+    storageDirectory: HydratedStorageDirectory(directory.path),
   );
   await DependencyInitializer.init();
   runApp(const MainFrame());

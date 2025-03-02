@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/mixins/control_transfer_device.dart';
+import 'package:rgb_app/extensions/color_extension.dart';
 
 class AuraLEDController extends DeviceInterface with ControlTransferDevice {
   AuraLEDController({required super.deviceData});
@@ -50,15 +51,15 @@ class AuraLEDController extends DeviceInterface with ControlTransferDevice {
         0x84,
         0x00,
         0x03,
-        colors[0].red,
-        colors[0].green,
-        colors[0].blue,
-        colors[1].red,
-        colors[1].green,
-        colors[1].blue,
-        colors[2].red,
-        colors[2].green,
-        colors[2].blue,
+        colors[0].redInt,
+        colors[0].greenInt,
+        colors[0].blueInt,
+        colors[1].redInt,
+        colors[1].greenInt,
+        colors[1].blueInt,
+        colors[2].redInt,
+        colors[2].greenInt,
+        colors[2].blueInt,
         0x00,
         0x00,
         0x00,

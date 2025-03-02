@@ -78,7 +78,7 @@ class _PopupWrapperState extends State<PopupWrapper> {
             border: Border.all(color: Colors.white, width: borderWidth),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withAlpha(128),
                 spreadRadius: 20,
                 blurRadius: 20,
               ),

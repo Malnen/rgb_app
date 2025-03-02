@@ -7,7 +7,7 @@ class LoadingBarrier extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: Container(
-        color: Colors.black.withOpacity(0.4),
+        color: Colors.black.withAlpha(102),
         child: Center(
           child: CircularProgressIndicator(
             color: Colors.orange,

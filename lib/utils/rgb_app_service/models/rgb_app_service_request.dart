@@ -4,11 +4,19 @@ part '../../../generated/utils/rgb_app_service/models/rgb_app_service_request.fr
 part '../../../generated/utils/rgb_app_service/models/rgb_app_service_request.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class RgbAppServiceRequest with _$RgbAppServiceRequest {
-  const factory RgbAppServiceRequest({
-    required String command,
-    Map<String, Object?>? data,
-  }) = _RgbAppServiceRequest;
+  @override
+  final String command;
+  @override
+  final Map<String, Object?>? data;
+
+  RgbAppServiceRequest({
+    required this.command,
+    required this.data,
+  });
 
   factory RgbAppServiceRequest.fromJson(Map<String, Object?> json) => _$RgbAppServiceRequestFromJson(json);
+
+  Map<String, Object?> toJson() => _$RgbAppServiceRequestToJson(this);
 }

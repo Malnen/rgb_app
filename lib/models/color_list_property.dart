@@ -10,6 +10,6 @@ class ColorListProperty extends Property<List<Color>> {
 
   @override
   Map<String, Object> getData() => <String, Object>{
-        'value': value.map((Color color) => color.value).toList(),
-    };
+        'value': value.map((Color color) => color.toARGB32()).toList(),
+      };
 }

@@ -5,10 +5,15 @@ part '../../generated/cubits/effects_colors_cubit/effects_colors_state.freezed.d
 
 @Freezed(makeCollectionsUnmodifiable: false)
 class EffectsColorsState with _$EffectsColorsState {
-  const factory EffectsColorsState({
-    required List<List<Color>> colors,
-    required Key key,
-  }) = _EffectsColorsState;
+  @override
+  final List<List<Color>> colors;
+  @override
+  final Key key;
+
+  EffectsColorsState({
+    required this.colors,
+    required this.key,
+  });
 
   factory EffectsColorsState.withRandomKey({
     required List<List<Color>> colors,

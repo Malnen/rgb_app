@@ -5,19 +5,29 @@ part '../generated/models/device_data.freezed.dart';
 part '../generated/models/device_data.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class DeviceData with _$DeviceData {
-  DeviceData._();
+  @override
+  final DeviceProductVendor deviceProductVendor;
+  @override
+  final int offsetX;
+  @override
+  final int offsetY;
+  @override
+  final bool connected;
 
-  factory DeviceData({
-    required DeviceProductVendor deviceProductVendor,
-    @Default(0) int offsetX,
-    @Default(0) int offsetY,
-    @Default(false) bool connected,
-  }) = _DeviceData;
+  DeviceData({
+    required this.deviceProductVendor,
+    this.offsetX = 0,
+    this.offsetY = 0,
+    this.connected = false,
+  });
 
   factory DeviceData.fromJson(Map<String, Object?> json) => _$DeviceDataFromJson(json);
 
   factory DeviceData.empty() => DeviceData(deviceProductVendor: DeviceProductVendor.unknownProductVendor());
+
+  Map<String, Object?> toJson() => _$DeviceDataToJson(this);
 
   bool get isKnownDevice => !deviceProductVendor.isUnknown;
 }

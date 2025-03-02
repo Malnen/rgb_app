@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/enums/transfer_type.dart';
 import 'package:rgb_app/devices/mixins/control_transfer_device.dart';
 import 'package:rgb_app/devices/mouse_interface.dart';
+import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/testers/steel_series_rival_100_tester.dart';
 
 class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
@@ -77,10 +78,10 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
         <int>[
         0x05,
         0x00,
-        color.red,
-        color.green,
-        color.blue,
-        0x00,
+          color.redInt,
+          color.greenInt,
+          color.blueInt,
+          0x00,
         0x00,
         0x00,
         0x00,

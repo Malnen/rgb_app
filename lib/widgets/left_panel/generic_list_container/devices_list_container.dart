@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
@@ -18,11 +18,23 @@ import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_c
 class DevicesListContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.devicesData.length);
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.connectedDevices.length);
-    context.select<DevicesBloc, int>((DevicesBloc devicesBloc) => devicesBloc.state.availableDevices.length);
-
     final DevicesBloc devicesBloc = GetIt.instance.get();
+    useBlocComparativeBuilder(
+      devicesBloc,
+      buildWhen: (DevicesState previousState, DevicesState currentState) =>
+          previousState.devicesData != currentState.devicesData,
+    );
+    useBlocComparativeBuilder(
+      devicesBloc,
+      buildWhen: (DevicesState previousState, DevicesState currentState) =>
+          previousState.connectedDevices != currentState.connectedDevices,
+    );
+    useBlocComparativeBuilder(
+      devicesBloc,
+      buildWhen: (DevicesState previousState, DevicesState currentState) =>
+          previousState.availableDevices != currentState.availableDevices,
+    );
+
     final KeyBloc keyBloc = GetIt.instance.get();
     final DevicesState state = devicesBloc.state;
     final List<DeviceData> availableDevices = state.availableDevices;

@@ -4,13 +4,23 @@ part '../generated/models/effect_grid_data.freezed.dart';
 part '../generated/models/effect_grid_data.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class EffectGridData with _$EffectGridData {
-  const factory EffectGridData({
-    required int sizeX,
-    required int sizeY,
-    required int minSizeX,
-    required int minSizeY,
-  }) = _EffectGridData;
+  @override
+  final int sizeX;
+  @override
+  final int sizeY;
+  @override
+  final int minSizeX;
+  @override
+  final int minSizeY;
+
+  const EffectGridData({
+    required this.sizeX,
+    required this.sizeY,
+    required this.minSizeX,
+    required this.minSizeY,
+  });
 
   factory EffectGridData.initial() => const EffectGridData(
         sizeX: 26,
@@ -20,4 +30,6 @@ class EffectGridData with _$EffectGridData {
       );
 
   factory EffectGridData.fromJson(Map<String, Object?> json) => _$EffectGridDataFromJson(json);
+
+  Map<String, Object?> toJson() => _$EffectGridDataToJson(this);
 }

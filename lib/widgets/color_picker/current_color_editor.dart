@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rgb_app/cubits/color_picker_cubit/color_picker_cubit.dart';
 import 'package:rgb_app/cubits/color_picker_cubit/color_picker_state.dart';
 import 'package:rgb_app/enums/color_picker_update_source.dart';
+import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/widgets/numeric_field/numeric_field.dart';
 
 class CurrentColorEditor extends StatefulWidget {
@@ -41,9 +42,9 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     final ColorPickerUpdateSource source = state.source;
     if (source != ColorPickerUpdateSource.textField) {
       final Color color = state.color;
-      rController.text = color.red.toString();
-      gController.text = color.green.toString();
-      bController.text = color.blue.toString();
+      rController.text = color.redInt.toString();
+      gController.text = color.greenInt.toString();
+      bController.text = color.blueInt.toString();
     }
   }
 
@@ -54,7 +55,7 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
     final Color color = Color.fromARGB(255, r, g, b);
     final ColorPickerState currentState = colorPickerCubit.state;
     final Color currentColor = currentState.color;
-    final bool hasDifferentColor = currentColor.red != r || currentColor.green != g || currentColor.blue != b;
+    final bool hasDifferentColor = currentColor.redInt != r || currentColor.greenInt != g || currentColor.blueInt != b;
     final bool hasFocus = rFocusNode.hasFocus || gFocusNode.hasFocus || bFocusNode.hasFocus;
     if (hasDifferentColor && hasFocus) {
       final ColorPickerState newState = ColorPickerState.fromColor(

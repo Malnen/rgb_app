@@ -8,29 +8,34 @@ part '../../generated/blocs/devices_bloc/devices_state.freezed.dart';
 part '../../generated/blocs/devices_bloc/devices_state.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class DevicesState with _$DevicesState {
-  factory DevicesState({
-    required List<DeviceData> devicesData,
-    @UniqueKeyConverter() required UniqueKey key,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    @Default(<DeviceData>[])
-    List<DeviceData> availableDevices,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    @Default(<DeviceInterface>[])
-    List<DeviceInterface> deviceInstances,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    @Default(<DeviceData>[])
-    List<DeviceData> connectedDevices,
-  }) = _DevicesState;
+  @override
+  final List<DeviceData> devicesData;
+
+  @override
+  @UniqueKeyConverter()
+  final UniqueKey key;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final List<DeviceData> availableDevices;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final List<DeviceInterface> deviceInstances;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final List<DeviceData> connectedDevices;
+
+  DevicesState({
+    required this.devicesData,
+    required this.key,
+    this.availableDevices = const <DeviceData>[],
+    this.deviceInstances = const <DeviceInterface>[],
+    this.connectedDevices = const <DeviceData>[],
+  });
 
   factory DevicesState.empty() => DevicesState(
         devicesData: <DeviceData>[],
@@ -41,6 +46,8 @@ class DevicesState with _$DevicesState {
       );
 
   factory DevicesState.fromJson(Map<String, Object?> json) => _$DevicesStateFromJson(json);
+
+  Map<String, Object?> toJson() => _$DevicesStateToJson(this);
 
   factory DevicesState.fromJsonWithModifiableLists(Map<String, Object?> json) {
     final DevicesState state = DevicesState.fromJson(json);

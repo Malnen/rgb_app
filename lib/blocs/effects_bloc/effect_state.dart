@@ -11,31 +11,39 @@ part '../../generated/blocs/effects_bloc/effect_state.freezed.dart';
 part '../../generated/blocs/effects_bloc/effect_state.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class EffectState with _$EffectState {
-  EffectState._();
+  @override
+  final EffectGridData effectGridData;
 
-  factory EffectState({
-    required EffectGridData effectGridData,
-    @EffectConverter() required List<Effect> effects,
-    @UniqueKeyConverter() required UniqueKey key,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    @Default(<EffectData>[])
-    List<EffectData> availableEffects,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    Effect? selectedEffect,
-    @JsonKey(
-      includeFromJson: false,
-      includeToJson: false,
-    )
-    @Default(false)
-    bool sizeChanged,
-  }) = _EffectState;
+  @override
+  @EffectConverter()
+  final List<Effect> effects;
+
+  @override
+  @UniqueKeyConverter()
+  final UniqueKey key;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final List<EffectData> availableEffects;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final Effect? selectedEffect;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final bool sizeChanged;
+
+  EffectState({
+    required this.effectGridData,
+    required this.effects,
+    required this.key,
+    this.selectedEffect,
+    this.availableEffects = const <EffectData>[],
+    this.sizeChanged = false,
+  });
 
   factory EffectState.initial() => EffectState(
         effectGridData: EffectGridData.initial(),
@@ -45,6 +53,8 @@ class EffectState with _$EffectState {
       );
 
   factory EffectState.fromJson(Map<String, Object?> json) => _$EffectStateFromJson(json);
+
+  Map<String, Object?> toJson() => _$EffectStateToJson(this);
 
   bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
     final EffectGridData effectGridData = state.effectGridData;

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:rgb_app/utils/audio_sample_recorder/enums/audio_sample_command.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/enums/audio_sample_response_type.dart';
@@ -44,9 +43,6 @@ class AudioSampleRecorder with RgbAppServiceListener<AudioSampleCommand, AudioSa
         break;
       case AudioSampleResponseType.audioData:
         _onAudioData(parsedData);
-        break;
-      default:
-        print(json);
         break;
     }
   }

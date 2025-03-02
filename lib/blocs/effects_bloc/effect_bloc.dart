@@ -86,7 +86,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   ) async {
     final int oldIndex = event.oldIndex;
     final int newIndex = event.newIndex;
-    final List<Effect> effects = state.effects;
+    final List<Effect> effects = <Effect>[...state.effects];
     final Effect effect = effects.removeAt(oldIndex);
     effects.insert(newIndex, effect);
 

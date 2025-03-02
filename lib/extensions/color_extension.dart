@@ -13,15 +13,15 @@ extension ColorExtension on Color {
   }
 
   Color mix(Color colorToMix, double fraction) {
-    final int rToMix = colorToMix.red;
-    final int gToMix = colorToMix.green;
-    final int bToMix = colorToMix.blue;
+    final int rToMix = colorToMix.redInt;
+    final int gToMix = colorToMix.greenInt;
+    final int bToMix = colorToMix.blueInt;
 
     return Color.fromARGB(
       255,
-      _getMixed(red, rToMix, fraction),
-      _getMixed(green, gToMix, fraction),
-      _getMixed(blue, bToMix, fraction),
+      _getMixed(redInt, rToMix, fraction),
+      _getMixed(greenInt, gToMix, fraction),
+      _getMixed(blueInt, bToMix, fraction),
     );
   }
 
@@ -29,6 +29,12 @@ extension ColorExtension on Color {
     final Random random = Random();
     return random.nextInt(256);
   }
+
+  int get redInt => r.toInt();
+
+  int get greenInt => g.toInt();
+
+  int get blueInt => b.toInt();
 
   int _getMixed(int value, int valueToMix, double fraction) {
     final double mixedValue = (value - valueToMix) * fraction + valueToMix;

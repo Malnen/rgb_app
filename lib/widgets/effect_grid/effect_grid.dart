@@ -20,12 +20,14 @@ class _EffectGridState extends State<EffectGrid> {
 
   late EffectBloc effectBloc;
   late EffectsColorsCubit effectsColorsCubit;
+  late ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     effectBloc = GetIt.instance.get();
     effectsColorsCubit = GetIt.instance.get();
+    scrollController = ScrollController();
     setControllersValue();
   }
 
@@ -33,13 +35,18 @@ class _EffectGridState extends State<EffectGrid> {
   Widget build(BuildContext context) {
     setGridSize();
     setControllersValue();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         top(),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: EffectGridWrapper(),
+        Scrollbar(
+          controller: scrollController,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            child: EffectGridWrapper(),
+          ),
         ),
       ],
     );

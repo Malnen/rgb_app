@@ -12,6 +12,7 @@ import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/devices/mixins/interrupt_transfer_device.dart';
 import 'package:rgb_app/enums/key_code.dart';
+import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/extensions/int_iterable_extension.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/packet_managers/corsair_k70_packet_manager.dart';
@@ -142,9 +143,9 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
     final int packetIndex = key.packetIndex;
     final int index = key.index;
     final Color color = effectsColorsCubit.colors[i + offsetY][j + offsetX];
-    final int r = color.red;
-    final int g = color.green;
-    final int b = color.blue;
+    final int r = color.redInt;
+    final int g = color.greenInt;
+    final int b = color.blueInt;
     final CorsairK70Packets corsairK70Packets = getPacket(packetIndex);
 
     corsairK70Packets.rPkt[index] = r;

@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hooked_bloc/hooked_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
@@ -15,10 +15,16 @@ import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_c
 class EffectsListContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.effects.length);
-    context.select<EffectBloc, int>((EffectBloc effectBloc) => effectBloc.state.availableEffects.length);
-
     final EffectBloc effectBloc = GetIt.instance.get();
+    useBlocComparativeBuilder(
+      effectBloc,
+      buildWhen: (EffectState previousState, EffectState currentState) => previousState.effects != currentState.effects,
+    );
+    useBlocComparativeBuilder(
+      effectBloc,
+      buildWhen: (EffectState previousState, EffectState currentState) =>
+          previousState.availableEffects != currentState.availableEffects,
+    );
     final EffectState state = effectBloc.state;
 
     return GenericListContainer<EffectData>(

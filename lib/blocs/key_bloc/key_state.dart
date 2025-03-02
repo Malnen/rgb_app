@@ -7,15 +7,24 @@ part '../../generated/blocs/key_bloc/key_state.freezed.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
 class KeyState with _$KeyState {
-  const KeyState._();
+  @override
+  final int keyCode;
+  @override
+  final String keyName;
+  @override
+  final KeyStateType type;
+  @override
+  final Key key;
+  @override
+  final KeyboardInterface? keyboardInterface;
 
-  const factory KeyState({
-    required int keyCode,
-    required String keyName,
-    required KeyStateType type,
-    required Key key,
-    KeyboardInterface? keyboardInterface,
-  }) = _KeyState;
+  KeyState({
+    required this.keyCode,
+    required this.keyName,
+    required this.type,
+    required this.key,
+    this.keyboardInterface,
+  });
 
   factory KeyState.empty() => KeyState(
         keyCode: 0,

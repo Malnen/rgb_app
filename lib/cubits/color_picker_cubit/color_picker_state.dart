@@ -6,15 +6,24 @@ part '../../generated/cubits/color_picker_cubit/color_picker_state.freezed.dart'
 
 @Freezed(makeCollectionsUnmodifiable: false)
 class ColorPickerState with _$ColorPickerState {
-  ColorPickerState._();
+  @override
+  final Color color;
+  @override
+  final ColorPickerUpdateSource source;
+  @override
+  final double hue;
+  @override
+  final double saturation;
+  @override
+  final double value;
 
-  factory ColorPickerState({
-    required Color color,
-    required ColorPickerUpdateSource source,
-    required double hue,
-    required double saturation,
-    required double value,
-  }) = _ColorPickerState;
+  ColorPickerState({
+    required this.color,
+    required this.source,
+    required this.hue,
+    required this.saturation,
+    required this.value,
+  });
 
   factory ColorPickerState.empty() => ColorPickerState(
         color: Colors.black,

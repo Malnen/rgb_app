@@ -10,6 +10,6 @@ class ColorProperty extends Property<Color> {
 
   @override
   Map<String, Object> getData() => <String, Object>{
-        'value': value.value,
-    };
+        'value': value.toARGB32(),
+      };
 }

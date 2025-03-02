@@ -4,7 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
         keyboard_event
-        screen_retriever
+        screen_retriever_windows
         system_tray
         window_manager
         windows_single_instance

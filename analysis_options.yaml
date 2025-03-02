@@ -17,7 +17,6 @@ linter:
     - comment_references
     - one_member_abstracts
     - only_throw_errors
-    - package_api_docs
     - prefer_single_quotes
     - avoid_shadowing_type_parameters
     - await_only_futures

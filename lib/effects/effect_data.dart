@@ -7,15 +7,25 @@ part '../generated/effects/effect_data.freezed.dart';
 part '../generated/effects/effect_data.g.dart';
 
 @Freezed(makeCollectionsUnmodifiable: false)
+@JsonSerializable()
 class EffectData with _$EffectData {
-  EffectData._();
+  @override
+  final String name;
+  @override
+  final String className;
+  @override
+  @IconDataConverter()
+  final IconData iconData;
+  @override
+  @UniqueKeyConverter()
+  final UniqueKey key;
 
-  factory EffectData({
-    required String name,
-    required String className,
-    @IconDataConverter() required IconData iconData,
-    @UniqueKeyConverter() required UniqueKey key,
-  }) = _EffectData;
+  EffectData({
+    required this.name,
+    required this.className,
+    required this.iconData,
+    required this.key,
+  });
 
   factory EffectData.withRandomKey({
     required String name,
