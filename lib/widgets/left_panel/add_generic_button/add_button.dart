@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 class AddButton extends StatelessWidget {
   final VoidCallback onTap;
+  final IconData? icon;
 
-  const AddButton({required this.onTap});
+  const AddButton({
+    required this.onTap,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class AddButton extends StatelessWidget {
           ),
         ),
         child: Icon(
-          Icons.add,
+          icon ?? Icons.add,
           color: Colors.white,
         ),
       ),

@@ -5,7 +5,7 @@ class UnknownDevice extends DeviceInterface {
   UnknownDevice({required super.deviceData});
 
   @override
-  void init() {}
+  Future<void> init() async {}
 
   @override
   void test() {}
@@ -18,16 +18,4 @@ class UnknownDevice extends DeviceInterface {
 
   @override
   Size getSize() => Size(0, 0);
-
-  @override
-  int get configuration => throw UnimplementedError();
-
-  @override
-  int get interface => throw UnimplementedError();
-
-  @override
-  Map<String, Object> getDataToSend() => throw UnimplementedError();
-
-  @override
-  List<List<int>> getPackets() => throw UnimplementedError();
 }

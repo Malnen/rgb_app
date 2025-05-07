@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
+import 'package:rgb_app/utils/type_defs.dart';
 
 class EffectGridCell extends StatefulWidget {
   final int x;
@@ -22,11 +23,21 @@ class EffectGridCell extends StatefulWidget {
 }
 
 class _EffectGridCellState extends State<EffectGridCell> {
+  late final FutureVoidCallback _onTick;
+
   @override
   void initState() {
     final TickProvider tickerProvider = GetIt.instance.get();
-    tickerProvider.onTick(() => setState(() {}));
+    _onTick = () async => setState(() {});
+    tickerProvider.onTick(_onTick);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    final TickProvider tickerProvider = GetIt.instance.get();
+    tickerProvider.removeOnTick(_onTick);
+    super.dispose();
   }
 
   @override

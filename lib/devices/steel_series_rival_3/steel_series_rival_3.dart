@@ -24,9 +24,6 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
   int get dataLength => 32;
 
   @override
-  int get timeout => 10;
-
-  @override
   int get interface => 3;
 
   @override
@@ -44,8 +41,8 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
   SteelSeriesRival3({required super.deviceData});
 
   @override
-  void init() {
-    super.init();
+  Future<void> init() async {
+    await super.init();
     tester = SteelSeriesRival3Tester(steelSeriesRival3: this);
     //test();
     //blink();
@@ -101,9 +98,9 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
   void blink() => tester.blink();
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     tester.dispose();
-    super.dispose();
+    await super.dispose();
   }
 
   @override
@@ -116,7 +113,7 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
       }
       colors = newColors;
     } catch (e) {
-      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
+      print('$offsetX, $offsetY out of range ${deviceData.name}');
     }
 
     super.update();

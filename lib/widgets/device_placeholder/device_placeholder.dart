@@ -17,6 +17,7 @@ class DevicePlaceholder extends StatefulWidget {
     required this.fullWidth,
     required this.deviceInterface,
     required this.sizeBase,
+    super.key,
   });
 
   @override

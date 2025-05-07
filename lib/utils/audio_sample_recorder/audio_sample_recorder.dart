@@ -27,7 +27,7 @@ class AudioSampleRecorder with RgbAppServiceListener<AudioSampleCommand, AudioSa
   Future<void> init() async {
     audioDataStream = BehaviorSubject<List<int>>.seeded(<int>[]);
     await super.init();
-    sendCommand(AudioSampleCommand.createCapture);
+    await sendCommand(AudioSampleCommand.createCapture);
   }
 
   @override
@@ -42,15 +42,9 @@ class AudioSampleRecorder with RgbAppServiceListener<AudioSampleCommand, AudioSa
         _getAudioData();
         break;
       case AudioSampleResponseType.audioData:
-        _onAudioData(parsedData);
+        audioDataStream.value = List<int>.from(parsedData['audioData'] as List<Object?>);
         break;
     }
-  }
-
-  void _onAudioData(Map<String, Object> data) async {
-    audioDataStream.value = List<int>.from(data['audioData'] as List<Object?>);
-    await Future<void>.delayed(Duration(milliseconds: 10));
-    _getAudioData();
   }
 
   void _getAudioData() {

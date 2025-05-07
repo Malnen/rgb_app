@@ -21,7 +21,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     on<ReorderEffectsEvent>(_onReorderEffectsEvent);
     on<SelectEffectEvent>(_onSelectEffectEvent);
     on<EffectPropertyChangedEvent>(_onEffectPropertyChangedEvent);
-    _tickProvider.onTick(() {
+    _tickProvider.onTick(() async {
       for (Effect effect in state.effects) {
         effect.update();
       }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/mixins/interrupt_transfer_device.dart';
+import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/testers/corsair_virtuoso_tester.dart';
 
-class CorsairVirtuoso extends DeviceInterface with InterruptTransferDevice {
+class CorsairVirtuoso extends UsbDeviceInterface with InterruptTransferDevice {
   Color color = Color.fromARGB(1, 0, 0, 0);
 
   late CorsairVirtuosoTester tester;
@@ -17,17 +17,14 @@ class CorsairVirtuoso extends DeviceInterface with InterruptTransferDevice {
   int get length => 64;
 
   @override
-  int get timeout => 10;
-
-  @override
   int get configuration => 1;
 
   @override
   int get interface => 4;
 
   @override
-  void init() {
-    super.init();
+  Future<void> init() async {
+    await super.init();
     tester = CorsairVirtuosoTester(corsairVirtuoso: this);
   }
 

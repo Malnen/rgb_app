@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,8 @@ import 'package:rgb_app/widgets/main_frame/main_frame.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
+
+final Completer<void> appReady = Completer<void>();
 
 void main() {
   _run();
@@ -38,6 +41,8 @@ Future<void> _run() async {
     if (kDebugMode) {
       await windowManager.show();
     }
+
+    appReady.complete();
   });
 }
 

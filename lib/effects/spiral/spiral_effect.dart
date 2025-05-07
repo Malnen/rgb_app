@@ -58,11 +58,11 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
   }
 
   void _updateValue() {
-    value += speed.value * spinDirection;
+    value += speed.adjustedValue * spinDirection;
     if (value < 0 || value > valueMax) {
       value = value % valueMax;
       if (customColorsMode) {
-        rotation += (speed.value * spinDirection) / 100;
+        rotation += (speed.adjustedValue * spinDirection) / 100;
         rotation %= 100;
         _fillWithProperValues();
       }

@@ -30,7 +30,7 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<UsbDeviceInfoCommand, UsbDe
   }
 
   Future<List<DeviceData>> getDeviceProductInfo() async {
-    sendCommand(UsbDeviceInfoCommand.getUsbDevicesInfo);
+    await sendCommand(UsbDeviceInfoCommand.getUsbDevicesInfo);
     final List<DeviceData> data = await deviceData.stream.first;
     await deviceData.close();
     deviceData = BehaviorSubject<List<DeviceData>>();
@@ -52,10 +52,11 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<UsbDeviceInfoCommand, UsbDe
     final List<Map<String, Object?>> devices = List<Map<String, Object?>>.from(rawDevices);
     for (final Map<String, Object?> device in devices) {
       final DeviceProductVendor deviceProductVendor = DeviceProductVendor.getByProductVendor(device);
-      final DeviceData data = DeviceData(deviceProductVendor: deviceProductVendor);
+      final DeviceData data = UsbDeviceData(deviceProductVendor: deviceProductVendor);
       devicesData.add(data);
     }
 
-    deviceData.sink.add(devicesData.where((DeviceData device) => device.isKnownDevice).toList());
+    final List<DeviceData> usbDevices = devicesData.where((DeviceData device) => device.isKnownDevice).toList();
+    deviceData.sink.add(usbDevices);
   }
 }

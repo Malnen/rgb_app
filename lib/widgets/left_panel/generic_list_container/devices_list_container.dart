@@ -12,7 +12,6 @@ import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
-import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
 
 class DevicesListContainer extends HookWidget {
@@ -74,15 +73,9 @@ class DevicesListContainer extends HookWidget {
     keyBloc.add(event);
   }
 
-  IconData _getIcon(DeviceData value) {
-    final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
-    return deviceProductVendor.icon!;
-  }
+  IconData _getIcon(DeviceData value) => value.icon!;
 
-  String _getName(DeviceData value) {
-    final DeviceProductVendor deviceProductVendor = value.deviceProductVendor;
-    return deviceProductVendor.name;
-  }
+  String _getName(DeviceData value) => value.name;
 
   bool _isDisabled(DeviceData value) => !value.connected;
 
@@ -95,7 +88,7 @@ class DevicesListContainer extends HookWidget {
     required DevicesBloc devicesBloc,
     required DeviceData deviceData,
   }) {
-    final AddDeviceEvent addDeviceEvent = DevicesEvent.addDevice(deviceData) as AddDeviceEvent;
+    final AddDeviceEvent addDeviceEvent = AddDeviceEvent(deviceData);
     devicesBloc.add(addDeviceEvent);
   }
 
@@ -103,7 +96,7 @@ class DevicesListContainer extends HookWidget {
     required DevicesBloc devicesBloc,
     required DeviceData deviceData,
   }) {
-    final RemoveDeviceEvent removeDeviceEvent = DevicesEvent.removeDevice(deviceData) as RemoveDeviceEvent;
+    final RemoveDeviceEvent removeDeviceEvent = RemoveDeviceEvent(deviceData);
     devicesBloc.add(removeDeviceEvent);
   }
 }

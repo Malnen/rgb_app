@@ -1,5 +1,6 @@
 import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/models/property.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 
 class NumericProperty extends Property<double> {
   double _min;
@@ -13,6 +14,8 @@ class NumericProperty extends Property<double> {
   double get min => _min;
 
   double get max => _max;
+
+  double get adjustedValue => value * TickProvider.fpsMultiplier;
 
   NumericProperty({
     required super.initialValue,

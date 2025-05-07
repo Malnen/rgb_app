@@ -6,6 +6,7 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/audio_sample_recorder.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties {
@@ -195,7 +196,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
     int currentValue = _currentValues[record.$1];
     final int newValue = record.$2;
     final int difference = (currentValue - newValue).abs();
-    final int barValue = pulseRate.value.toInt();
+    final int barValue = (pulseRate.value * TickProvider.fpsMultiplier).toInt();
     if (barValue > difference) {
       currentValue = newValue;
     } else if (newValue > currentValue) {

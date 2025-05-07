@@ -1,22 +1,36 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:rgb_app/utils/type_defs.dart';
 
 class TickProvider {
-  final List<VoidCallback> _listeners;
+  static const int fps = 60;
+  static const int frameTime = 1000 ~/ fps;
+  static const double fpsMultiplier = 60 / fps;
 
-  TickProvider() : _listeners = <VoidCallback>[] {
+  final List<FutureVoidCallback> _listeners;
+
+  bool _processingFrame;
+
+  TickProvider()
+      : _listeners = <FutureVoidCallback>[],
+        _processingFrame = false {
     Timer.periodic(
-      Duration(milliseconds: 25),
+      Duration(milliseconds: frameTime),
       (_) => _processCallbacks(),
     );
   }
 
-  void onTick(VoidCallback callback) => _listeners.add(callback);
+  void onTick(FutureVoidCallback callback) => _listeners.add(callback);
 
-  void _processCallbacks() {
-    for (VoidCallback callback in _listeners) {
-      callback.call();
+  void removeOnTick(FutureVoidCallback onTick) => _listeners.remove(onTick);
+
+  Future<void> _processCallbacks() async {
+    if (!_processingFrame) {
+      _processingFrame = true;
+      for (FutureVoidCallback callback in _listeners) {
+        await callback();
+      }
+      _processingFrame = false;
     }
   }
 }

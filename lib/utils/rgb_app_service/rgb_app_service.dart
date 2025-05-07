@@ -57,7 +57,7 @@ class RgbAppService {
   }
 
   void _decode(List<int> data) {
-    final String output = String.fromCharCodes(data);
+    final String output = String.fromCharCodes(data).trim();
     _logs.add(output);
     logs.value = _logs.join();
     print(output);

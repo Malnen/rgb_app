@@ -1,0 +1,85 @@
+;
+; RgbAppDriver.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=RgbAppDriver 
+ClassGuid={C30B2C45-87B1-4011-80EF-30D52D48F884}
+Provider=%ManufacturerName%
+CatalogFile=RgbAppDriver.cat
+DriverVer = 05/06/2025,18.2.36.710
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+RgbAppDriver_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+RgbAppDriver.sys  = 1,,
+;
+
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+%RgbAppDriver.DeviceDesc%=RgbAppDriver_Device, Root\RgbAppDriver 
+
+[RgbAppDriver_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+RgbAppDriver.sys
+
+;-------------- Service installation
+[RgbAppDriver_Device.NT.Services]
+AddService = RgbAppDriver,%SPSVCINST_ASSOCSERVICE%, RgbAppDriver_Service_Inst
+
+; -------------- RgbAppDriver driver install sections
+[RgbAppDriver_Service_Inst]
+DisplayName    = %RgbAppDriver.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\RgbAppDriver.sys
+
+;
+;--- RgbAppDriver_Device Coinstaller installation ------
+;
+
+[RgbAppDriver_Device.NT.CoInstallers]
+AddReg=RgbAppDriver_Device_CoInstaller_AddReg
+CopyFiles=RgbAppDriver_Device_CoInstaller_CopyFiles
+
+[RgbAppDriver_Device_CoInstaller_AddReg]
+;
+
+
+[RgbAppDriver_Device_CoInstaller_CopyFiles]
+;
+
+
+[RgbAppDriver_Device.NT.Wdf]
+KmdfService =  RgbAppDriver, RgbAppDriver_wdfsect
+[RgbAppDriver_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" 
+DiskName = "RgbAppDriver Installation Disk"
+RgbAppDriver.DeviceDesc = "RgbAppDriver Device"
+RgbAppDriver.SVCDESC = "RgbAppDriver Service"
+[RgbAppDriver_Device.NT.Interfaces]
+AddInterface = {C30B2C45-87B1-4011-80EF-30D52D48F884}, "GLOBAL", RgbAppDriver_Device_Interface_Install
+
+[RgbAppDriver_Device_Interface_Install]
+; Empty, required section

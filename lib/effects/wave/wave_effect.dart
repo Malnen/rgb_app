@@ -9,9 +9,9 @@ class WaveEffect extends Effect with WaveEffectProperties {
   static const String className = 'WaveEffect';
   static const String name = 'Wave';
 
-  late List<Color> gradientColors;
-  late List<Color> shiftedColors;
-  late int colorsIncrementMax;
+  List<Color> gradientColors = <Color>[];
+  List<Color> shiftedColors = <Color>[];
+  int colorsIncrementMax = 1;
   double value = 1;
   int direction = -1;
   bool leftDirection = false;
@@ -166,7 +166,7 @@ class WaveEffect extends Effect with WaveEffectProperties {
 
   void _updateValue() {
     final int multiplier = customColorsMode ? 100 : 1;
-    value += speed.value * direction * multiplier;
+    value += speed.adjustedValue * direction * multiplier;
     if (value < 0 || value > colorsIncrementMax) {
       value = value % colorsIncrementMax;
       customColorIndex++;

@@ -53,9 +53,6 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
   int get length => 64;
 
   @override
-  int get timeout => 10;
-
-  @override
   int get configuration => 1;
 
   @override
@@ -65,7 +62,7 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
   TransferType get transferType => TransferType.interrupt;
 
   @override
-  void init() {
+  Future<void> init() async {
     _setKeys();
     tester = CorsairK70Tester(
       corsairK70: this,
@@ -84,9 +81,9 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
   void blink() => tester.blink();
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     tester.dispose();
-    super.dispose();
+    await super.dispose();
   }
 
   @override
@@ -94,7 +91,7 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
     try {
       _updateKeys();
     } catch (_) {
-      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
+      print('$offsetX, $offsetY out of range ${deviceData.name}');
     }
 
     super.update();

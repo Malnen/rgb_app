@@ -5,6 +5,7 @@ import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/widgets/device_placeholder/device_placeholder.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_cells.dart';
 
@@ -52,6 +53,7 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
               sizeBase: cellSize + margin,
               fullWidth: fullWidth,
               deviceInterface: deviceInterface,
+              key: ValueKey<DeviceData>(deviceInterface.deviceData),
             ),
           ),
         ],

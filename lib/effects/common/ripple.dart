@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 
 class Ripple {
   final Point<int> center;
@@ -8,7 +9,7 @@ class Ripple {
 
   double lifespan;
 
-  final double _originalLifespan;
+  late final double _originalLifespan;
 
   double _radius;
   double _disappearanceRadius;
@@ -20,12 +21,14 @@ class Ripple {
     required this.center,
     required this.lifespan,
     required this.color,
-  })  : _originalLifespan = lifespan,
-        _radius = 0,
+  })  : _radius = 0,
         _disappearanceRadius = 0,
         _fade = 0,
         _canBeDeleted = false,
-        _isDisappearing = false;
+        _isDisappearing = false {
+    lifespan *= TickProvider.fpsMultiplier;
+    _originalLifespan = lifespan;
+  }
 
   bool get canBeDeleted => _canBeDeleted;
 
@@ -35,13 +38,13 @@ class Ripple {
     required double expansionSpeed,
     required double deathSpeed,
   }) {
-    _radius += expansionSpeed;
+    _radius += expansionSpeed * TickProvider.fpsMultiplier;
     if (_isDisappearing) {
-      _disappearanceRadius += expansionSpeed;
+      _disappearanceRadius += expansionSpeed * TickProvider.fpsMultiplier;
     }
 
     if (lifespan > 0) {
-      lifespan -= deathSpeed;
+      lifespan -= deathSpeed * TickProvider.fpsMultiplier;
       if (lifespan < .3 * _originalLifespan && !_isDisappearing) {
         _isDisappearing = true;
         _fade = _originalLifespan;
@@ -49,7 +52,7 @@ class Ripple {
     }
 
     if (_isDisappearing) {
-      _fade -= 0.1;
+      _fade -= 0.1 * TickProvider.fpsMultiplier;
       if (_fade <= 0) {
         _canBeDeleted = true;
       }

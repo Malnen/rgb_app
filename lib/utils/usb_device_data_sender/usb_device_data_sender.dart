@@ -1,11 +1,14 @@
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
+import 'package:rgb_app/utils/frame_throttler.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/enums/usb_device_data_sender_command.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/enums/usb_device_data_sender_response_type.dart';
 
-class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand, UsbDeviceDataSenderResponseType> {
+class UsbDeviceDataSender
+    with RgbAppServiceListener<UsbDeviceDataSenderCommand, UsbDeviceDataSenderResponseType>, FrameThrottler {
   final Map<String, DeviceInterface> pendingDevices;
 
   UsbDeviceDataSender() : pendingDevices = <String, DeviceInterface>{};
@@ -19,8 +22,8 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
   @override
   void Function(UsbDeviceDataSenderResponseType, Map<String, Object>) get processResponse => _responseListener;
 
-  void openDevice(DeviceInterface deviceInterface) {
-    final DeviceData deviceData = deviceInterface.deviceData;
+  void openDevice(UsbDeviceInterface deviceInterface) {
+    final UsbDeviceData deviceData = deviceInterface.deviceData as UsbDeviceData;
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     _sendDeviceCommand(
       deviceInterface,
@@ -34,19 +37,16 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
     );
   }
 
-  void sendData(DeviceInterface deviceInterface) {
-    _sendDeviceCommand(
-      deviceInterface,
-      UsbDeviceDataSenderCommand.sendData,
-      data: <String, Object>{
-        'packets': deviceInterface.getPackets(),
-        'guid': deviceInterface.guid,
-        ...deviceInterface.getDataToSend(),
-      },
-    );
-  }
+  void sendData(List<Map<String, Object?>> data) => runThrottled(
+        () async => sendCommand(
+          UsbDeviceDataSenderCommand.sendData,
+          data: <String, Object?>{
+            'data': data,
+          },
+        ),
+      );
 
-  void closeDevice(DeviceInterface deviceInterface) {
+  void closeDevice(UsbDeviceInterface deviceInterface) {
     deviceInterface.isOpen.sink.add(false);
     _sendDeviceCommand(
       deviceInterface,
@@ -60,9 +60,9 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
   void _sendDeviceCommand(
     DeviceInterface deviceInterface,
     UsbDeviceDataSenderCommand command, {
-    Map<String, Object>? data,
+    Map<String, Object?>? data,
   }) {
-    final DeviceData deviceData = deviceInterface.deviceData;
+    final UsbDeviceData deviceData = deviceInterface.deviceData as UsbDeviceData;
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     pendingDevices[deviceProductVendor.productVendor] = deviceInterface;
     sendCommand(
@@ -88,7 +88,7 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
   void _onDeviceOpened(Map<String, Object> data) {
     final DeviceProductVendor deviceProductVendor = DeviceProductVendor.getByProductVendor(data);
     final String productVendor = deviceProductVendor.productVendor;
-    final DeviceInterface? deviceInterface = pendingDevices[productVendor];
+    final UsbDeviceInterface? deviceInterface = pendingDevices[productVendor] as UsbDeviceInterface?;
     pendingDevices.remove(productVendor);
     deviceInterface?.isOpen.sink.add(true);
     deviceInterface?.guid = data['guid'] as String;

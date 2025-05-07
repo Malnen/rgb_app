@@ -1,11 +1,12 @@
 import 'package:rgb_app/devices/enums/transfer_type.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 
 mixin InterruptTransferDevice {
   int get endpoint;
 
   int get length;
 
-  int get timeout;
+  int get timeout => TickProvider.frameTime;
 
   TransferType get transferType => TransferType.interrupt;
 

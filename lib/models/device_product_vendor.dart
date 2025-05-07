@@ -32,7 +32,7 @@ class DeviceProductVendor with _$DeviceProductVendor {
   factory DeviceProductVendor.unknownProductVendor() => DeviceProductVendor(
         name: 'Unknown',
         productVendor: unknown,
-        icon: Icons.devices,
+        icon: Icons.question_mark,
       );
 
   String get productId => productVendor.substring(5);

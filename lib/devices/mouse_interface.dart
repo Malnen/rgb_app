@@ -1,5 +1,5 @@
-import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/usb_device_interface.dart';
 
-abstract class MouseInterface extends DeviceInterface {
+abstract class MouseInterface extends UsbDeviceInterface {
   MouseInterface({required super.deviceData});
 }

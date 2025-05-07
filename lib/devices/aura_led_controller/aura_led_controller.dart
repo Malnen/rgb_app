@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/mixins/control_transfer_device.dart';
+import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 
-class AuraLEDController extends DeviceInterface with ControlTransferDevice {
+class AuraLEDController extends UsbDeviceInterface with ControlTransferDevice {
   AuraLEDController({required super.deviceData});
 
   List<Color> colors = <Color>[
@@ -24,9 +24,6 @@ class AuraLEDController extends DeviceInterface with ControlTransferDevice {
 
   @override
   int get requestType => 0x21;
-
-  @override
-  int get timeout => 10;
 
   @override
   int get value => 0x02ec;
@@ -133,7 +130,7 @@ class AuraLEDController extends DeviceInterface with ControlTransferDevice {
       }
       colors = newColors;
     } catch (e) {
-      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
+      print('$offsetX, $offsetY out of range ${deviceData.name}');
     }
 
     super.update();

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 
 part '../../generated/blocs/devices_bloc/devices_event.freezed.dart';
@@ -14,9 +15,10 @@ abstract class DevicesEvent with _$DevicesEvent {
 
   const factory DevicesEvent.loadAvailableDevices() = LoadAvailableDevicesEvent;
 
+  const factory DevicesEvent.addAvailableDevice(DeviceData deviceData) = AddAvailableDeviceEvent;
+
   const factory DevicesEvent.updateDevices({
     required List<DeviceData> devicesData,
-    required List<DeviceData> connectedDevices,
     required List<DeviceData> availableDevices,
   }) = UpdateDevices;
 
@@ -31,7 +33,14 @@ abstract class DevicesEvent with _$DevicesEvent {
     required DeviceInterface deviceInterface,
   }) = UpdateDeviceOffsetEvent;
 
-  const factory DevicesEvent.checkDevicesConnectionState() = CheckDevicesConnectionStateEvent;
+  const factory DevicesEvent.checkDevicesConnectionState() = CheckUSBDevicesConnectionStateEvent;
 
-  const factory DevicesEvent.sendDataManually(DeviceInterface deviceInterface) = SendDataManuallyEvent;
+  const factory DevicesEvent.deviceConnectionChange({
+    required DeviceData deviceData,
+    required bool connected,
+  }) = DeviceConnectionChange;
+
+  const factory DevicesEvent.sendDataManually(UsbDeviceInterface deviceInterface) = SendDataManuallyEvent;
+
+  const factory DevicesEvent.reConnectBluetoothDevice(BluetoothDeviceData deviceData) = ReConnectBluetoothDeviceEvent;
 }

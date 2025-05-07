@@ -1,4 +1,5 @@
 import 'package:rgb_app/devices/enums/transfer_type.dart';
+import 'package:rgb_app/utils/tick_provider.dart';
 
 mixin ControlTransferDevice {
   int get requestType;
@@ -11,7 +12,7 @@ mixin ControlTransferDevice {
 
   int get dataLength;
 
-  int get timeout;
+  int get timeout => TickProvider.frameTime;
 
   TransferType get transferType => TransferType.control;
 

@@ -28,9 +28,6 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   int get dataLength => 32;
 
   @override
-  int get timeout => 10;
-
-  @override
   int get configuration => 1;
 
   @override
@@ -40,8 +37,8 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   TransferType get transferType => TransferType.control;
 
   @override
-  void init() {
-    super.init();
+  Future<void> init() async {
+    await super.init();
     tester = SteelSeriesRival100Tester(steelSeriesRival100: this);
     //test();
     //blink();
@@ -57,9 +54,9 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   void blink() => tester.blink();
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     tester.dispose();
-    super.dispose();
+    await super.dispose();
   }
 
   @override
@@ -67,7 +64,7 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
     try {
       color = effectsColorsCubit.colors[offsetY][offsetX];
     } catch (e) {
-      print('$offsetX, $offsetY out of range ${deviceData.deviceProductVendor.name}');
+      print('$offsetX, $offsetY out of range ${deviceData.name}');
     }
 
     super.update();
@@ -76,38 +73,38 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   @override
   List<List<int>> getPackets() => <List<int>>[
         <int>[
-        0x05,
-        0x00,
+          0x05,
+          0x00,
           color.redInt,
           color.greenInt,
           color.blueInt,
           0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
-      ],
-    ];
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+        ],
+      ];
 }
