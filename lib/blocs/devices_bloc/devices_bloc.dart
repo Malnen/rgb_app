@@ -15,6 +15,7 @@ import 'package:rgb_app/devices/udp_network_device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/main.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/models/udp_network_device_details.dart';
 import 'package:rgb_app/services/loading_service.dart';
 import 'package:rgb_app/services/udp_network_service.dart';
 import 'package:rgb_app/utils/smbus/smbus.dart';
@@ -257,7 +258,15 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
           udpNetworkService.discoveredDevices
               .firstWhere((UdpNetworkDeviceData device) => device.udpNetworkDeviceDetails.id == targetId)
               .then((UdpNetworkDeviceData matchedDevice) {
-            add(AddDeviceEvent(matchedDevice.copyWith(properties: deviceData.properties)));
+            final UdpNetworkDeviceDetails matchedUdpNetworkDeviceDetails = matchedDevice.udpNetworkDeviceDetails;
+            final UdpNetworkDeviceDetails udpNetworkDeviceDetails = deviceData.udpNetworkDeviceDetails;
+            final UdpNetworkDeviceData updatedDeviceData = deviceData.copyWith(
+              udpNetworkDeviceDetails: udpNetworkDeviceDetails.copyWith(
+                address: matchedUdpNetworkDeviceDetails.address,
+                port: matchedUdpNetworkDeviceDetails.port,
+              ),
+            );
+            add(AddDeviceEvent(updatedDeviceData));
           }),
         );
       } else {

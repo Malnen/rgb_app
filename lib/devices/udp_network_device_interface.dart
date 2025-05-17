@@ -57,7 +57,7 @@ class UdpNetworkDeviceInterface extends DeviceInterface with FrameThrottler {
   @override
   void update() {
     try {
-      for (int i = 0; i < ledCountValue; i++) {
+      for (int i = 0; i < colors.length; i++) {
         _colors[i] = effectsColorsCubit.colors[offsetY][offsetX + i];
       }
     } catch (_) {
