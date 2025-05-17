@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/smbus_device_details.dart';
 import 'package:rgb_app/utils/smbus/smbus.dart';
@@ -36,6 +37,7 @@ class KingstonFuryRamDetector {
               address: address,
             ),
             connected: true,
+            key: UniqueKey(),
           ),
         )
         .toList();

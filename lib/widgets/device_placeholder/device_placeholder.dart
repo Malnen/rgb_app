@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
@@ -6,7 +7,7 @@ import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/vector.dart';
 import 'package:rgb_app/widgets/draggable_positioned/draggable_positioned.dart';
 
-class DevicePlaceholder extends StatefulWidget {
+class DevicePlaceholder extends HookWidget {
   final double fullHeight;
   final double fullWidth;
   final DeviceInterface deviceInterface;
@@ -21,46 +22,35 @@ class DevicePlaceholder extends StatefulWidget {
   });
 
   @override
-  State<DevicePlaceholder> createState() => _DevicePlaceholderState();
-}
-
-class _DevicePlaceholderState extends State<DevicePlaceholder> {
-  final GlobalKey key = GlobalKey();
-
-  late Offset? position;
-  late DevicesBloc devicesBloc;
-  late Vector initialPosition;
-
-  double get fullHeight => widget.fullHeight;
-
-  double get fullWidth => widget.fullWidth;
-
-  DeviceInterface get deviceInterface => widget.deviceInterface;
-
-  double get sizeBase => widget.sizeBase;
-
-  Size get size => deviceInterface.getSize();
-
-  double get width => sizeBase * size.width;
-
-  double get height => sizeBase * size.height;
-
-  int get offsetX => deviceInterface.offsetX;
-
-  int get offsetY => deviceInterface.offsetY;
-
-  @override
-  void initState() {
-    super.initState();
-    devicesBloc = GetIt.instance.get();
-    initialPosition = Vector(
-      x: offsetX * sizeBase,
-      y: offsetY * sizeBase,
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final DevicesBloc devicesBloc = GetIt.instance.get<DevicesBloc>();
+    useListenable(deviceInterface.deviceDataNotifier);
+
+    final Size size = deviceInterface.getSize();
+    final double width = sizeBase * size.width;
+    final double height = sizeBase * size.height;
+    final int offsetX = deviceInterface.offsetX;
+    final int offsetY = deviceInterface.offsetY;
+
+    final Vector initialPosition = useMemoized(
+      () => Vector(x: offsetX * sizeBase, y: offsetY * sizeBase),
+      <Object?>[offsetX, offsetY, sizeBase],
+    );
+
+    void updateOffset(double newOffsetX, double newOffsetY) {
+      final int intX = newOffsetX.toInt();
+      final int intY = newOffsetY.toInt();
+      if (intX != offsetX || intY != offsetY) {
+        devicesBloc.add(
+          UpdateDeviceOffsetEvent(
+            offsetX: intX,
+            offsetY: intY,
+            deviceInterface: deviceInterface,
+          ),
+        );
+      }
+    }
+
     return DraggablePositioned(
       width: width,
       height: height,
@@ -74,23 +64,10 @@ class _DevicePlaceholderState extends State<DevicePlaceholder> {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
+          borderRadius: const BorderRadius.all(Radius.circular(2)),
           color: Colors.black.withAlpha(200),
         ),
       ),
     );
-  }
-
-  void updateOffset(double offsetX, double offsetY) {
-    final int intX = offsetX.toInt();
-    final int intY = offsetY.toInt();
-    if (intX != this.offsetX || intY != this.offsetY) {
-      final UpdateDeviceOffsetEvent event = UpdateDeviceOffsetEvent(
-        offsetX: intX,
-        offsetY: intY,
-        deviceInterface: deviceInterface,
-      );
-      devicesBloc.add(event);
-    }
   }
 }

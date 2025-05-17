@@ -5,9 +5,6 @@ class UnknownDevice extends DeviceInterface {
   UnknownDevice({required super.deviceData});
 
   @override
-  Future<void> init() async {}
-
-  @override
   void test() {}
 
   @override

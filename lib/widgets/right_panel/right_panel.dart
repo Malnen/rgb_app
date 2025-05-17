@@ -4,8 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
-import 'package:rgb_app/widgets/effect_configurator/effect_configurator.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid.dart';
+import 'package:rgb_app/widgets/right_panel/right_panel_details.dart';
 
 class RightPanel extends StatelessWidget {
   @override
@@ -21,9 +21,10 @@ class RightPanel extends StatelessWidget {
           controller: ScrollController(),
           children: <Widget>[
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 EffectGrid(),
-                EffectConfigurator(),
+                RightPanelDetails(),
               ],
             ),
           ],

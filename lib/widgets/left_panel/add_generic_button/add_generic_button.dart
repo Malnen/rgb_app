@@ -25,21 +25,26 @@ class AddGenericButton<T> extends StatelessWidget {
 
   void _onTap(BuildContext context) {
     Navigator.of(context).push(
-      DialogManager.showDialog(
+      DialogManager.showDialog<void>(
         context: context,
         title: dialogLabel,
-        child: Column(
-          children: <Widget>[
-            ...values.map(
-              (T value) => GenericTile<T>(
-                disabled: false,
-                value: value,
-                onTap: (T value) => _addEvent(value, context),
-                iconData: getIcon(value),
-                name: getName(value),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          child: Column(
+            children: <Widget>[
+              ...values.map(
+                (T value) => GenericTile<T>(
+                  disabled: false,
+                  value: value,
+                  onTap: (T value) => _addEvent(value, context),
+                  iconData: getIcon(value),
+                  name: getName(value),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

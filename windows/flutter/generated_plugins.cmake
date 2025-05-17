@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+        flutter_nsd
         keyboard_event
         screen_retriever_windows
         system_tray

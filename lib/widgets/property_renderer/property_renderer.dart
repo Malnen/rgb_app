@@ -5,17 +5,17 @@ import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector_property.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/color_list_property/color_list_property_renderer.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/color_property_renderer.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/numeric_property_renderer.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/option_property_renderer.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/vector_property_renderer.dart';
+import 'package:rgb_app/widgets/property_renderer/color_list_property/color_list_property_renderer.dart';
+import 'package:rgb_app/widgets/property_renderer/color_property_renderer.dart';
+import 'package:rgb_app/widgets/property_renderer/numeric_property_renderer.dart';
+import 'package:rgb_app/widgets/property_renderer/option_property_renderer.dart';
+import 'package:rgb_app/widgets/property_renderer/vector_property_renderer.dart';
 
-class EffectPropertyRenderer extends StatelessWidget {
+class PropertyRenderer extends StatelessWidget {
   final Property<Object> property;
   final VoidCallback updateRenderer;
 
-  const EffectPropertyRenderer({
+  const PropertyRenderer({
     required this.property,
     required this.updateRenderer,
   });

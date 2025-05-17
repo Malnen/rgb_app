@@ -63,6 +63,7 @@ class CorsairK70 extends KeyboardInterface with InterruptTransferDevice {
 
   @override
   Future<void> init() async {
+    await super.init();
     _setKeys();
     tester = CorsairK70Tester(
       corsairK70: this,

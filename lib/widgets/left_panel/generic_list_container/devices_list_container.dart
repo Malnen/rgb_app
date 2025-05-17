@@ -34,7 +34,7 @@ class DevicesListContainer extends HookWidget {
         devicesBloc: devicesBloc,
         deviceData: deviceData,
       ),
-      onTap: (_) {},
+      onTap: (DeviceData deviceData) => _onSelect(devicesBloc, deviceData),
       onRemove: (DeviceData deviceData) => _removeDevice(
         devicesBloc: devicesBloc,
         deviceData: deviceData,
@@ -98,5 +98,14 @@ class DevicesListContainer extends HookWidget {
   }) {
     final RemoveDeviceEvent removeDeviceEvent = RemoveDeviceEvent(deviceData);
     devicesBloc.add(removeDeviceEvent);
+  }
+
+  void _onSelect(DevicesBloc bloc, DeviceData deviceData) {
+    final DevicesState state = bloc.state;
+    final List<DeviceInterface> devices = state.deviceInstances;
+    final DeviceInterface device = devices.firstWhere((DeviceInterface element) => element.deviceData == deviceData);
+    final DevicesEvent event = DevicesEvent.selectDevice(device: device);
+
+    bloc.add(event);
   }
 }

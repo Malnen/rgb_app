@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/models/options_property.dart';
-import 'package:rgb_app/widgets/effect_property_renderer/option_tile.dart';
+import 'package:rgb_app/widgets/property_renderer/option_tile.dart';
 
 class OptionPropertyRenderer extends StatefulWidget {
   final OptionProperty property;

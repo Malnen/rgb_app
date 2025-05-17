@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
@@ -52,7 +53,7 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<UsbDeviceInfoCommand, UsbDe
     final List<Map<String, Object?>> devices = List<Map<String, Object?>>.from(rawDevices);
     for (final Map<String, Object?> device in devices) {
       final DeviceProductVendor deviceProductVendor = DeviceProductVendor.getByProductVendor(device);
-      final DeviceData data = UsbDeviceData(deviceProductVendor: deviceProductVendor);
+      final DeviceData data = UsbDeviceData(deviceProductVendor: deviceProductVendor, key: UniqueKey());
       devicesData.add(data);
     }
 

@@ -42,9 +42,14 @@ class AudioSampleRecorder with RgbAppServiceListener<AudioSampleCommand, AudioSa
         _getAudioData();
         break;
       case AudioSampleResponseType.audioData:
-        audioDataStream.value = List<int>.from(parsedData['audioData'] as List<Object?>);
+        _onAudioData(parsedData);
         break;
     }
+  }
+
+  void _onAudioData(Map<String, Object> data) async {
+    audioDataStream.value = List<int>.from(data['audioData'] as List<Object?>);
+    _getAudioData();
   }
 
   void _getAudioData() {

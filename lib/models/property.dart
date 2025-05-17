@@ -30,6 +30,7 @@ abstract class Property<T> extends ValueNotifier<T> {
     final Map<String, Object?> json = <String, Object?>{
       'value': value,
       'name': name,
+      'idn': idn,
       'type': runtimeType.toString(),
     };
     final Map<String, Object?> data = getData();

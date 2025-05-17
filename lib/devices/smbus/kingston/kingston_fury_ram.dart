@@ -33,6 +33,7 @@ class KingstonFuryRam extends SMBusDeviceInterface {
 
   @override
   Future<void> init() async {
+    await super.init();
     await _setMode();
   }
 

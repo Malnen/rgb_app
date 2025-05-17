@@ -42,5 +42,9 @@ abstract class DevicesEvent with _$DevicesEvent {
 
   const factory DevicesEvent.sendDataManually(UsbDeviceInterface deviceInterface) = SendDataManuallyEvent;
 
-  const factory DevicesEvent.reConnectBluetoothDevice(BluetoothDeviceData deviceData) = ReConnectBluetoothDeviceEvent;
+  const factory DevicesEvent.selectDevice({
+    required DeviceInterface device,
+  }) = SelectDevicesEvent;
+
+  const factory DevicesEvent.updateDeviceDataEvent({required DeviceData deviceData}) = UpdateDeviceDataEvent;
 }

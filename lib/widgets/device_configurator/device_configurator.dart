@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
-import 'package:rgb_app/effects/effect.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
+import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/widgets/property_renderer/property_renderer.dart';
 
-class EffectConfigurator extends StatefulWidget {
+class DeviceConfigurator extends StatefulWidget {
   @override
-  State<EffectConfigurator> createState() => _EffectConfiguratorState();
+  State<DeviceConfigurator> createState() => _EffectConfiguratorState();
 }
 
-class _EffectConfiguratorState extends State<EffectConfigurator> {
+class _EffectConfiguratorState extends State<DeviceConfigurator> {
   @override
   Widget build(BuildContext context) {
-    final Effect? currentEffect = context.select<EffectBloc, Effect?>((EffectBloc bloc) => bloc.state.selectedEffect);
+    final DeviceInterface? currentDevice =
+        context.select<DevicesBloc, DeviceInterface?>((DevicesBloc bloc) => bloc.state.selectedDevice);
     return Column(
       children: <Widget>[
-        ..._getProperties(currentEffect),
+        ..._getProperties(currentDevice),
       ],
     );
   }
 
-  List<Widget> _getProperties(Effect? currentEffect) {
-    if (currentEffect != null) {
-      return currentEffect.properties
+  List<Widget> _getProperties(DeviceInterface? currentDevice) {
+    if (currentDevice != null) {
+      return currentDevice.properties
           .where((Property<Object> property) => property.visible)
           .map(
             (Property<Object> property) => PropertyRenderer(

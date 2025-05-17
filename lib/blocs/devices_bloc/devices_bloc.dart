@@ -3,19 +3,20 @@ import 'dart:async';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
-import 'package:rgb_app/devices/bluetooth_device_interface.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/smbus/kingston/kingston_fury_ram_detector.dart';
 import 'package:rgb_app/devices/smbus/models/smbus_transaction_data.dart';
 import 'package:rgb_app/devices/smbus/smbus_device_interface.dart';
+import 'package:rgb_app/devices/udp_network_device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/main.dart';
 import 'package:rgb_app/models/device_data.dart';
-import 'package:rgb_app/services/bluetooth_service.dart';
 import 'package:rgb_app/services/loading_service.dart';
+import 'package:rgb_app/services/udp_network_service.dart';
 import 'package:rgb_app/utils/smbus/smbus.dart';
 import 'package:rgb_app/utils/smbus/smbus_batch_sender.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
@@ -31,6 +32,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   late final UsbDeviceDataSender usbDeviceDataSender;
   late final Smbus smbus;
   late final SMBusBatchSender smbusBatchSender;
+  late final UdpNetworkService udpNetworkService;
 
   late final List<SMBusDeviceData> smbusDevices;
 
@@ -56,6 +58,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     ]);
     final KingstonFuryRamDetector detector = KingstonFuryRamDetector(smbus);
     smbusDevices = await detector.scan();
+    udpNetworkService = GetIt.instance.get();
+    udpNetworkService.startDiscovery();
 
     Future<void>.delayed(const Duration(seconds: 5), () {
       final CheckUSBDevicesConnectionStateEvent checkDevicesConnectionStateEvent =
@@ -66,8 +70,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       () async {
         for (DeviceInterface device in deviceInstances) {
           device.update();
-          if (device is UsbDeviceInterface) {
-          } else if (device is BluetoothDeviceInterface) {
+          if (device is UdpNetworkDeviceInterface) {
             device.sendData();
           }
         }
@@ -88,9 +91,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   @override
-  DevicesState fromJson(Map<String, Object?> json) {
-    return DevicesState.fromJsonWithModifiableLists(json);
-  }
+  DevicesState fromJson(Map<String, Object?> json) => DevicesState.fromJsonWithModifiableLists(json);
 
   @override
   Map<String, Object?> toJson(DevicesState state) => state.toJson();
@@ -131,13 +132,11 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       case const (SendDataManuallyEvent):
         await _onSendDataManually(event as SendDataManuallyEvent, emit);
         break;
-      case const (ReConnectBluetoothDeviceEvent):
-        final BluetoothDeviceData deviceData = (event as ReConnectBluetoothDeviceEvent).deviceData;
-        final DeviceInterface? deviceInterface = state.deviceInstances
-            .firstWhereOrNull((DeviceInterface device) => device.deviceData.isSameDevice(deviceData));
-        if (deviceInterface != null) {
-          await _connectBluetoothDevice(deviceData, deviceInterface as BluetoothDeviceInterface);
-        }
+      case const (SelectDevicesEvent):
+        await _onSelectDeviceEvent(event as SelectDevicesEvent, emit);
+        break;
+      case const (UpdateDeviceDataEvent):
+        await _onUpdateDeviceDataEvent(event as UpdateDeviceDataEvent, emit);
         break;
       default:
         throw UnimplementedError('Event not implemented: $event');
@@ -176,18 +175,20 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     loadingService.showLoading();
     if (deviceInterface is UsbDeviceInterface) {
       usbDeviceDataSender.openDevice(deviceInterface);
-    } else if (deviceInterface is BluetoothDeviceInterface) {
-      final BluetoothDeviceData deviceData = deviceInterface.deviceData;
-      await _connectBluetoothDevice(deviceData, deviceInterface);
     } else if (deviceInterface is SMBusDeviceInterface) {
+      deviceInterface.isOpen.sink.add(true);
+    } else if (deviceInterface is UdpNetworkDeviceInterface) {
       deviceInterface.isOpen.sink.add(true);
     }
 
     await deviceInterface.isOpen.first;
     loadingService.hideLoading();
     await deviceInterface.init();
+    deviceInterface.updatePropertiesDeviceData();
     deviceInstances.add(deviceInterface);
-    if (!devicesData.contains(deviceData)) {
+    final bool contained =
+        devicesData.any((DeviceData existingDeviceData) => existingDeviceData.isSameDevice(deviceData));
+    if (!contained) {
       devicesData.add(deviceData);
     }
 
@@ -249,9 +250,19 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final Emitter<DevicesState> emit,
   ) async {
     final List<DeviceData> devicesData = state.devicesData;
-    for (DeviceData deviceData in devicesData) {
-      final AddDeviceEvent event = AddDeviceEvent(deviceData);
-      add(event);
+    for (final DeviceData deviceData in devicesData) {
+      if (deviceData is UdpNetworkDeviceData) {
+        final String targetId = deviceData.udpNetworkDeviceDetails.id;
+        unawaited(
+          udpNetworkService.discoveredDevices
+              .firstWhere((UdpNetworkDeviceData device) => device.udpNetworkDeviceDetails.id == targetId)
+              .then((UdpNetworkDeviceData matchedDevice) {
+            add(AddDeviceEvent(matchedDevice.copyWith(properties: deviceData.properties)));
+          }),
+        );
+      } else {
+        add(AddDeviceEvent(deviceData));
+      }
     }
   }
 
@@ -399,8 +410,6 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
         deviceInterface: deviceInterface,
         deviceData: updatedDevice,
       );
-    } else if (deviceInterface is BluetoothDeviceInterface) {
-      await _connectBluetoothDevice(updatedDevice as BluetoothDeviceData, deviceInterface);
     }
   }
 
@@ -409,12 +418,6 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       usbDeviceDataSender.closeDevice(deviceInterface);
       usbDeviceDataSender.openDevice(deviceInterface);
       await deviceInterface.isOpen.stream.firstWhere((bool value) => value);
-    }
-  }
-
-  Future<void> _connectBluetoothDevice(BluetoothDeviceData deviceData, BluetoothDeviceInterface deviceInterface) async {
-    if (!deviceData.connected) {
-      await bluetoothService.connect(deviceData, deviceInterface);
     }
   }
 
@@ -448,5 +451,42 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   ) async {
     final Map<String, Object?> payload = event.deviceInterface.getPayload();
     usbDeviceDataSender.sendData(<Map<String, Object?>>[payload]);
+  }
+
+  Future<void> _onSelectDeviceEvent(
+    final SelectDevicesEvent event,
+    final Emitter<DevicesState> emit,
+  ) async {
+    final DevicesState newState = state.copyWith(
+      selectedDevice: event.device,
+      key: UniqueKey(),
+    );
+    emit(newState);
+    final ValueNotifier<Object?> rightPanelSelectionNotifier =
+        GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
+    rightPanelSelectionNotifier.value = event.device;
+  }
+
+  Future<void> _onUpdateDeviceDataEvent(
+    UpdateDeviceDataEvent event,
+    Emitter<DevicesState> emit,
+  ) async {
+    final DeviceData updatedDeviceData = event.deviceData;
+    final List<DeviceData> updatedList = state.devicesData
+        .map((DeviceData device) => device.isSameDevice(updatedDeviceData) ? updatedDeviceData : device)
+        .toList();
+    final List<DeviceInterface> updatedInstances = state.deviceInstances.map((DeviceInterface instance) {
+      if (instance.deviceData.isSameDevice(updatedDeviceData)) {
+        instance.deviceData = updatedDeviceData;
+      }
+
+      return instance;
+    }).toList();
+    final DevicesState newState = state.copyWith(
+      devicesData: updatedList,
+      deviceInstances: updatedInstances,
+      key: UniqueKey(),
+    );
+    emit(newState);
   }
 }

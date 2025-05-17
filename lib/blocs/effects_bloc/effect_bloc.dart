@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
@@ -23,7 +24,11 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
     on<EffectPropertyChangedEvent>(_onEffectPropertyChangedEvent);
     _tickProvider.onTick(() async {
       for (Effect effect in state.effects) {
-        effect.update();
+        try {
+          effect.update();
+        } catch (error) {
+          print(error);
+        }
       }
     });
   }
@@ -107,6 +112,9 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       key: UniqueKey(),
     );
     emit(newState);
+    final ValueNotifier<Object?> rightPanelSelectionNotifier =
+        GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
+    rightPanelSelectionNotifier.value = event.effect;
   }
 
   Future<void> _onEffectPropertyChangedEvent(

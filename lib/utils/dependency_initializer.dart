@@ -1,11 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
-import 'package:rgb_app/services/bluetooth_service.dart';
 import 'package:rgb_app/services/loading_service.dart';
+import 'package:rgb_app/services/udp_network_service.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
 
@@ -13,6 +14,8 @@ class DependencyInitializer {
   static final GetIt instance = GetIt.instance;
 
   static Future<void> init() async {
+    _initRightPanelSelectionNotifier();
+    await _initUdpNetworkService();
     _initLoadingService();
     await _initRgbAppService();
     _initTickProvider();
@@ -20,7 +23,16 @@ class DependencyInitializer {
     _initKeyBloc();
     _initEffectBloc();
     _initEffectsColorsCubit();
-    await _initBluetoothService();
+  }
+
+  static void _initRightPanelSelectionNotifier() {
+    final ValueNotifier<Object?> rightPanelSelectionNotifier = ValueNotifier<Object?>(null);
+    instance.registerSingleton(rightPanelSelectionNotifier, instanceName: 'rightPanelSelectionNotifier');
+  }
+
+  static Future<void> _initUdpNetworkService() async {
+    final UdpNetworkService udpNetworkService = UdpNetworkService();
+    instance.registerSingleton(udpNetworkService);
   }
 
   static void _initLoadingService() {
@@ -64,11 +76,5 @@ class DependencyInitializer {
   static void _initEffectsColorsCubit() async {
     final EffectsColorsCubit effectsColorsCubit = EffectsColorsCubit();
     instance.registerSingleton(effectsColorsCubit);
-  }
-
-  static Future<void> _initBluetoothService() async {
-    final BluetoothService bluetoothService = BluetoothService();
-    await bluetoothService.initialize();
-    instance.registerSingleton(bluetoothService);
   }
 }
