@@ -23,6 +23,10 @@ class PropertyRenderer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16,
       children: <Widget>[
         Container(
           width: 100,

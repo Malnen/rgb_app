@@ -1,7 +1,7 @@
-import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
+import 'package:rgb_app/devices/corsair_keyboard/corsair_keyboard.dart';
 
 class CorsairK70PacketManager {
-  final CorsairK70 corsairK70;
+  final CorsairKeyboard corsairK70;
 
   CorsairK70PacketManager(this.corsairK70);
 
@@ -145,7 +145,7 @@ class CorsairK70PacketManager {
       0x28,
       0x03,
       0x03,
-      0x01,
+      0x02,
       0x00,
       0x00,
       0x00,

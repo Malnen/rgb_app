@@ -115,7 +115,15 @@ enum KeyCode {
   previous,
   leftBackSlash,
   mute,
-  corsairStar,
+  lightningKey,
+  profile,
+  lock,
+  g1,
+  g2,
+  g3,
+  g4,
+  g5,
+  g6,
   unknown,
 }
 
@@ -237,8 +245,8 @@ extension KeyCodeExtension on KeyCode {
         KeyCode.previous => 177,
         KeyCode.leftBackSlash => 226,
         KeyCode.mute => 173,
-        KeyCode.corsairStar => -100,
-        KeyCode.unknown => -1,
+        KeyCode.lightningKey => -100,
+        _ => -1,
       };
 
   static KeyCode fromKeyCode(int keyCode) => switch (keyCode) {
@@ -358,7 +366,7 @@ extension KeyCodeExtension on KeyCode {
         177 => KeyCode.previous,
         226 => KeyCode.leftBackSlash,
         173 => KeyCode.mute,
-        -100 => KeyCode.corsairStar,
+        -100 => KeyCode.lightningKey,
         _ => KeyCode.unknown,
       };
 

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
+import 'package:rgb_app/models/device_product_vendor.dart';
 
 class KeyDictionary {
   static KeyboardKey esc = KeyboardKey.withRandomKey(
@@ -44,10 +45,20 @@ class KeyDictionary {
     index: 11,
     keyCode: KeyCode.equal,
   );
+  static KeyboardKey lock = KeyboardKey.withRandomKey(
+    packetIndex: 0,
+    index: 12,
+    keyCode: KeyCode.lock,
+  );
   static KeyboardKey num7 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 13,
     keyCode: KeyCode.numpad_7,
+  );
+  static KeyboardKey g1 = KeyboardKey.withRandomKey(
+    packetIndex: 0,
+    index: 14,
+    keyCode: KeyCode.g1,
   );
   static KeyboardKey f1 = KeyboardKey.withRandomKey(
     packetIndex: 0,
@@ -93,6 +104,11 @@ class KeyDictionary {
     packetIndex: 0,
     index: 25,
     keyCode: KeyCode.numpad_8,
+  );
+  static KeyboardKey g2 = KeyboardKey.withRandomKey(
+    packetIndex: 0,
+    index: 26,
+    keyCode: KeyCode.g2,
   );
   static KeyboardKey f2 = KeyboardKey.withRandomKey(
     packetIndex: 0,
@@ -144,6 +160,11 @@ class KeyDictionary {
     index: 37,
     keyCode: KeyCode.numpad_9,
   );
+  static KeyboardKey g3 = KeyboardKey.withRandomKey(
+    packetIndex: 0,
+    index: 38,
+    keyCode: KeyCode.g3,
+  );
   static KeyboardKey f3 = KeyboardKey.withRandomKey(
     packetIndex: 0,
     index: 40,
@@ -183,6 +204,11 @@ class KeyDictionary {
     packetIndex: 0,
     index: 48,
     keyCode: KeyCode.previous,
+  );
+  static KeyboardKey g4 = KeyboardKey.withRandomKey(
+    packetIndex: 0,
+    index: 50,
+    keyCode: KeyCode.g4,
   );
   static KeyboardKey f4 = KeyboardKey.withRandomKey(
     packetIndex: 0,
@@ -234,6 +260,11 @@ class KeyDictionary {
     index: 61,
     keyCode: KeyCode.numpad_4,
   );
+  static KeyboardKey g5 = KeyboardKey.withRandomKey(
+    packetIndex: 0,
+    index: 62,
+    keyCode: KeyCode.g5,
+  );
   static KeyboardKey f5 = KeyboardKey.withRandomKey(
     packetIndex: 1,
     index: 4,
@@ -278,6 +309,11 @@ class KeyDictionary {
     packetIndex: 1,
     index: 13,
     keyCode: KeyCode.numpad_5,
+  );
+  static KeyboardKey g6 = KeyboardKey.withRandomKey(
+    packetIndex: 1,
+    index: 14,
+    keyCode: KeyCode.g6,
   );
   static KeyboardKey f6 = KeyboardKey.withRandomKey(
     packetIndex: 1,
@@ -494,6 +530,11 @@ class KeyDictionary {
     index: 8,
     keyCode: KeyCode.period,
   );
+  static KeyboardKey profile = KeyboardKey.withRandomKey(
+    packetIndex: 2,
+    index: 9,
+    keyCode: KeyCode.profile,
+  );
   static KeyboardKey enter = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 10,
@@ -539,10 +580,10 @@ class KeyDictionary {
     index: 20,
     keyCode: KeyCode.slash,
   );
-  static KeyboardKey corsairStar = KeyboardKey.withRandomKey(
+  static KeyboardKey lightningKey = KeyboardKey.withRandomKey(
     packetIndex: 2,
     index: 21,
-    keyCode: KeyCode.corsairStar,
+    keyCode: KeyCode.lightningKey,
   );
   static KeyboardKey rightArrow = KeyboardKey.withRandomKey(
     packetIndex: 2,
@@ -560,187 +601,209 @@ class KeyDictionary {
     keyCode: KeyCode.decimal,
   );
 
+  static KeyboardKey led(int packetIndex, int index) => KeyboardKey.withRandomKey(
+        packetIndex: packetIndex,
+        index: index,
+        keyCode: KeyCode.unknown,
+      );
+
   static KeyboardKey get emptyKey => KeyboardKey.withRandomKey(
         packetIndex: -1,
         index: -1,
         keyCode: KeyCode.unknown,
       );
 
-  static Map<Point<int>, KeyboardKey> keys = <Point<int>, KeyboardKey>{
-    Point<int>(0, 0): emptyKey,
-    Point<int>(1, 0): emptyKey,
-    Point<int>(2, 0): emptyKey,
-    Point<int>(3, 0): emptyKey,
-    Point<int>(4, 0): emptyKey,
-    Point<int>(5, 0): emptyKey,
-    Point<int>(6, 0): emptyKey,
-    Point<int>(7, 0): emptyKey,
-    Point<int>(8, 0): emptyKey,
-    Point<int>(9, 0): emptyKey,
-    Point<int>(10, 0): emptyKey,
-    Point<int>(11, 0): emptyKey,
-    Point<int>(12, 0): emptyKey,
-    Point<int>(13, 0): emptyKey,
-    Point<int>(14, 0): emptyKey,
-    Point<int>(15, 0): corsairStar,
-    Point<int>(16, 0): emptyKey,
-    Point<int>(17, 0): emptyKey,
-    Point<int>(18, 0): emptyKey,
-    Point<int>(19, 0): mute,
-    Point<int>(20, 0): emptyKey,
-    Point<int>(21, 0): emptyKey,
-    Point<int>(0, 1): esc,
-    Point<int>(1, 1): emptyKey,
-    Point<int>(2, 1): f1,
-    Point<int>(3, 1): f2,
-    Point<int>(4, 1): f3,
-    Point<int>(5, 1): f4,
-    Point<int>(6, 1): f5,
-    Point<int>(7, 1): f6,
-    Point<int>(8, 1): f7,
-    Point<int>(9, 1): f8,
-    Point<int>(10, 1): emptyKey,
-    Point<int>(11, 1): f9,
-    Point<int>(12, 1): f10,
-    Point<int>(13, 1): f11,
-    Point<int>(14, 1): f12,
-    Point<int>(15, 1): printScreen,
-    Point<int>(16, 1): scrollLock,
-    Point<int>(17, 1): pauseBreak,
-    Point<int>(18, 1): pause,
-    Point<int>(19, 1): previous,
-    Point<int>(20, 1): resumeStop,
-    Point<int>(21, 1): next,
-    Point<int>(0, 2): backQuote,
-    Point<int>(1, 2): key1,
-    Point<int>(2, 2): key2,
-    Point<int>(3, 2): key3,
-    Point<int>(4, 2): key4,
-    Point<int>(5, 2): key5,
-    Point<int>(6, 2): key6,
-    Point<int>(7, 2): key7,
-    Point<int>(8, 2): key8,
-    Point<int>(9, 2): key9,
-    Point<int>(10, 2): key0,
-    Point<int>(11, 2): minus,
-    Point<int>(12, 2): equal,
-    Point<int>(13, 2): emptyKey,
-    Point<int>(14, 2): backSpace,
-    Point<int>(15, 2): insert,
-    Point<int>(16, 2): home,
-    Point<int>(17, 2): pageUp,
-    Point<int>(18, 2): numLock,
-    Point<int>(19, 2): divide,
-    Point<int>(20, 2): multiply,
-    Point<int>(21, 2): subtract,
-    Point<int>(0, 3): tab,
-    Point<int>(1, 3): q,
-    Point<int>(2, 3): w,
-    Point<int>(3, 3): e,
-    Point<int>(4, 3): r,
-    Point<int>(5, 3): t,
-    Point<int>(6, 3): y,
-    Point<int>(7, 3): u,
-    Point<int>(8, 3): i,
-    Point<int>(9, 3): o,
-    Point<int>(10, 3): p,
-    Point<int>(11, 3): openBracket,
-    Point<int>(12, 3): closeBracket,
-    Point<int>(13, 3): enter,
-    Point<int>(14, 3): emptyKey,
-    Point<int>(15, 3): delete,
-    Point<int>(16, 3): end,
-    Point<int>(17, 3): pageDown,
-    Point<int>(18, 3): num7,
-    Point<int>(19, 3): num8,
-    Point<int>(20, 3): num9,
-    Point<int>(21, 3): add,
-    Point<int>(0, 4): capsLock,
-    Point<int>(1, 4): a,
-    Point<int>(2, 4): s,
-    Point<int>(3, 4): d,
-    Point<int>(4, 4): f,
-    Point<int>(5, 4): g,
-    Point<int>(6, 4): h,
-    Point<int>(7, 4): j,
-    Point<int>(8, 4): k,
-    Point<int>(9, 4): l,
-    Point<int>(10, 4): semicolon,
-    Point<int>(11, 4): quote,
-    Point<int>(12, 4): backSlash,
-    Point<int>(13, 4): emptyKey,
-    Point<int>(14, 4): emptyKey,
-    Point<int>(15, 4): emptyKey,
-    Point<int>(16, 4): emptyKey,
-    Point<int>(17, 4): emptyKey,
-    Point<int>(18, 4): num4,
-    Point<int>(19, 4): num5,
-    Point<int>(20, 4): num6,
-    Point<int>(21, 4): emptyKey,
-    Point<int>(0, 5): leftShift,
-    Point<int>(1, 5): leftBackSlash,
-    Point<int>(2, 5): z,
-    Point<int>(3, 5): x,
-    Point<int>(4, 5): c,
-    Point<int>(5, 5): v,
-    Point<int>(6, 5): b,
-    Point<int>(7, 5): n,
-    Point<int>(8, 5): m,
-    Point<int>(9, 5): comma,
-    Point<int>(10, 5): period,
-    Point<int>(11, 5): slash,
-    Point<int>(12, 5): emptyKey,
-    Point<int>(13, 5): rightShift,
-    Point<int>(14, 5): emptyKey,
-    Point<int>(15, 5): emptyKey,
-    Point<int>(16, 5): upArrow,
-    Point<int>(17, 5): emptyKey,
-    Point<int>(18, 5): num1,
-    Point<int>(19, 5): num2,
-    Point<int>(20, 5): num3,
-    Point<int>(21, 5): rightEnter,
-    Point<int>(0, 6): leftControl,
-    Point<int>(1, 6): leftWin,
-    Point<int>(2, 6): leftAlt,
-    Point<int>(3, 6): emptyKey,
-    Point<int>(4, 6): emptyKey,
-    Point<int>(5, 6): emptyKey,
-    Point<int>(6, 6): space,
-    Point<int>(7, 6): emptyKey,
-    Point<int>(8, 6): emptyKey,
-    Point<int>(9, 6): emptyKey,
-    Point<int>(10, 6): rightAlt,
-    Point<int>(11, 6): rightWin,
-    Point<int>(12, 6): contextMenu,
-    Point<int>(13, 6): emptyKey,
-    Point<int>(14, 6): rightControl,
-    Point<int>(15, 6): leftArrow,
-    Point<int>(16, 6): downArrow,
-    Point<int>(17, 6): rightArrow,
-    Point<int>(18, 6): num0,
-    Point<int>(19, 6): emptyKey,
-    Point<int>(20, 6): decimal,
-    Point<int>(21, 6): emptyKey,
+  static final Map<Point<int>, List<KeyboardKey>> _keys = <Point<int>, List<KeyboardKey>>{
+    Point<int>(19, 0): <KeyboardKey>[mute],
+    Point<int>(0, 1): <KeyboardKey>[esc],
+    Point<int>(2, 1): <KeyboardKey>[f1],
+    Point<int>(3, 1): <KeyboardKey>[f2],
+    Point<int>(4, 1): <KeyboardKey>[f3],
+    Point<int>(5, 1): <KeyboardKey>[f4],
+    Point<int>(6, 1): <KeyboardKey>[f5],
+    Point<int>(7, 1): <KeyboardKey>[f6],
+    Point<int>(8, 1): <KeyboardKey>[f7],
+    Point<int>(9, 1): <KeyboardKey>[f8],
+    Point<int>(11, 1): <KeyboardKey>[f9],
+    Point<int>(12, 1): <KeyboardKey>[f10],
+    Point<int>(13, 1): <KeyboardKey>[f11],
+    Point<int>(14, 1): <KeyboardKey>[f12],
+    Point<int>(15, 1): <KeyboardKey>[printScreen],
+    Point<int>(16, 1): <KeyboardKey>[scrollLock],
+    Point<int>(17, 1): <KeyboardKey>[pauseBreak],
+    Point<int>(18, 1): <KeyboardKey>[pause],
+    Point<int>(19, 1): <KeyboardKey>[previous],
+    Point<int>(20, 1): <KeyboardKey>[resumeStop],
+    Point<int>(21, 1): <KeyboardKey>[next],
+    Point<int>(0, 2): <KeyboardKey>[backQuote],
+    Point<int>(1, 2): <KeyboardKey>[key1],
+    Point<int>(2, 2): <KeyboardKey>[key2],
+    Point<int>(3, 2): <KeyboardKey>[key3],
+    Point<int>(4, 2): <KeyboardKey>[key4],
+    Point<int>(5, 2): <KeyboardKey>[key5],
+    Point<int>(6, 2): <KeyboardKey>[key6],
+    Point<int>(7, 2): <KeyboardKey>[key7],
+    Point<int>(8, 2): <KeyboardKey>[key8],
+    Point<int>(9, 2): <KeyboardKey>[key9],
+    Point<int>(10, 2): <KeyboardKey>[key0],
+    Point<int>(11, 2): <KeyboardKey>[minus],
+    Point<int>(12, 2): <KeyboardKey>[equal],
+    Point<int>(14, 2): <KeyboardKey>[backSpace],
+    Point<int>(15, 2): <KeyboardKey>[insert],
+    Point<int>(16, 2): <KeyboardKey>[home],
+    Point<int>(17, 2): <KeyboardKey>[pageUp],
+    Point<int>(18, 2): <KeyboardKey>[numLock],
+    Point<int>(19, 2): <KeyboardKey>[divide],
+    Point<int>(20, 2): <KeyboardKey>[multiply],
+    Point<int>(21, 2): <KeyboardKey>[subtract],
+    Point<int>(0, 3): <KeyboardKey>[tab],
+    Point<int>(1, 3): <KeyboardKey>[q],
+    Point<int>(2, 3): <KeyboardKey>[w],
+    Point<int>(3, 3): <KeyboardKey>[e],
+    Point<int>(4, 3): <KeyboardKey>[r],
+    Point<int>(5, 3): <KeyboardKey>[t],
+    Point<int>(6, 3): <KeyboardKey>[y],
+    Point<int>(7, 3): <KeyboardKey>[u],
+    Point<int>(8, 3): <KeyboardKey>[i],
+    Point<int>(9, 3): <KeyboardKey>[o],
+    Point<int>(10, 3): <KeyboardKey>[p],
+    Point<int>(11, 3): <KeyboardKey>[openBracket],
+    Point<int>(12, 3): <KeyboardKey>[closeBracket],
+    Point<int>(13, 3): <KeyboardKey>[enter],
+    Point<int>(14, 3): <KeyboardKey>[emptyKey],
+    Point<int>(15, 3): <KeyboardKey>[delete],
+    Point<int>(16, 3): <KeyboardKey>[end],
+    Point<int>(17, 3): <KeyboardKey>[pageDown],
+    Point<int>(18, 3): <KeyboardKey>[num7],
+    Point<int>(19, 3): <KeyboardKey>[num8],
+    Point<int>(20, 3): <KeyboardKey>[num9],
+    Point<int>(21, 3): <KeyboardKey>[add],
+    Point<int>(0, 4): <KeyboardKey>[capsLock],
+    Point<int>(1, 4): <KeyboardKey>[a],
+    Point<int>(2, 4): <KeyboardKey>[s],
+    Point<int>(3, 4): <KeyboardKey>[d],
+    Point<int>(4, 4): <KeyboardKey>[f],
+    Point<int>(5, 4): <KeyboardKey>[g],
+    Point<int>(6, 4): <KeyboardKey>[h],
+    Point<int>(7, 4): <KeyboardKey>[j],
+    Point<int>(8, 4): <KeyboardKey>[k],
+    Point<int>(9, 4): <KeyboardKey>[l],
+    Point<int>(10, 4): <KeyboardKey>[semicolon],
+    Point<int>(11, 4): <KeyboardKey>[quote],
+    Point<int>(12, 4): <KeyboardKey>[backSlash],
+    Point<int>(18, 4): <KeyboardKey>[num4],
+    Point<int>(19, 4): <KeyboardKey>[num5],
+    Point<int>(20, 4): <KeyboardKey>[num6],
+    Point<int>(0, 5): <KeyboardKey>[leftShift],
+    Point<int>(1, 5): <KeyboardKey>[leftBackSlash],
+    Point<int>(2, 5): <KeyboardKey>[z],
+    Point<int>(3, 5): <KeyboardKey>[x],
+    Point<int>(4, 5): <KeyboardKey>[c],
+    Point<int>(5, 5): <KeyboardKey>[v],
+    Point<int>(6, 5): <KeyboardKey>[b],
+    Point<int>(7, 5): <KeyboardKey>[n],
+    Point<int>(8, 5): <KeyboardKey>[m],
+    Point<int>(9, 5): <KeyboardKey>[comma],
+    Point<int>(10, 5): <KeyboardKey>[period],
+    Point<int>(11, 5): <KeyboardKey>[slash],
+    Point<int>(13, 5): <KeyboardKey>[rightShift],
+    Point<int>(16, 5): <KeyboardKey>[upArrow],
+    Point<int>(18, 5): <KeyboardKey>[num1],
+    Point<int>(19, 5): <KeyboardKey>[num2],
+    Point<int>(20, 5): <KeyboardKey>[num3],
+    Point<int>(21, 5): <KeyboardKey>[rightEnter],
+    Point<int>(0, 6): <KeyboardKey>[leftControl],
+    Point<int>(1, 6): <KeyboardKey>[leftWin],
+    Point<int>(2, 6): <KeyboardKey>[leftAlt],
+    Point<int>(6, 6): <KeyboardKey>[space],
+    Point<int>(10, 6): <KeyboardKey>[rightAlt],
+    Point<int>(11, 6): <KeyboardKey>[rightWin],
+    Point<int>(12, 6): <KeyboardKey>[contextMenu],
+    Point<int>(14, 6): <KeyboardKey>[rightControl],
+    Point<int>(15, 6): <KeyboardKey>[leftArrow],
+    Point<int>(16, 6): <KeyboardKey>[downArrow],
+    Point<int>(17, 6): <KeyboardKey>[rightArrow],
+    Point<int>(18, 6): <KeyboardKey>[num0],
+    Point<int>(20, 6): <KeyboardKey>[decimal],
   };
 
-  static Map<KeyCode, Point<int>> get reverseKeyCodes {
+  static final Map<String, Map<Point<int>, List<KeyboardKey>>> keys = <String, Map<Point<int>, List<KeyboardKey>>>{
+    DeviceProductVendor.corsairK70Lux: _mergeKeysWith(_keys, <(Point<int>, KeyboardKey)>[
+      (Point<int>(15, 0), lightningKey),
+      (Point<int>(16, 0), lock),
+    ]),
+    DeviceProductVendor.corsairK70MKIILowProfile: _mergeKeysWith(_keys, <(Point<int>, KeyboardKey)>[
+      (Point<int>(3, 0), profile),
+      (Point<int>(4, 0), lightningKey),
+      (Point<int>(5, 0), lock),
+      (Point<int>(9, 0), led(0, 62)),
+      (Point<int>(10, 0), led(0, 63)),
+    ]),
+    DeviceProductVendor.corsairK95Platinum: _mergeKeysWith(_keys, <(Point<int>, KeyboardKey)>[
+      (Point<int>(3, 0), profile),
+      (Point<int>(4, 0), lightningKey),
+      (Point<int>(5, 0), lock),
+      (Point<int>(0, 0), led(2, 28)),
+      (Point<int>(1, 0), led(2, 29)),
+      (Point<int>(2, 0), led(2, 30)),
+      (Point<int>(3, 0), led(2, 42)),
+      (Point<int>(4, 0), led(2, 44)),
+      (Point<int>(5, 0), led(2, 31)),
+      (Point<int>(6, 0), led(2, 32)),
+      (Point<int>(7, 0), led(2, 33)),
+      (Point<int>(9, 0), led(2, 34)),
+      (Point<int>(11, 0), led(2, 35)),
+      (Point<int>(13, 0), led(2, 36)),
+      (Point<int>(14, 0), led(2, 37)),
+      (Point<int>(15, 0), led(2, 38)),
+      (Point<int>(16, 0), led(2, 39)),
+      (Point<int>(17, 0), led(2, 40)),
+      (Point<int>(18, 0), led(2, 43)),
+      (Point<int>(19, 0), led(2, 45)),
+      (Point<int>(20, 0), led(2, 46)),
+      (Point<int>(0, 1), g1),
+      (Point<int>(0, 2), g2),
+      (Point<int>(0, 3), g3),
+      (Point<int>(0, 4), g4),
+      (Point<int>(0, 5), g5),
+      (Point<int>(0, 6), g6),
+    ]),
+  };
+
+  static Map<Point<int>, List<KeyboardKey>> _mergeKeysWith(
+    Map<Point<int>, List<KeyboardKey>> base,
+    List<(Point<int>, KeyboardKey)> additionalKeyPairs,
+  ) {
+    final Map<Point<int>, List<KeyboardKey>> merged = <Point<int>, List<KeyboardKey>>{
+      for (final MapEntry<Point<int>, List<KeyboardKey>> entry in base.entries)
+        entry.key: List<KeyboardKey>.from(entry.value),
+    };
+
+    for (final (Point<int> position, KeyboardKey key) in additionalKeyPairs) {
+      merged.putIfAbsent(position, () => <KeyboardKey>[]);
+      merged[position]!.add(key);
+    }
+
+    return merged;
+  }
+
+  static Map<KeyCode, Point<int>> reverseKeyCodes(String device) {
     if (_reverseKeyCodes.isEmpty) {
       _initReverseKeyCodes();
     }
 
-    return _reverseKeyCodes;
+    return _reverseKeyCodes[device] ?? <KeyCode, Point<int>>{};
   }
 
-  static Map<KeyCode, Point<int>> _reverseKeyCodes = <KeyCode, Point<int>>{};
+  static Map<String, Map<KeyCode, Point<int>>> _reverseKeyCodes = <String, Map<KeyCode, Point<int>>>{};
 
   static void _initReverseKeyCodes() {
-    _reverseKeyCodes = Map<KeyCode, Point<int>>.fromEntries(
-      keys.entries.map(
-        (MapEntry<Point<int>, KeyboardKey> entry) => MapEntry<KeyCode, Point<int>>(
-          entry.value.keyCode,
-          entry.key,
-        ),
-      ),
-    );
+    _reverseKeyCodes = <String, Map<KeyCode, Point<int>>>{
+      for (final MapEntry<String, Map<Point<int>, List<KeyboardKey>>> deviceEntry in keys.entries)
+        deviceEntry.key: <KeyCode, Point<int>>{
+          for (final MapEntry<Point<int>, List<KeyboardKey>> pointEntry in deviceEntry.value.entries)
+            for (final KeyboardKey keyboardKey in pointEntry.value) keyboardKey.keyCode: pointEntry.key,
+        },
+    };
   }
 }

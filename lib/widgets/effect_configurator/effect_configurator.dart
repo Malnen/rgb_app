@@ -14,10 +14,9 @@ class _EffectConfiguratorState extends State<EffectConfigurator> {
   @override
   Widget build(BuildContext context) {
     final Effect? currentEffect = context.select<EffectBloc, Effect?>((EffectBloc bloc) => bloc.state.selectedEffect);
-    return Column(
-      children: <Widget>[
-        ..._getProperties(currentEffect),
-      ],
+    return Wrap(
+      spacing: 16,
+      children: _getProperties(currentEffect),
     );
   }
 

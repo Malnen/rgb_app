@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/mixins/interrupt_transfer_device.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/testers/corsair_virtuoso_tester.dart';
+import 'package:vector_math/vector_math.dart';
 
 class CorsairVirtuoso extends UsbDeviceInterface with InterruptTransferDevice {
   Color color = Color.fromARGB(1, 0, 0, 0);
 
   late CorsairVirtuosoTester tester;
 
-  CorsairVirtuoso({required super.deviceData});
+  CorsairVirtuoso({required super.deviceData, required super.usbDeviceDataSender});
 
   @override
   int get endpoint => 0x02;
 
   @override
-  int get length => 64;
+  int get dataLength => 64;
 
   @override
   int get configuration => 1;
@@ -38,12 +39,15 @@ class CorsairVirtuoso extends UsbDeviceInterface with InterruptTransferDevice {
 
   @override
   void update() {
-    color = effectsColorsCubit.colors[offsetY][offsetX];
+    color = getColorAt(x: 0, y: 0);
     super.update();
   }
 
   @override
-  Size getSize() => Size(1, 1);
+  Vector3 getSize() => Vector3(1, 1, 1);
+
+  @override
+  List<List<int>> get initializePackets => <List<int>>[];
 
   @override
   List<List<int>> getPackets() => <List<int>>[

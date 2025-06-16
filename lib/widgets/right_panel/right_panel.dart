@@ -8,6 +8,8 @@ import 'package:rgb_app/widgets/effect_grid/effect_grid.dart';
 import 'package:rgb_app/widgets/right_panel/right_panel_details.dart';
 
 class RightPanel extends StatelessWidget {
+  const RightPanel({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -23,8 +25,21 @@ class RightPanel extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                EffectGrid(),
+/*                Container(
+                  margin: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: View3D(
+                    width: 700,
+                    height: 400,
+                    backgroundColor: Colors.white10,
+                  ),
+                ),*/
                 RightPanelDetails(),
+                EffectGrid(),
+                SizedBox(height: 100),
               ],
             ),
           ],

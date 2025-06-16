@@ -29,7 +29,7 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
   @override
   Widget build(BuildContext context) {
     context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeX);
-    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeY);
+    context.select<EffectBloc, int>((EffectBloc value) => value.state.effectGridData.sizeZ);
     colors = buildColors();
 
     return EffectGridContainer();
@@ -37,7 +37,7 @@ class _EffectGridWrapperState extends State<EffectGridWrapper> {
 
   List<List<Color>> buildColors() {
     final List<List<Color>> colors = <List<Color>>[];
-    for (int i = 0; i < effectBloc.sizeY; i++) {
+    for (int i = 0; i < effectBloc.sizeZ; i++) {
       final List<Color> colorRows = buildColorRows();
       colors.add(colorRows);
     }

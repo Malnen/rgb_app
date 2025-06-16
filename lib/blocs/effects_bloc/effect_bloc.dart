@@ -9,9 +9,11 @@ import 'package:rgb_app/utils/tick_provider.dart';
 class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
   final TickProvider _tickProvider;
 
-  int get sizeX => state.effectGridData.sizeX;
+  int get sizeX => state.effectGridData.size.x.toInt();
 
-  int get sizeY => state.effectGridData.sizeY;
+  int get sizeY => state.effectGridData.size.y.toInt();
+
+  int get sizeZ => state.effectGridData.size.z.toInt();
 
   EffectBloc({required TickProvider tickProvider})
       : _tickProvider = tickProvider,

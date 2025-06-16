@@ -5,6 +5,7 @@ import 'package:rgb_app/devices/smbus/models/smbus_transaction_entry.dart';
 import 'package:rgb_app/devices/smbus/smbus_device_interface.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/utils/smbus/smbus.dart';
+import 'package:vector_math/vector_math.dart';
 
 class KingstonFuryRam extends SMBusDeviceInterface {
   static const String name = 'Kingston Hyper Fury Ram';
@@ -41,7 +42,7 @@ class KingstonFuryRam extends SMBusDeviceInterface {
   Future<void> update() async {
     final List<Color> newColors = <Color>[];
     for (int i = 0; i < colors.length; i++) {
-      final Color newColor = effectsColorsCubit.colors[offsetY + i][offsetX];
+      final Color newColor = getColorAt(x: 0, y: i);
       newColors.add(newColor);
     }
     colors = newColors;
@@ -53,9 +54,7 @@ class KingstonFuryRam extends SMBusDeviceInterface {
   }
 
   @override
-  Size getSize() {
-    return Size(1, 12);
-  }
+  Vector3 getSize() => Vector3(1, 12, 1);
 
   @override
   void test() {

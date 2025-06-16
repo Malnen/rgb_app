@@ -4,6 +4,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_event.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
+import 'package:rgb_app/extensions/vector_3_extension.dart';
 import 'package:rgb_app/models/effect_grid_data.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_apply_button.dart';
 import 'package:rgb_app/widgets/effect_grid/effect_grid_wrapper.dart';
@@ -16,7 +17,7 @@ class EffectGrid extends StatefulWidget {
 
 class _EffectGridState extends State<EffectGrid> {
   final TextEditingController controllerX = TextEditingController();
-  final TextEditingController controllerY = TextEditingController();
+  final TextEditingController controllerZ = TextEditingController();
 
   late EffectBloc effectBloc;
   late EffectsColorsCubit effectsColorsCubit;
@@ -74,7 +75,7 @@ class _EffectGridState extends State<EffectGrid> {
           ),
           NumericField<int>(
             label: 'Y',
-            controller: controllerY,
+            controller: controllerZ,
           ),
           EffectGridApplyButton(
             onTap: setGridSize,
@@ -88,17 +89,19 @@ class _EffectGridState extends State<EffectGrid> {
     final EffectState state = effectBloc.state;
     final EffectGridData effectGridData = state.effectGridData;
     final int minX = effectGridData.minSizeX;
-    final int minY = effectGridData.minSizeY;
+    final int minZ = effectGridData.minSizeZ;
     final int x = correctValue(controllerX, minX);
-    final int y = correctValue(controllerY, minY);
+    final int z = correctValue(controllerZ, minZ);
     final SetGridSizeEvent event = SetGridSizeEvent(
       effectGridData: effectGridData.copyWith(
-        sizeX: x,
-        sizeY: y,
+        size: effectGridData.size.copyWith(
+          x: x.toDouble(),
+          z: z.toDouble(),
+        ),
       ),
     );
     effectBloc.add(event);
-    effectsColorsCubit.updateColorsSize(x, y);
+    effectsColorsCubit.updateColorsSize(x, z);
   }
 
   int correctValue(TextEditingController controller, int min) {
@@ -120,9 +123,9 @@ class _EffectGridState extends State<EffectGrid> {
     final EffectState state = effectBloc.state;
     final EffectGridData effectGridData = state.effectGridData;
     final int sizeX = effectGridData.sizeX;
-    final int sizeY = effectGridData.sizeY;
+    final int sizeZ = effectGridData.sizeZ;
 
     controllerX.text = sizeX.toString();
-    controllerY.text = sizeY.toString();
+    controllerZ.text = sizeZ.toString();
   }
 }

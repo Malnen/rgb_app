@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/enums/draggable_center.dart';
 import 'package:rgb_app/models/vector.dart';
+import 'package:vector_math/vector_math.dart' as vmath;
 
 class DraggablePositioned extends StatefulWidget {
   final double width;
@@ -10,16 +11,19 @@ class DraggablePositioned extends StatefulWidget {
   final double sizeBase;
   final Widget child;
   final void Function(double, double) updateOffset;
+  final VoidCallback? onPanStart;
+  final VoidCallback? onPanEnd;
   final bool snapOnPanEnd;
   final bool moveOnTap;
   final DraggableCenter draggableCenter;
   final Vector? initialPosition;
   final double padding;
   final Vector? forcePosition;
+  final vmath.Vector3 rotation;
   final bool lockY;
   final bool lockX;
 
-  const DraggablePositioned({
+  DraggablePositioned({
     required this.width,
     required this.height,
     required this.fullWidth,
@@ -27,6 +31,9 @@ class DraggablePositioned extends StatefulWidget {
     required this.sizeBase,
     required this.child,
     required this.updateOffset,
+    vmath.Vector3? rotation,
+    this.onPanStart,
+    this.onPanEnd,
     this.snapOnPanEnd = false,
     this.moveOnTap = false,
     this.draggableCenter = DraggableCenter.topLeft,
@@ -35,7 +42,7 @@ class DraggablePositioned extends StatefulWidget {
     this.padding = 0,
     this.lockY = false,
     this.lockX = false,
-  });
+  }) : rotation = rotation ?? vmath.Vector3.zero();
 
   @override
   State<DraggablePositioned> createState() => _DraggablePositionedState();
@@ -93,9 +100,10 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
       left: position.x + padding,
       top: position.y + padding,
       child: GestureDetector(
+        onPanStart: (DragStartDetails details) => widget.onPanStart?.call(),
         onPanUpdate: onPanUpdate,
         onPanEnd: snapOnPanEnd ? onPanEnd : null,
-        child: widget.child,
+        child: applyXRotation(widget.child),
       ),
     );
   }
@@ -106,7 +114,7 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
         Positioned(
           left: position.x + padding,
           top: position.y + padding,
-          child: widget.child,
+          child: applyXRotation(widget.child),
         ),
         GestureDetector(
           onPanStart: onPanStart,
@@ -114,6 +122,15 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
           onPanEnd: snapOnPanEnd ? onPanEnd : null,
         ),
       ],
+    );
+  }
+
+  Widget applyXRotation(Widget child) {
+    final double radiansZ = vmath.radians(widget.rotation.z);
+    return Transform(
+      transform: Matrix4.identity()..rotateZ(radiansZ),
+      alignment: Alignment.center,
+      child: child,
     );
   }
 
@@ -178,6 +195,7 @@ class _DraggablePositionedState extends State<DraggablePositioned> {
     left = offsetX * widget.sizeBase;
     top = offsetY * widget.sizeBase;
     setState(() {});
+    widget.onPanEnd?.call();
   }
 
   double getLeft(double newLeft) {

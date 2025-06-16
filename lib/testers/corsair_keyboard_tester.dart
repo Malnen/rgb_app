@@ -6,16 +6,15 @@ import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
-import 'package:rgb_app/devices/corsair_k_70/corsair_k_70.dart';
-import 'package:rgb_app/devices/corsair_k_70/corsair_k_70_packets.dart';
-import 'package:rgb_app/devices/key_dictionary.dart';
+import 'package:rgb_app/devices/corsair_keyboard/corsair_keyboard.dart';
+import 'package:rgb_app/devices/corsair_keyboard/corsair_keyboard_packets.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/testers/device_tester.dart';
 
-class CorsairK70Tester extends DeviceTester {
+class CorsairKeyboardTester extends DeviceTester {
   final List<Timer> timers = <Timer>[];
-  final CorsairK70 corsairK70;
+  final CorsairKeyboard corsairKeyboard;
   final KeyBloc keyBloc;
 
   int currentPacketIndex = 0;
@@ -27,10 +26,10 @@ class CorsairK70Tester extends DeviceTester {
   late int lastValueG;
   late int lastValueB;
 
-  int get length => corsairK70.dataPkt1.length;
+  int get length => corsairKeyboard.dataPkt1.length;
 
-  CorsairK70Tester({
-    required this.corsairK70,
+  CorsairKeyboardTester({
+    required this.corsairKeyboard,
   }) : keyBloc = GetIt.instance.get();
 
   @override
@@ -46,16 +45,17 @@ class CorsairK70Tester extends DeviceTester {
 
   @override
   Future<void> blink() async {
-    final Iterable<MapEntry<Point<int>, KeyboardKey>> entries = KeyDictionary.keys.entries;
+    final Iterable<MapEntry<Point<int>, List<KeyboardKey>>> keyEntries = corsairKeyboard.keys.entries;
     _updateColor(Duration(milliseconds: 4), 0.75);
-    final Timer timer = Timer.periodic(
-      Duration(milliseconds: 100),
+    final Timer periodicBlinkTimer = Timer.periodic(
+      const Duration(milliseconds: 100),
       (Timer timer) {
-        _blink(entries);
-        devicesBloc.add(SendDataManuallyEvent(corsairK70));
+        _blink(keyEntries);
+        devicesBloc.add(SendDataManuallyEvent(corsairKeyboard));
       },
     );
-    timers.add(timer);
+
+    timers.add(periodicBlinkTimer);
   }
 
   @override
@@ -65,19 +65,24 @@ class CorsairK70Tester extends DeviceTester {
     }
   }
 
-  void _blink(Iterable<MapEntry<Point<int>, KeyboardKey>> entries) {
-    for (MapEntry<Point<int>, KeyboardKey> entry in entries) {
-      final KeyboardKey key = entry.value;
-      final int packetIndex = key.packetIndex;
-      if (packetIndex < 0) continue;
-      _setBlinkColor(packetIndex, key);
+  void _blink(Iterable<MapEntry<Point<int>, List<KeyboardKey>>> keyEntries) {
+    for (MapEntry<Point<int>, List<KeyboardKey>> entry in keyEntries) {
+      final List<KeyboardKey> keysAtPoint = entry.value;
+      for (KeyboardKey key in keysAtPoint) {
+        final int packetIndex = key.packetIndex;
+        if (packetIndex < 0) {
+          continue;
+        }
+
+        _setBlinkColor(packetIndex, key);
+      }
     }
 
-    devicesBloc.add(SendDataManuallyEvent(corsairK70));
+    devicesBloc.add(SendDataManuallyEvent(corsairKeyboard));
   }
 
   void _setBlinkColor(int packetIndex, KeyboardKey key) {
-    final CorsairK70Packets packets = corsairK70.getPacket(packetIndex);
+    final CorsairKeyboardPackets packets = corsairKeyboard.getPacket(packetIndex);
     final List<int> rPkt = packets.rPkt;
     final List<int> gPkt = packets.gPkt;
     final List<int> bPkt = packets.bPkt;
@@ -88,17 +93,17 @@ class CorsairK70Tester extends DeviceTester {
 
   void _rememberValues() {
     if (currentPacketIndex == 0) {
-      lastValueR = corsairK70.rPkt1[currentIndex];
-      lastValueG = corsairK70.gPkt1[currentIndex];
-      lastValueB = corsairK70.bPkt1[currentIndex];
+      lastValueR = corsairKeyboard.rPkt1[currentIndex];
+      lastValueG = corsairKeyboard.gPkt1[currentIndex];
+      lastValueB = corsairKeyboard.bPkt1[currentIndex];
     } else if (currentPacketIndex == 1) {
-      lastValueR = corsairK70.rPkt2[currentIndex];
-      lastValueG = corsairK70.gPkt2[currentIndex];
-      lastValueB = corsairK70.bPkt2[currentIndex];
+      lastValueR = corsairKeyboard.rPkt2[currentIndex];
+      lastValueG = corsairKeyboard.gPkt2[currentIndex];
+      lastValueB = corsairKeyboard.bPkt2[currentIndex];
     } else if (currentPacketIndex == 2) {
-      lastValueR = corsairK70.rPkt3[currentIndex];
-      lastValueG = corsairK70.gPkt3[currentIndex];
-      lastValueB = corsairK70.bPkt3[currentIndex];
+      lastValueR = corsairKeyboard.rPkt3[currentIndex];
+      lastValueG = corsairKeyboard.gPkt3[currentIndex];
+      lastValueB = corsairKeyboard.bPkt3[currentIndex];
     }
   }
 
@@ -133,13 +138,13 @@ class CorsairK70Tester extends DeviceTester {
     _updateColor();
     final Timer timer = Timer.periodic(
       Duration(milliseconds: 100),
-          (Timer timer) {
-            _setCurrentIndexValue(
+      (Timer timer) {
+        _setCurrentIndexValue(
           valueR: value.toInt(),
           valueG: 0,
           valueB: 0,
         );
-        devicesBloc.add(SendDataManuallyEvent(corsairK70));
+        devicesBloc.add(SendDataManuallyEvent(corsairKeyboard));
       },
     );
     timers.add(timer);
@@ -175,17 +180,17 @@ class CorsairK70Tester extends DeviceTester {
     required int valueB,
   }) {
     if (currentPacketIndex == 0) {
-      corsairK70.rPkt1[currentIndex] = valueR;
-      corsairK70.gPkt1[currentIndex] = valueG;
-      corsairK70.bPkt1[currentIndex] = valueB;
+      corsairKeyboard.rPkt1[currentIndex] = valueR;
+      corsairKeyboard.gPkt1[currentIndex] = valueG;
+      corsairKeyboard.bPkt1[currentIndex] = valueB;
     } else if (currentPacketIndex == 1) {
-      corsairK70.rPkt2[currentIndex] = valueR;
-      corsairK70.gPkt2[currentIndex] = valueG;
-      corsairK70.bPkt2[currentIndex] = valueB;
+      corsairKeyboard.rPkt2[currentIndex] = valueR;
+      corsairKeyboard.gPkt2[currentIndex] = valueG;
+      corsairKeyboard.bPkt2[currentIndex] = valueB;
     } else if (currentPacketIndex == 2) {
-      corsairK70.rPkt3[currentIndex] = valueR;
-      corsairK70.gPkt3[currentIndex] = valueG;
-      corsairK70.bPkt3[currentIndex] = valueB;
+      corsairKeyboard.rPkt3[currentIndex] = valueR;
+      corsairKeyboard.gPkt3[currentIndex] = valueG;
+      corsairKeyboard.bPkt3[currentIndex] = valueB;
     }
   }
 }

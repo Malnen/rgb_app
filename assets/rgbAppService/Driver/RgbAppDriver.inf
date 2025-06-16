@@ -8,7 +8,7 @@ Class=RgbAppDriver
 ClassGuid={C30B2C45-87B1-4011-80EF-30D52D48F884}
 Provider=%ManufacturerName%
 CatalogFile=RgbAppDriver.cat
-DriverVer = 05/06/2025,18.2.36.710
+DriverVer = 06/10/2025,18.15.35.357
 PnpLockdown=1
 
 [DestinationDirs]

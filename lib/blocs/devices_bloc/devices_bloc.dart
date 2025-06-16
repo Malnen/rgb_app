@@ -7,10 +7,13 @@ import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
+import 'package:rgb_app/devices/corsair_icue_link_hub/corsair_icue_link_hub.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/devices/lightning_controller_interface.dart';
 import 'package:rgb_app/devices/smbus/kingston/kingston_fury_ram_detector.dart';
 import 'package:rgb_app/devices/smbus/models/smbus_transaction_data.dart';
 import 'package:rgb_app/devices/smbus/smbus_device_interface.dart';
+import 'package:rgb_app/devices/sub_device_interface.dart';
 import 'package:rgb_app/devices/udp_network_device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/main.dart';
@@ -84,9 +87,11 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
         final List<Map<String, Object?>> usbData = deviceInstances
             .whereType<UsbDeviceInterface>()
+            .where((UsbDeviceInterface element) => element is CorsairICueLinkHub ? element.ready : true)
+            .where((UsbDeviceInterface element) => element.isOpen.valueOrNull ?? false)
             .map((UsbDeviceInterface device) => device.getPayload())
             .toList();
-        usbDeviceDataSender.sendData(usbData);
+        unawaited(usbDeviceDataSender.sendData(usbData));
       },
     );
   }
@@ -121,8 +126,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       case const (UpdateDevices):
         await _onUpdateDevicesEvent(event as UpdateDevices, emit);
         break;
-      case const (UpdateDeviceOffsetEvent):
-        await _onUpdateDeviceOffsetEvent(event as UpdateDeviceOffsetEvent, emit);
+      case const (UpdateDeviceProperties):
+        await _onUpdateDevicePropertiesEvent(event as UpdateDeviceProperties, emit);
         break;
       case const (CheckUSBDevicesConnectionStateEvent):
         await _onCheckUSBDevicesConnectionStateEvent(event as CheckUSBDevicesConnectionStateEvent, emit);
@@ -172,17 +177,13 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     required List<DeviceInterface> deviceInstances,
   }) async {
     final List<DeviceData> devicesData = state.devicesData;
-    final DeviceInterface deviceInterface = DeviceInterface.fromDeviceData(deviceData: deviceData, smbus: smbus);
+    final DeviceInterface deviceInterface =
+        DeviceInterface.fromDeviceData(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender, smbus: smbus);
     loadingService.showLoading();
     if (deviceInterface is UsbDeviceInterface) {
-      usbDeviceDataSender.openDevice(deviceInterface);
-    } else if (deviceInterface is SMBusDeviceInterface) {
-      deviceInterface.isOpen.sink.add(true);
-    } else if (deviceInterface is UdpNetworkDeviceInterface) {
-      deviceInterface.isOpen.sink.add(true);
+      await usbDeviceDataSender.openDevice(deviceInterface).timeout(Duration(seconds: 10));
     }
 
-    await deviceInterface.isOpen.first;
     loadingService.hideLoading();
     await deviceInterface.init();
     deviceInterface.updatePropertiesDeviceData();
@@ -424,27 +425,34 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
   Future<void> _reInitDevHandle({required UsbDeviceInterface deviceInterface, required DeviceData deviceData}) async {
     if (!deviceData.connected) {
+      await deviceInterface.dispose();
       usbDeviceDataSender.closeDevice(deviceInterface);
-      usbDeviceDataSender.openDevice(deviceInterface);
-      await deviceInterface.isOpen.stream.firstWhere((bool value) => value);
+      await usbDeviceDataSender.openDevice(deviceInterface);
+      await deviceInterface.isOpen.stream.firstWhere((bool value) => value).timeout(Duration(seconds: 10));
+      await deviceInterface.init();
     }
   }
 
-  Future<void> _onUpdateDeviceOffsetEvent(UpdateDeviceOffsetEvent event, Emitter<DevicesState> emit) async {
+  Future<void> _onUpdateDevicePropertiesEvent(UpdateDeviceProperties event, Emitter<DevicesState> emit) async {
     final DeviceInterface deviceInterface = event.deviceInterface;
     final DeviceData deviceData = deviceInterface.deviceData;
     final List<DeviceInterface> deviceInstances = state.deviceInstances;
     final List<DeviceData> devicesData = state.devicesData;
-    final int index = deviceInstances.indexOf(deviceInterface);
-    final int offsetX = event.offsetX;
-    final int offsetY = event.offsetY;
     final DeviceData updatedDeviceData = deviceData.copyWith(
-      offsetX: offsetX,
-      offsetY: offsetY,
+      offset: event.offset ?? deviceData.offset,
+      scale: event.scale ?? deviceData.scale,
+      rotation: event.rotation ?? deviceData.rotation,
     );
-
     deviceInterface.deviceData = updatedDeviceData;
-    devicesData[index] = updatedDeviceData;
+
+    if (deviceInterface case final SubDeviceInterface subDevice) {
+      final LightningControllerInterface parent = subDevice.parent as LightningControllerInterface;
+      final int index = parent.subDevices.indexOf(subDevice);
+      parent.deviceData.subDevicesData[index] = updatedDeviceData as SubDeviceData;
+    } else {
+      final int index = deviceInstances.indexOf(deviceInterface);
+      devicesData[index] = updatedDeviceData;
+    }
 
     final DevicesState newState = state.copyWith(
       deviceInstances: deviceInstances,
@@ -459,7 +467,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     Emitter<DevicesState> emit,
   ) async {
     final Map<String, Object?> payload = event.deviceInterface.getPayload();
-    usbDeviceDataSender.sendData(<Map<String, Object?>>[payload]);
+    await usbDeviceDataSender.sendData(<Map<String, Object?>>[payload]);
   }
 
   Future<void> _onSelectDeviceEvent(
@@ -481,18 +489,23 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     Emitter<DevicesState> emit,
   ) async {
     final DeviceData updatedDeviceData = event.deviceData;
-    final List<DeviceData> updatedList = state.devicesData
-        .map((DeviceData device) => device.isSameDevice(updatedDeviceData) ? updatedDeviceData : device)
-        .toList();
     final List<DeviceInterface> updatedInstances = state.deviceInstances.map((DeviceInterface instance) {
       if (instance.deviceData.isSameDevice(updatedDeviceData)) {
         instance.deviceData = updatedDeviceData;
+      } else if (instance is LightningControllerInterface) {
+        for (SubDeviceInterface subDevice in instance.subDevices) {
+          if (subDevice.deviceData.isSameDevice(updatedDeviceData)) {
+            subDevice.deviceData = updatedDeviceData;
+            final int index = instance.subDevices.indexOf(subDevice);
+            instance.deviceData.subDevicesData[index] = updatedDeviceData as SubDeviceData;
+          }
+        }
       }
 
       return instance;
     }).toList();
     final DevicesState newState = state.copyWith(
-      devicesData: updatedList,
+      devicesData: updatedInstances.map((DeviceInterface device) => device.deviceData).toList(),
       deviceInstances: updatedInstances,
       key: UniqueKey(),
     );

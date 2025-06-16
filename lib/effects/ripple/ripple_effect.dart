@@ -56,7 +56,7 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
     final List<List<Color>> colors = effectsColorsCubit.colors;
     for (Ripple ripple in _ripples) {
       for (int x = 0; x < effectBloc.sizeX; x++) {
-        for (int y = 0; y < effectBloc.sizeY; y++) {
+        for (int y = 0; y < effectBloc.sizeZ; y++) {
           _processRipple(ripple, Point<int>(x, y), colors);
         }
       }
@@ -96,7 +96,7 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
   Point<int> _getCenter() {
     final Random random = Random();
     final int x = random.nextInt(effectBloc.sizeX);
-    final int y = random.nextInt(effectBloc.sizeY);
+    final int y = random.nextInt(effectBloc.sizeZ);
 
     return Point<int>(x, y);
   }

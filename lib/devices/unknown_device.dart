@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/device_interface.dart';
+import 'package:vector_math/vector_math.dart';
 
 class UnknownDevice extends DeviceInterface {
   UnknownDevice({required super.deviceData});
@@ -14,5 +14,5 @@ class UnknownDevice extends DeviceInterface {
   void update() {}
 
   @override
-  Size getSize() => Size(0, 0);
+  Vector3 getSize() => Vector3(0, 0, 0);
 }

@@ -103,9 +103,11 @@ class DevicesListContainer extends HookWidget {
   void _onSelect(DevicesBloc bloc, DeviceData deviceData) {
     final DevicesState state = bloc.state;
     final List<DeviceInterface> devices = state.deviceInstances;
-    final DeviceInterface device = devices.firstWhere((DeviceInterface element) => element.deviceData == deviceData);
-    final DevicesEvent event = DevicesEvent.selectDevice(device: device);
-
-    bloc.add(event);
+    final DeviceInterface? device =
+        devices.firstWhereOrNull((DeviceInterface element) => element.deviceData.isSameDevice(deviceData));
+    if (device != null) {
+      final DevicesEvent event = DevicesEvent.selectDevice(device: device);
+      bloc.add(event);
+    }
   }
 }

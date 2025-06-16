@@ -21,29 +21,26 @@ class _OptionPropertyRendererState extends State<OptionPropertyRenderer> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25, bottom: 20),
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.orange,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(4),
-          ),
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.orange,
+          width: 2,
         ),
-        child: Row(
-          children: property.value
-              .map(
-                (Option option) => OptionTile(
-                  option: option,
-                  onTap: onTap,
-                ),
-              )
-              .toList(),
+        borderRadius: BorderRadius.all(
+          Radius.circular(4),
         ),
+      ),
+      child: Row(
+        children: property.value
+            .map(
+              (Option option) => OptionTile(
+                option: option,
+                onTap: onTap,
+              ),
+            )
+            .toList(),
       ),
     );
   }

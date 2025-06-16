@@ -37,9 +37,9 @@ class WaveEffect extends Effect with WaveEffectProperties {
     final EffectGridData effectGridData = state.effectGridData;
     final List<List<Color>> colors = effectsColorsCubit.colors;
     final int sizeX = effectGridData.sizeX;
-    final int sizeY = effectGridData.sizeY;
+    final int sizeZ = effectGridData.sizeZ;
     if (colors.isNotEmpty) {
-      _setColors(sizeX, sizeY, colors);
+      _setColors(sizeX, sizeZ, colors);
     }
 
     _updateValue();
@@ -68,19 +68,19 @@ class WaveEffect extends Effect with WaveEffectProperties {
     _setCustomColors();
   }
 
-  void _setColors(int sizeX, int sizeY, List<List<Color>> colors) {
+  void _setColors(int sizeX, int sizeZ, List<List<Color>> colors) {
     final double shiftValue = value / colorsIncrementMax;
     for (int i = 0; i < sizeX; i++) {
-      customColorsMode ? _setCustomColor(i, sizeY, colors, shiftValue) : _setRainbowColor(i, sizeY, colors);
+      customColorsMode ? _setCustomColor(i, sizeZ, colors, shiftValue) : _setRainbowColor(i, sizeZ, colors);
     }
   }
 
-  void _setCustomColor(int i, int sizeY, List<List<Color>> colors, double shiftValue) {
+  void _setCustomColor(int i, int sizeZ, List<List<Color>> colors, double shiftValue) {
     final int index = (i + customColorIndex * direction) % (shiftedColors.length - 1);
     final Color firstColor = leftDirection ? shiftedColors[index] : _getNextColor(index);
     final Color secondColor = leftDirection ? _getPreviousColor(index) : shiftedColors[index];
     final Color color = Color.lerp(secondColor, firstColor, shiftValue)!;
-    for (int j = 0; j < sizeY; j++) {
+    for (int j = 0; j < sizeZ; j++) {
       try {
         colors[j][i] = color;
       } catch (_) {}
@@ -103,10 +103,10 @@ class WaveEffect extends Effect with WaveEffectProperties {
     return shiftedColors.last;
   }
 
-  void _setRainbowColor(int i, int sizeY, List<List<Color>> colors) {
+  void _setRainbowColor(int i, int sizeZ, List<List<Color>> colors) {
     final double hue = (i * size.value + value) % colorsIncrementMax;
     final HSVColor hsv = HSVColor.fromAHSV(1, hue, 1, 1);
-    for (int j = 0; j < sizeY; j++) {
+    for (int j = 0; j < sizeZ; j++) {
       try {
         colors[j][i] = hsv.toColor();
       } catch (_) {}

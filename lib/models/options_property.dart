@@ -20,5 +20,5 @@ class OptionProperty extends Property<Set<Option>> {
   @override
   Map<String, Object> getData() => <String, Object>{
         'value': value.map((Option option) => option.toJson()).toList(),
-    };
+      };
 }

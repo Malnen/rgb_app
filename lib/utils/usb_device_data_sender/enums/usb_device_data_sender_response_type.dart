@@ -1,1 +1,6 @@
-enum UsbDeviceDataSenderResponseType { deviceOpened, dataSent, deviceClosed }
+enum UsbDeviceDataSenderResponseType {
+  deviceOpened,
+  dataSent,
+  deviceClosed,
+  dataRead,
+}

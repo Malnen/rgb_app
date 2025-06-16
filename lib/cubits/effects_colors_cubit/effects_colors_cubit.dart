@@ -9,9 +9,9 @@ class EffectsColorsCubit extends Cubit<EffectsColorsState> {
 
   void updateColors(List<List<Color>> colors) => _emitColors(colors);
 
-  void updateColorsSize(int sizeX, int sizeY) {
+  void updateColorsSize(int sizeX, int sizeZ) {
     final List<List<Color>> colors = List<List<Color>>.generate(
-      sizeY,
+      sizeZ,
       (int index) => List<Color>.generate(
         sizeX,
         (int index) => Colors.white,

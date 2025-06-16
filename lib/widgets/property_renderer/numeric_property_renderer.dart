@@ -49,5 +49,7 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
           ),
       };
 
-  void onChanged(double updatedValue) => setState(() => property.value = updatedValue);
+  void onChanged(double updatedValue) => setState(() {
+        property.value = updatedValue;
+      });
 }

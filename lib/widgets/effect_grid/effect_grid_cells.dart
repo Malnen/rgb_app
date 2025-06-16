@@ -19,8 +19,8 @@ class EffectGridCells extends StatelessWidget {
       builder: (_, EffectState state) => Column(
         children: <Widget>[
           ...List<Widget>.generate(
-            state.effectGridData.sizeY,
-            (int yIndex) => Row(
+            state.effectGridData.sizeZ,
+            (int zIndex) => Row(
               children: <Widget>[
                 ...List<Widget>.generate(
                   state.effectGridData.sizeX,
@@ -28,7 +28,7 @@ class EffectGridCells extends StatelessWidget {
                     margin: cellMargin,
                     size: cellSize,
                     x: xIndex,
-                    y: yIndex,
+                    y: zIndex,
                   ),
                 ),
               ],

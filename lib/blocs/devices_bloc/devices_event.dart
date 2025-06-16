@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:vector_math/vector_math.dart';
 
 part '../../generated/blocs/devices_bloc/devices_event.freezed.dart';
 
@@ -27,11 +28,12 @@ abstract class DevicesEvent with _$DevicesEvent {
     required int newIndex,
   }) = ReorderDevicesEvent;
 
-  const factory DevicesEvent.updateDeviceOffset({
-    required int offsetX,
-    required int offsetY,
+  const factory DevicesEvent.updateDeviceProperties({
     required DeviceInterface deviceInterface,
-  }) = UpdateDeviceOffsetEvent;
+    Vector3? offset,
+    Vector3? scale,
+    Vector3? rotation,
+  }) = UpdateDeviceProperties;
 
   const factory DevicesEvent.checkDevicesConnectionState() = CheckUSBDevicesConnectionStateEvent;
 

@@ -53,7 +53,11 @@ class UsbDeviceInfoGetter with RgbAppServiceListener<UsbDeviceInfoCommand, UsbDe
     final List<Map<String, Object?>> devices = List<Map<String, Object?>>.from(rawDevices);
     for (final Map<String, Object?> device in devices) {
       final DeviceProductVendor deviceProductVendor = DeviceProductVendor.getByProductVendor(device);
-      final DeviceData data = UsbDeviceData(deviceProductVendor: deviceProductVendor, key: UniqueKey());
+      final DeviceData data = switch (deviceProductVendor) {
+        LightningControllerDeviceProductVendor() =>
+          LightningControllerDeviceData(deviceProductVendor: deviceProductVendor, key: UniqueKey()),
+        _ => UsbDeviceData(deviceProductVendor: deviceProductVendor, key: UniqueKey())
+      };
       devicesData.add(data);
     }
 

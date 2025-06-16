@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
@@ -22,10 +24,10 @@ class UsbDeviceDataSender
   @override
   void Function(UsbDeviceDataSenderResponseType, Map<String, Object>) get processResponse => _responseListener;
 
-  void openDevice(UsbDeviceInterface deviceInterface) {
-    final UsbDeviceData deviceData = deviceInterface.deviceData as UsbDeviceData;
+  Future<Map<String, Object>> openDevice(UsbDeviceInterface deviceInterface) {
+    final UsbDeviceData deviceData = deviceInterface.deviceData;
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
-    _sendDeviceCommand(
+    return _sendDeviceCommand(
       deviceInterface,
       UsbDeviceDataSenderCommand.openDevice,
       data: <String, Object>{
@@ -37,14 +39,47 @@ class UsbDeviceDataSender
     );
   }
 
-  void sendData(List<Map<String, Object?>> data) => runThrottled(
-        () async => sendCommand(
+  Future<void> sendData(List<Map<String, Object?>> data, {bool throttled = true}) => throttled
+      ? runThrottled(
+          () => sendCommand(
+            UsbDeviceDataSenderCommand.sendData,
+            data: <String, Object?>{
+              'data': data,
+            },
+          ),
+        )
+      : sendCommand(
           UsbDeviceDataSenderCommand.sendData,
           data: <String, Object?>{
             'data': data,
           },
-        ),
-      );
+        );
+
+  Future<List<int>> readData({
+    required String guid,
+    required int endpoint,
+    int length = 512,
+    int timeout = 1000,
+  }) async {
+    final Map<String, Object> response = await sendCommand(
+      UsbDeviceDataSenderCommand.interruptRead,
+      data: <String, Object>{
+        'data': <String, Object>{
+          'guid': guid,
+          'endpoint': endpoint,
+          'length': length,
+          'timeout': timeout,
+        },
+      },
+    );
+
+    final Object? rawData = response['data'];
+    if (rawData is List<dynamic>) {
+      return rawData.map((Object? value) => value as int).toList();
+    } else {
+      throw Exception('Invalid data format from USB interrupt read');
+    }
+  }
 
   void closeDevice(UsbDeviceInterface deviceInterface) {
     deviceInterface.isOpen.sink.add(false);
@@ -57,7 +92,7 @@ class UsbDeviceDataSender
     );
   }
 
-  void _sendDeviceCommand(
+  Future<Map<String, Object>> _sendDeviceCommand(
     DeviceInterface deviceInterface,
     UsbDeviceDataSenderCommand command, {
     Map<String, Object?>? data,
@@ -65,7 +100,7 @@ class UsbDeviceDataSender
     final UsbDeviceData deviceData = deviceInterface.deviceData as UsbDeviceData;
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     pendingDevices[deviceProductVendor.productVendor] = deviceInterface;
-    sendCommand(
+    return sendCommand(
       command,
       data: <String, Object?>{
         'data': data,
@@ -81,6 +116,8 @@ class UsbDeviceDataSender
       case UsbDeviceDataSenderResponseType.dataSent:
         break;
       case UsbDeviceDataSenderResponseType.deviceClosed:
+        break;
+      case UsbDeviceDataSenderResponseType.dataRead:
         break;
     }
   }

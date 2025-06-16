@@ -44,7 +44,8 @@ class KeyBloc extends Bloc<rgb_key_event.KeyEvent, KeyState> {
     add(keyPressedEvent);
   }
 
-  Future<void> _onKeyPressedEvent(final rgb_key_event.KeyPressedEvent event,
+  Future<void> _onKeyPressedEvent(
+    final rgb_key_event.KeyPressedEvent event,
     final Emitter<KeyState> emit,
   ) async {
     final KeyState newState = state.copyWith(
@@ -55,7 +56,8 @@ class KeyBloc extends Bloc<rgb_key_event.KeyEvent, KeyState> {
     emit(newState);
   }
 
-  Future<void> _onKeyReleasedEvent(final rgb_key_event.KeyReleasedEvent event,
+  Future<void> _onKeyReleasedEvent(
+    final rgb_key_event.KeyReleasedEvent event,
     final Emitter<KeyState> emit,
   ) async {
     final KeyState newState = state.copyWith(
@@ -66,7 +68,8 @@ class KeyBloc extends Bloc<rgb_key_event.KeyEvent, KeyState> {
     emit(newState);
   }
 
-  Future<void> _onSetKeyboardDeviceEvent(final rgb_key_event.SetKeyboardDeviceEvent event,
+  Future<void> _onSetKeyboardDeviceEvent(
+    final rgb_key_event.SetKeyboardDeviceEvent event,
     final Emitter<KeyState> emit,
   ) async {
     final KeyState newState = state.setKeyboard(

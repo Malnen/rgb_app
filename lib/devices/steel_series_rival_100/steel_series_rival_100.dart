@@ -4,13 +4,14 @@ import 'package:rgb_app/devices/mixins/control_transfer_device.dart';
 import 'package:rgb_app/devices/mouse_interface.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/testers/steel_series_rival_100_tester.dart';
+import 'package:vector_math/vector_math.dart';
 
 class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   late SteelSeriesRival100Tester tester;
 
   Color color = Color.fromARGB(1, 0, 0, 0);
 
-  SteelSeriesRival100({required super.deviceData});
+  SteelSeriesRival100({required super.deviceData, required super.usbDeviceDataSender});
 
   @override
   int get requestType => 0x21;
@@ -45,7 +46,7 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   }
 
   @override
-  Size getSize() => Size(1, 1);
+  Vector3 getSize() => Vector3(1, 1, 1);
 
   @override
   void test() => tester.test();
@@ -62,13 +63,16 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   @override
   void update() {
     try {
-      color = effectsColorsCubit.colors[offsetY][offsetX];
+      color = getColorAt(x: 0, y: 0);
     } catch (e) {
-      print('$offsetX, $offsetY out of range ${deviceData.name}');
+      print('$offsetX, $offsetZ out of range ${deviceData.name}');
     }
 
     super.update();
   }
+
+  @override
+  List<List<int>> get initializePackets => <List<int>>[];
 
   @override
   List<List<int>> getPackets() => <List<int>>[

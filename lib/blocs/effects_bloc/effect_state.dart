@@ -59,10 +59,10 @@ class EffectState with _$EffectState {
   bool hasEffectGridDataSizeOrMinChanged(EffectState state) {
     final EffectGridData effectGridData = state.effectGridData;
     final bool hasDifferentSizeX = effectGridData.sizeX != this.effectGridData.sizeX;
-    final bool hasDifferentSizeY = effectGridData.sizeY != this.effectGridData.sizeY;
+    final bool hasDifferentSizeZ = effectGridData.sizeZ != this.effectGridData.sizeZ;
     final bool hasDifferentMinX = effectGridData.minSizeX != this.effectGridData.minSizeX;
-    final bool hasDifferentMinY = effectGridData.minSizeY != this.effectGridData.minSizeY;
+    final bool hasDifferentMinZ = effectGridData.minSizeZ != this.effectGridData.minSizeZ;
 
-    return hasDifferentSizeX || hasDifferentSizeY || hasDifferentMinX || hasDifferentMinY;
+    return hasDifferentSizeX || hasDifferentSizeZ || hasDifferentMinX || hasDifferentMinZ;
   }
 }

@@ -48,7 +48,7 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
       return;
     }
 
-    for (int i = 0; i < effectBloc.sizeY; i++) {
+    for (int i = 0; i < effectBloc.sizeZ; i++) {
       for (int j = 0; j < effectBloc.sizeX; j++) {
         _setColors(i, j, colors);
       }
@@ -82,7 +82,7 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
 
   void _prepareNewColors() {
     final List<List<Color>> newColors = <List<Color>>[];
-    for (int i = 0; i < effectBloc.sizeY; i++) {
+    for (int i = 0; i < effectBloc.sizeZ; i++) {
       final List<Color> rows = <Color>[];
       for (int j = 0; j < effectBloc.sizeX; j++) {
         rows.add(Colors.black);

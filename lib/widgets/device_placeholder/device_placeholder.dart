@@ -1,53 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:get_it/get_it.dart';
-import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
-import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
-import 'package:rgb_app/devices/device_interface.dart';
+import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/models/device_placeholder_data.dart';
 import 'package:rgb_app/models/vector.dart';
 import 'package:rgb_app/widgets/draggable_positioned/draggable_positioned.dart';
+import 'package:vector_math/vector_math.dart' as vmath;
 
 class DevicePlaceholder extends HookWidget {
   final double fullHeight;
   final double fullWidth;
-  final DeviceInterface deviceInterface;
+  final DevicePlaceholderData devicePlaceholderData;
   final double sizeBase;
+  final void Function(double newOffsetX, double newOffsetZ) onUpdateOffset;
+  final ValueNotifier<DeviceData> dataNotifier;
 
   const DevicePlaceholder({
     required this.fullHeight,
     required this.fullWidth,
-    required this.deviceInterface,
+    required this.devicePlaceholderData,
     required this.sizeBase,
+    required this.onUpdateOffset,
+    required this.dataNotifier,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final DevicesBloc devicesBloc = GetIt.instance.get<DevicesBloc>();
-    useListenable(deviceInterface.deviceDataNotifier);
-
-    final Size size = deviceInterface.getSize();
-    final double width = sizeBase * size.width;
-    final double height = sizeBase * size.height;
-    final int offsetX = deviceInterface.offsetX;
-    final int offsetY = deviceInterface.offsetY;
-
-    final Vector initialPosition = useMemoized(
-      () => Vector(x: offsetX * sizeBase, y: offsetY * sizeBase),
-      <Object?>[offsetX, offsetY, sizeBase],
+    final ValueNotifier<bool> forcePosition = useValueNotifier(true);
+    useListenable(dataNotifier);
+    final vmath.Vector3 size = devicePlaceholderData.size;
+    final vmath.Vector3 scale = dataNotifier.value.scale;
+    final double width = sizeBase * size.x * scale.x;
+    final double height = sizeBase * size.z * scale.z;
+    final int offsetX = dataNotifier.value.offset.x.toInt();
+    final int offsetZ = dataNotifier.value.offset.z.toInt();
+    final Vector currentPosition = Vector(
+      x: offsetX * sizeBase,
+      y: offsetZ * sizeBase,
     );
 
-    void updateOffset(double newOffsetX, double newOffsetY) {
+    void updateOffset(double newOffsetX, double newOffsetZ) {
       final int intX = newOffsetX.toInt();
-      final int intY = newOffsetY.toInt();
-      if (intX != offsetX || intY != offsetY) {
-        devicesBloc.add(
-          UpdateDeviceOffsetEvent(
-            offsetX: intX,
-            offsetY: intY,
-            deviceInterface: deviceInterface,
-          ),
-        );
+      final int intZ = newOffsetZ.toInt();
+      if (intX != offsetX || intZ != offsetZ) {
+        onUpdateOffset(newOffsetX, newOffsetZ);
       }
     }
 
@@ -58,8 +54,11 @@ class DevicePlaceholder extends HookWidget {
       fullHeight: fullHeight,
       sizeBase: sizeBase,
       snapOnPanEnd: true,
+      onPanStart: () => forcePosition.value = false,
+      onPanEnd: () => forcePosition.value = true,
       updateOffset: updateOffset,
-      initialPosition: initialPosition,
+      rotation: dataNotifier.value.rotation,
+      forcePosition: forcePosition.value ? currentPosition : null,
       child: Container(
         width: width,
         height: height,

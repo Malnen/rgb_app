@@ -1,15 +1,15 @@
-class CorsairK70Packets {
+class CorsairKeyboardPackets {
   final List<int> rPkt;
   final List<int> gPkt;
   final List<int> bPkt;
 
-  CorsairK70Packets({
+  CorsairKeyboardPackets({
     required this.rPkt,
     required this.gPkt,
     required this.bPkt,
   });
 
-  CorsairK70Packets.empty()
+  CorsairKeyboardPackets.empty()
       : rPkt = <int>[],
         gPkt = <int>[],
         bPkt = <int>[];

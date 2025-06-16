@@ -11,6 +11,7 @@ import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/udp_network_device_details.dart';
 import 'package:rgb_app/utils/frame_throttler.dart';
+import 'package:vector_math/vector_math.dart' as vmath;
 
 class UdpNetworkDeviceInterface extends DeviceInterface with FrameThrottler {
   late List<Color> _colors;
@@ -42,6 +43,7 @@ class UdpNetworkDeviceInterface extends DeviceInterface with FrameThrottler {
 
   @override
   List<Property<Object>> get properties => <Property<Object>>[
+        ...super.properties,
         ledCount,
       ];
 
@@ -58,10 +60,10 @@ class UdpNetworkDeviceInterface extends DeviceInterface with FrameThrottler {
   void update() {
     try {
       for (int i = 0; i < colors.length; i++) {
-        _colors[i] = effectsColorsCubit.colors[offsetY][offsetX + i];
+        _colors[i] = getColorAt(x: i, y: 0);
       }
     } catch (_) {
-      print('$offsetX, $offsetY out of range: ${deviceData.name}');
+      print('$offsetX, $offsetZ out of range: ${deviceData.name}');
     }
 
     super.update();
@@ -100,7 +102,7 @@ class UdpNetworkDeviceInterface extends DeviceInterface with FrameThrottler {
   }
 
   @override
-  Size getSize() => Size(ledCount.value, 1);
+  vmath.Vector3 getSize() => vmath.Vector3(ledCount.value, 1, 1);
 
   @override
   void blink() {}

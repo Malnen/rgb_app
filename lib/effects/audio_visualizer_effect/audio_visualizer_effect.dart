@@ -217,17 +217,17 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
 
   void _processUpdatedValues() {
     final List<List<Color>> colors = effectsColorsCubit.colors;
-    final int sizeY = effectBloc.sizeY;
-    final int step = 100 ~/ sizeY;
+    final int sizeZ = effectBloc.sizeZ;
+    final int step = 100 ~/ sizeZ;
     final int spectrumShiftValue = spectrumShift.value.toInt();
     final int sizeX = effectBloc.sizeX;
     final int spectrumOffset = spectrumShiftValue > _currentValues.length - sizeX ? 0 : spectrumShiftValue;
     for (int i = 0; i < sizeX; i++) {
       final int value = _currentValues[i + spectrumOffset];
-      for (int j = 0; j < sizeY; j++) {
-        final int y = sizeY - 1 - j;
+      for (int j = 0; j < sizeZ; j++) {
+        final int y = sizeZ - 1 - j;
         final Color currentColor = colors[y][i];
-        _setColor(step, j, i, value, sizeY, colors, y, currentColor);
+        _setColor(step, j, i, value, sizeZ, colors, y, currentColor);
         if (_duringTransition) {
           final Color currentNewColor = colors[y][i];
           colors[y][i] = currentNewColor.mix(currentColor, _transitionOpacity);
@@ -236,7 +236,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
     }
   }
 
-  void _setColor(int step, int j, int i, int value, int sizeY, List<List<Color>> colors, int y, Color currentColor) {
+  void _setColor(int step, int j, int i, int value, int sizeZ, List<List<Color>> colors, int y, Color currentColor) {
     final int selectedId = displayMode.selectedOption.value;
     if (selectedId == 0) {
       _onNormalDisplay(step, j, value, currentColor, colors, y, i);
@@ -253,7 +253,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
   }
 
   void _onMirroredDisplay(int step, int j, int value, Color currentColor, List<List<Color>> colors, int y, int i) {
-    final int halfOfHeight = effectBloc.sizeY ~/ 2;
+    final int halfOfHeight = effectBloc.sizeZ ~/ 2;
     late double opacity;
     if (y < halfOfHeight) {
       opacity = _calculateOpacity(step, j - halfOfHeight, value);

@@ -16,8 +16,6 @@ targets:
         options:
           build_extensions:
             '^lib/{{}}.dart': 'lib/generated/{{}}.freezed.dart'
-          ignore_for_file:
-            - unnecessary_non_null_assertion
 
 
 builders:

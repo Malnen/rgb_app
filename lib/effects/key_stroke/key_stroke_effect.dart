@@ -35,7 +35,7 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
     final List<List<Color>> colors = effectsColorsCubit.colors;
     for (Ripple ripple in _ripples) {
       for (int x = 0; x < effectBloc.sizeX; x++) {
-        for (int y = 0; y < effectBloc.sizeY; y++) {
+        for (int y = 0; y < effectBloc.sizeZ; y++) {
           _processRipple(ripple, Point<int>(x, y), colors);
         }
       }
@@ -73,15 +73,18 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
   }
 
   Point<int> _getCenter(KeyState state) {
-    final KeyCode keycode = KeyCodeExtension.fromKeyCode(state.keyCode);
-    final Map<KeyCode, Point<int>> reverseKeys = KeyDictionary.reverseKeyCodes;
-    final Point<int>? position = reverseKeys[keycode];
-    if (position != null) {
-      final KeyboardInterface? keyboardInterface = state.keyboardInterface;
-      return Point<int>(
-        position.x + (keyboardInterface?.offsetX ?? 0),
-        position.y + (keyboardInterface?.offsetY ?? 0),
-      );
+    final KeyboardInterface? keyboardInterface = state.keyboardInterface;
+    if (keyboardInterface != null) {
+      final KeyCode keycode = KeyCodeExtension.fromKeyCode(state.keyCode);
+      final Map<KeyCode, Point<int>> reverseKeys =
+          KeyDictionary.reverseKeyCodes(keyboardInterface.deviceData.deviceProductVendor.productVendor);
+      final Point<int>? position = reverseKeys[keycode];
+      if (position != null) {
+        return Point<int>(
+          position.x + keyboardInterface.offsetX,
+          position.y + keyboardInterface.offsetZ,
+        );
+      }
     }
 
     return Point<int>(-1, -1);
