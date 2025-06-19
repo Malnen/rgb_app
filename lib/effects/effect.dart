@@ -6,6 +6,7 @@ import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/factories/effect_factory.dart';
 import 'package:rgb_app/factories/property_factory.dart';
+import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/property.dart';
 
 abstract class Effect {
@@ -29,6 +30,8 @@ abstract class Effect {
     return _effectsColorsCubit!;
   }
 
+  ColorList get colors => effectsColorsCubit.colors;
+
   @mustCallSuper
   void init() {
     for (Property<Object> property in properties) {
@@ -47,6 +50,17 @@ abstract class Effect {
   }
 
   void dispose() {}
+
+  @protected
+  void processUsedIndexes(void Function(int x, int y) process) {
+    final Set<int> usedIndexes = effectsColorsCubit.state.usedIndexes;
+    final int width = colors.width;
+    for (final int index in usedIndexes) {
+      final int y = index ~/ width;
+      final int x = index % width;
+      process(x, y);
+    }
+  }
 
   @protected
   void onPropertyChanged() {

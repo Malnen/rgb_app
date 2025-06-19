@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
+import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/devices/corsair_icue_link_hub/corsair_icue_link_hub.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/lightning_controller_interface.dart';
@@ -16,7 +17,9 @@ import 'package:rgb_app/devices/smbus/smbus_device_interface.dart';
 import 'package:rgb_app/devices/sub_device_interface.dart';
 import 'package:rgb_app/devices/udp_network_device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
+import 'package:rgb_app/extensions/list_extension.dart';
 import 'package:rgb_app/main.dart';
+import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/udp_network_device_details.dart';
 import 'package:rgb_app/services/loading_service.dart';
@@ -27,6 +30,7 @@ import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rgb_app/utils/usb_device_change/usb_device_change_detector.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/usb_device_data_sender.dart';
 import 'package:rgb_app/utils/usb_devices_info_getter/usb_devices_info_getter.dart';
+import 'package:vector_math/vector_math.dart';
 
 class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   final TickProvider _tickProvider;
@@ -101,6 +105,12 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
   @override
   Map<String, Object?> toJson(DevicesState state) => state.toJson();
+
+  @override
+  void emit(DevicesState state) {
+    _updateUsedIndexes();
+    super.emit(state);
+  }
 
   Future<void> _onEvent(DevicesEvent event, Emitter<DevicesState> emit) async {
     await appReady.future;
@@ -177,6 +187,21 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     required List<DeviceInterface> deviceInstances,
   }) async {
     final List<DeviceData> devicesData = state.devicesData;
+    final bool contained =
+        devicesData.any((DeviceData existingDeviceData) => existingDeviceData.isSameDevice(deviceData));
+    if (!contained) {
+      final DeviceData? persistedData =
+          state.persistDeviceData.firstWhereOrNull((DeviceData element) => element.isSameDevice(deviceData));
+      if (persistedData != null) {
+        deviceData = deviceData.copyWith(
+          rotation: persistedData.rotation,
+          scale: persistedData.scale,
+          offset: persistedData.offset,
+        );
+      }
+      devicesData.add(deviceData);
+    }
+
     final DeviceInterface deviceInterface =
         DeviceInterface.fromDeviceData(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender, smbus: smbus);
     loadingService.showLoading();
@@ -184,20 +209,17 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       await usbDeviceDataSender.openDevice(deviceInterface).timeout(Duration(seconds: 10));
     }
 
+    state.persistDeviceData.replaceOrAdd((DeviceData element) => element.isSameDevice(deviceData), deviceData);
     loadingService.hideLoading();
     await deviceInterface.init();
     deviceInterface.updatePropertiesDeviceData();
     deviceInstances.add(deviceInterface);
-    final bool contained =
-        devicesData.any((DeviceData existingDeviceData) => existingDeviceData.isSameDevice(deviceData));
-    if (!contained) {
-      devicesData.add(deviceData);
-    }
 
     return state.copyWith(
       devicesData: devicesData,
       deviceInstances: deviceInstances,
       key: UniqueKey(),
+      persistDeviceData: state.persistDeviceData,
     );
   }
 
@@ -454,6 +476,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       devicesData[index] = updatedDeviceData;
     }
 
+    state.persistDeviceData
+        .replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
     final DevicesState newState = state.copyWith(
       deviceInstances: deviceInstances,
       devicesData: devicesData,
@@ -504,11 +528,45 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
       return instance;
     }).toList();
+    state.persistDeviceData
+        .replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
     final DevicesState newState = state.copyWith(
       devicesData: updatedInstances.map((DeviceInterface device) => device.deviceData).toList(),
       deviceInstances: updatedInstances,
       key: UniqueKey(),
     );
     emit(newState);
+  }
+
+  void _updateUsedIndexes() {
+    final Set<int> indexes = <int>{};
+    final EffectsColorsCubit effectsColorsCubit = GetIt.instance.get();
+    final ColorList colors = effectsColorsCubit.state.colors;
+    final int width = colors.width;
+    final int height = colors.height;
+    final List<DeviceInterface> deviceInstances = state.deviceInstances
+        .expand(
+          (DeviceInterface device) =>
+              device is LightningControllerInterface ? device.subDevices : <DeviceInterface>[device],
+        )
+        .toList();
+    for (final DeviceInterface device in deviceInstances) {
+      final Vector3 offset = device.deviceData.offset;
+      final Vector3 size = device.getSize();
+
+      final int xStart = (offset.x - 1).floor().clamp(0, width - 1);
+      final int yStart = (offset.z - 1).floor().clamp(0, height - 1);
+      final int xEnd = (offset.x + size.x + 1).ceil().clamp(0, width);
+      final int yEnd = (offset.z + size.z + 1).ceil().clamp(0, height);
+
+      for (int y = yStart; y < yEnd; y++) {
+        for (int x = xStart; x < xEnd; x++) {
+          final int index = y * width + x;
+          indexes.add(index);
+        }
+      }
+    }
+
+    effectsColorsCubit.updateUsedIndexes(indexes);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_state.dart';
 import 'package:rgb_app/devices/lightning_controller_interface.dart';
 import 'package:rgb_app/devices/mixins/interrupt_transfer_device.dart';
 import 'package:rgb_app/devices/sub_device_interface.dart';
@@ -110,7 +111,7 @@ class CorsairICueLinkHub extends LightningControllerInterface with InterruptTran
       1,
       6,
       0,
-      ..._int32LittleEndian(rgbData.length),
+      ..._int32LittleEndian(rgbData.length + 2),
       18,
       0,
     ];
@@ -199,6 +200,16 @@ class CorsairICueLinkHub extends LightningControllerInterface with InterruptTran
           );
         }
 
+        final DevicesState state = devicesBloc.state;
+        final DeviceData? persistedData =
+            state.persistDeviceData.firstWhereOrNull((DeviceData element) => element.isSameDevice(subDeviceData));
+        if (persistedData != null) {
+          subDeviceData = subDeviceData.copyWith(
+            rotation: persistedData.rotation,
+            scale: persistedData.scale,
+            offset: persistedData.offset,
+          );
+        }
         return SubDeviceInterface(
           subComponent: subComponent,
           parent: this,

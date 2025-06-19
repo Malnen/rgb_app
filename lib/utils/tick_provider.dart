@@ -1,19 +1,25 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/utils/type_defs.dart';
 
 class TickProvider {
-  static const int fps = 60;
+  static const int fps = 144;
   static const int frameTime = 1000 ~/ fps;
   static const double fpsMultiplier = 60 / fps;
 
-  final List<FutureVoidCallback> _listeners;
+  final ValueNotifier<int> averageFps;
 
+  final List<FutureVoidCallback> _listeners;
   bool _processingFrame;
+  int _frameCount = 0;
+  DateTime _fpsTime;
 
   TickProvider()
-      : _listeners = <FutureVoidCallback>[],
-        _processingFrame = false {
+      : averageFps = ValueNotifier<int>(0),
+        _listeners = <FutureVoidCallback>[],
+        _processingFrame = false,
+        _fpsTime = DateTime.now() {
     Timer.periodic(
       Duration(milliseconds: frameTime),
       (_) => _processCallbacks(),
@@ -30,7 +36,15 @@ class TickProvider {
       for (FutureVoidCallback callback in _listeners) {
         await callback();
       }
+
       _processingFrame = false;
+      _frameCount++;
+      final DateTime now = DateTime.now();
+      if (now.millisecondsSinceEpoch >= _fpsTime.millisecondsSinceEpoch + 1000) {
+        averageFps.value = _frameCount;
+        _frameCount = 0;
+        _fpsTime = DateTime.now();
+      }
     }
   }
 }

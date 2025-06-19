@@ -32,26 +32,24 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
 
   @override
   void update() {
-    final List<List<Color>> colors = effectsColorsCubit.colors;
     for (Ripple ripple in _ripples) {
-      for (int x = 0; x < effectBloc.sizeX; x++) {
-        for (int y = 0; y < effectBloc.sizeZ; y++) {
-          _processRipple(ripple, Point<int>(x, y), colors);
-        }
-      }
-
+      processUsedIndexes((int x, int y) => _processRipple(ripple, Point<int>(x, y)));
       ripple.update(expansionSpeed: expansion.value, deathSpeed: fadeSpeed.value);
     }
 
     _ripples.removeWhere((Ripple ripple) => ripple.canBeDeleted);
   }
 
-  void _processRipple(Ripple ripple, Point<int> position, List<List<Color>> colors) {
+  void _processRipple(Ripple ripple, Point<int> position) {
     final double opacity = ripple.getOpacity(position);
-    final Color currentColor = colors[position.y][position.x];
-    colors[position.y][position.x] = ripple.color.mix(
-      currentColor,
-      opacity,
+    final Color currentColor = colors.getColor(position.x, position.y);
+    colors.setColor(
+      position.x,
+      position.y,
+      ripple.color.mix(
+        currentColor,
+        opacity,
+      ),
     );
   }
 

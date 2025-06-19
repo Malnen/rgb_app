@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
+import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
 import 'package:rgb_app/utils/type_defs.dart';
 
@@ -55,9 +56,9 @@ class _EffectGridCellState extends State<EffectGridCell> {
   }
 
   Color _getColor(EffectsColorsCubit cubit) {
-    final List<List<Color>> colors = cubit.colors;
-    if (colors.length > widget.y && colors.first.length > widget.x) {
-      return colors[widget.y][widget.x];
+    final ColorList colors = cubit.colors;
+    if (colors.width > widget.x && colors.height > widget.y) {
+      return colors.getColor(widget.x, widget.y);
     }
 
     return Colors.white;

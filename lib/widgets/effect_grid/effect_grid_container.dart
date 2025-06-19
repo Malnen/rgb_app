@@ -11,7 +11,6 @@ import 'package:rgb_app/extensions/vector_3_extension.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_placeholder_data.dart';
 import 'package:rgb_app/widgets/device_placeholder/device_placeholder.dart';
-import 'package:rgb_app/widgets/effect_grid/effect_grid_cells.dart';
 
 class EffectGridContainer extends StatefulWidget {
   const EffectGridContainer();
@@ -48,10 +47,10 @@ class _EffectGridContainerState extends State<EffectGridContainer> {
         width: fullWidth,
         child: Stack(
           children: <Widget>[
-            EffectGridCells(
+/*            EffectGridCells(
               cellMargin: cellMargin,
               cellSize: cellSize,
-            ),
+            ),*/
             ...devicesBloc.deviceInstances.expand((DeviceInterface deviceInterface) {
               final bool isLightningController = deviceInterface is LightningControllerInterface;
               final List<DeviceInterface> allDevices = <DeviceInterface>[

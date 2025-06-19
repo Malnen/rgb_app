@@ -108,9 +108,9 @@ class _EffectGridState extends State<EffectGrid> {
     final String text = controller.text;
     final bool hasText = text.isNotEmpty;
     final int parsedValue = hasText ? int.parse(text) : 0;
-    if (parsedValue > 60) {
-      controller.text = '60';
-      return 60;
+    if (parsedValue > 1000) {
+      controller.text = '1000';
+      return 1000;
     } else if (parsedValue < min) {
       controller.text = min.toString();
       return min;

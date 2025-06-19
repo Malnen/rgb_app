@@ -29,13 +29,17 @@ class DevicesState with _$DevicesState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   final DeviceInterface? selectedDevice;
 
+  @override
+  final List<DeviceData> persistDeviceData;
+
   DevicesState({
     required this.devicesData,
     required this.key,
     this.availableDevices = const <DeviceData>[],
     this.deviceInstances = const <DeviceInterface>[],
+    List<DeviceData>? persistDeviceData,
     this.selectedDevice,
-  });
+  }) : persistDeviceData = persistDeviceData ?? <DeviceData>[];
 
   factory DevicesState.empty() => DevicesState(
         devicesData: <DeviceData>[],
@@ -54,6 +58,7 @@ class DevicesState with _$DevicesState {
       devicesData: <DeviceData>[...state.devicesData],
       deviceInstances: <DeviceInterface>[...state.deviceInstances],
       availableDevices: <DeviceData>[...state.availableDevices],
+      persistDeviceData: state.persistDeviceData,
       key: UniqueKey(),
     );
   }

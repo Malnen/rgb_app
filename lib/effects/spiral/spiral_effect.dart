@@ -43,17 +43,11 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
 
   @override
   void update() {
-    final List<List<Color>> colors = effectsColorsCubit.colors;
     if (colors.isEmpty) {
       return;
     }
 
-    for (int i = 0; i < effectBloc.sizeZ; i++) {
-      for (int j = 0; j < effectBloc.sizeX; j++) {
-        _setColors(i, j, colors);
-      }
-    }
-
+    processUsedIndexes(_setColors);
     _updateValue();
   }
 
@@ -82,9 +76,9 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
 
   void _prepareNewColors() {
     final List<List<Color>> newColors = <List<Color>>[];
-    for (int i = 0; i < effectBloc.sizeZ; i++) {
+    for (int i = 0; i < effectBloc.sizeX; i++) {
       final List<Color> rows = <Color>[];
-      for (int j = 0; j < effectBloc.sizeX; j++) {
+      for (int j = 0; j < effectBloc.sizeZ; j++) {
         rows.add(Colors.black);
       }
       newColors.add(rows);
@@ -95,8 +89,8 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
 
   void _fillWithProperValues() {
     _lastColors = _colors.map(List<Color>.from).toList();
-    final int height = _colors.length;
-    final int width = _colors[0].length;
+    final int height = colors.height;
+    final int width = colors.width;
     final double centerX = center.value.x * width;
     final double centerY = center.value.y * height;
 
@@ -104,12 +98,12 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
       for (int y = 0; y < height; y++) {
         final double distanceFromCenter = sqrt(pow(x - centerX, 2) + pow(y - centerY, 2));
         final double twistFactor = distanceFromCenter * twist.value;
-        final double angle = atan2(y - centerY, x - centerX) + twistFactor * twistDirection + rotation;
+        final double angle = atan2(x - centerX, y - centerY) + twistFactor * twistDirection + rotation;
         final double hue = _getHue(angle);
         if (customColorsMode) {
-          _calculateCustomColor(hue, y, x);
+          _calculateCustomColor(hue, x, y);
         } else {
-          _colors[y][x] = HSVColor.fromAHSV(1, hue, 1, 1).toColor();
+          _colors[x][y] = HSVColor.fromAHSV(1, hue, 1, 1).toColor();
         }
       }
     }
@@ -122,11 +116,11 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
     return correctHue % 360;
   }
 
-  void _calculateCustomColor(double hue, int y, int x) {
+  void _calculateCustomColor(double hue, int x, int y) {
     final int firstColor = hue.floor() % customColorsLength;
     final int secondColor = (firstColor + 1) % customColorsLength;
     final double fraction = hue % 1;
-    _colors[y][x] = Color.lerp(
+    _colors[x][y] = Color.lerp(
       customColors[firstColor],
       customColors[secondColor],
       fraction,
@@ -158,23 +152,23 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
     _fillWithProperValues();
   }
 
-  void _setColors(int i, int j, List<List<Color>> colors) {
+  void _setColors(int x, int y) {
     if (customColorsMode) {
-      final Color firstColor = leftDirection ? _lastColors[i][j] : _colors[i][j];
-      final Color secondColor = leftDirection ? _colors[i][j] : _lastColors[i][j];
-      colors[i][j] = Color.lerp(firstColor, secondColor, value / valueMax)!;
+      final Color firstColor = leftDirection ? _lastColors[x][y] : _colors[x][y];
+      final Color secondColor = leftDirection ? _colors[x][y] : _lastColors[x][y];
+      colors.setColor(x, y, Color.lerp(firstColor, secondColor, value / valueMax)!);
     } else {
-      _setRainbowColor(i, j, colors);
+      _setRainbowColor(x, y);
     }
   }
 
-  void _setRainbowColor(int i, int j, List<List<Color>> colors) {
-    final Color color = _colors[i][j];
+  void _setRainbowColor(int x, int y) {
+    final Color color = _colors[x][y];
     final HSVColor hsv = HSVColor.fromColor(color);
     final double hue = hsv.hue;
     final double currentValue = hue + value;
     final double newHue = currentValue % 360;
     final HSVColor newHsv = HSVColor.fromAHSV(1, newHue, 1, 1);
-    colors[i][j] = newHsv.toColor();
+    colors.setColor(x, y, newHsv.toColor());
   }
 }

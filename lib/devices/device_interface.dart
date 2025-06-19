@@ -20,6 +20,7 @@ import 'package:rgb_app/devices/udp_network_device_interface.dart';
 import 'package:rgb_app/devices/unknown_device.dart';
 import 'package:rgb_app/extensions/vector_3_extension.dart';
 import 'package:rgb_app/mixins/subscriber.dart';
+import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/models/numeric_property.dart';
@@ -271,9 +272,9 @@ abstract class DeviceInterface with Subscriber {
     rotation ??= deviceData.rotation;
     size ??= getSize();
 
-    final List<List<Color>> colors = effectsColorsCubit.colors;
-    final int width = colors[0].length;
-    final int height = colors.length;
+    final ColorList colors = effectsColorsCubit.colors;
+    final int width = colors.width;
+    final int height = colors.height;
 
     final double radiansZ = radians(rotation.z);
 
@@ -300,10 +301,10 @@ abstract class DeviceInterface with Subscriber {
     final double tx = fx - fx.floor();
     final double tz = fz - fz.floor();
 
-    final Color c00 = colors[z0][x0];
-    final Color c10 = colors[z0][x1];
-    final Color c01 = colors[z1][x0];
-    final Color c11 = colors[z1][x1];
+    final Color c00 = colors.getColor(x0, z0);
+    final Color c10 = colors.getColor(x1, z0);
+    final Color c01 = colors.getColor(x0, z1);
+    final Color c11 = colors.getColor(x1, z1);
 
     final Color top = _lerp(c00, c10, tx);
     final Color bottom = _lerp(c01, c11, tx);

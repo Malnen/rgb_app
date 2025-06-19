@@ -216,43 +216,42 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
   }
 
   void _processUpdatedValues() {
-    final List<List<Color>> colors = effectsColorsCubit.colors;
     final int sizeZ = effectBloc.sizeZ;
     final int step = 100 ~/ sizeZ;
     final int spectrumShiftValue = spectrumShift.value.toInt();
     final int sizeX = effectBloc.sizeX;
     final int spectrumOffset = spectrumShiftValue > _currentValues.length - sizeX ? 0 : spectrumShiftValue;
-    for (int i = 0; i < sizeX; i++) {
-      final int value = _currentValues[i + spectrumOffset];
-      for (int j = 0; j < sizeZ; j++) {
-        final int y = sizeZ - 1 - j;
-        final Color currentColor = colors[y][i];
-        _setColor(step, j, i, value, sizeZ, colors, y, currentColor);
+    processUsedIndexes(
+      (int x, int yIndex) {
+        final int value = _currentValues[x + spectrumOffset];
+        final int y = sizeZ - 1 - yIndex;
+        final Color currentColor = colors.getColor(x, yIndex);
+        _setColor(step, yIndex, x, value, sizeZ, y, currentColor);
         if (_duringTransition) {
-          final Color currentNewColor = colors[y][i];
-          colors[y][i] = currentNewColor.mix(currentColor, _transitionOpacity);
+          final Color currentNewColor = colors.getColor(x, y);
+          colors.setColor(x, y, currentNewColor.mix(currentColor, _transitionOpacity));
         }
-      }
-    }
+      },
+    );
   }
 
-  void _setColor(int step, int j, int i, int value, int sizeZ, List<List<Color>> colors, int y, Color currentColor) {
+  void _setColor(int step, int j, int i, int value, int sizeZ, int y, Color currentColor) {
     final int selectedId = displayMode.selectedOption.value;
     if (selectedId == 0) {
-      _onNormalDisplay(step, j, value, currentColor, colors, y, i);
+      _onNormalDisplay(step, j, value, currentColor, y, i);
     } else if (selectedId == 1) {
-      _onMirroredDisplay(step, j, value ~/ 2, currentColor, colors, y, i);
+      _onMirroredDisplay(step, j, value ~/ 2, currentColor, y, i);
     }
   }
 
-  void _onNormalDisplay(int step, int j, int value, Color currentColor, List<List<Color>> colors, int y, int i) {
+  void _onNormalDisplay(int step, int j, int value, Color currentColor, int y, int i) {
     final double opacity = _calculateOpacity(step, j, value);
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors[y][i] = barsColorValue.mix(backgroundColorValue, opacity);
+    colors.setColor(i, j, barsColorValue.mix(backgroundColorValue, opacity));
   }
 
-  void _onMirroredDisplay(int step, int j, int value, Color currentColor, List<List<Color>> colors, int y, int i) {
+  void _onMirroredDisplay(int step, int j, int value, Color currentColor, int y, int i) {
     final int halfOfHeight = effectBloc.sizeZ ~/ 2;
     late double opacity;
     if (y < halfOfHeight) {
@@ -263,7 +262,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
 
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors[y][i] = barsColorValue.mix(backgroundColorValue, opacity);
+    colors.setColor(i, j, barsColorValue.mix(backgroundColorValue, opacity));
   }
 
   double _calculateOpacity(int step, int j, int value) {
