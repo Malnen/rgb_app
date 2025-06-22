@@ -57,19 +57,18 @@ class ViewPainter3D extends CustomPainter {
 
     final double fovY = vmath.radians(60);
     final double aspect = size.width / size.height;
-    final double near = 10;
-    final double far = 500;
-    final double f = 1 / tan(fovY / 2);
+    final double near = 10.0;
+    final double far = 500.0;
+    final double f = 1.0 / tan(fovY / 2);
 
     final vmath.Matrix4 projection = vmath.Matrix4.zero()
       ..setEntry(0, 0, f / aspect)
-      ..setEntry(1, 1, f)
-      ..setEntry(2, 2, (far + near) / (near - far))..setEntry(2, 3, (2 * far * near) / (near - far))..setEntry(
-          3, 2, -1);
+      ..setEntry(1, 1, f)..setEntry(2, 2, (far + near) / (near - far))..setEntry(
+          2, 3, (2 * far * near) / (near - far))..setEntry(3, 2, -1.0);
 
-    final double effectiveZoom = zoomFactor.clamp(0.2, 5);
+    final double effectiveZoom = zoomFactor.clamp(0.2, 5.0);
     final vmath.Matrix4 view = vmath.Matrix4.identity()
-      ..translate(0, 0, -200 / effectiveZoom)
+      ..translate(0.0, 0.0, -200.0 / effectiveZoom)
       ..rotateX(rotationX)
       ..rotateY(rotationY)
       ..translate(translationOffset.dx, translationOffset.dy);
@@ -140,7 +139,7 @@ class ViewPainter3D extends CustomPainter {
 
         final List<Offset> projected = clipped.map((vmath.Vector4 v) {
           final vmath.Vector4 p = projection.transform(v);
-          final double w = p.w != 0 ? p.w : 1;
+          final double w = p.w != 0 ? p.w : 1.0;
           return Offset((p.x / w) * size.width / 2 + center.dx, (-p.y / w) * size.height / 2 + center.dy);
         }).toList();
         canvas.drawPath(Path()..addPolygon(projected, true), paint);
@@ -149,7 +148,7 @@ class ViewPainter3D extends CustomPainter {
       if (showEffects && colorList.isNotEmpty && usedIndexes.isNotEmpty) {
         final int width = colorList.width;
         final int height = colorList.height;
-        final double near = 10;
+        final double near = 10.0;
         final vmath.Matrix4 viewModel = view;
 
         for (final int index in usedIndexes) {
@@ -164,25 +163,25 @@ class ViewPainter3D extends CustomPainter {
           final vmath.Vector3 voxelCenter = vmath.Vector3(x.toDouble(), y.toDouble(), z.toDouble());
 
           final vmath.Vector4 viewSpace = viewModel.transform(
-            vmath.Vector4(voxelCenter.x, voxelCenter.y, voxelCenter.z, 1),
+            vmath.Vector4(voxelCenter.x, voxelCenter.y, voxelCenter.z, 1.0),
           );
 
           if (viewSpace.z > -near) continue;
 
           final vmath.Vector4 transformed = projection.transform(viewSpace);
-          final double w = transformed.w != 0 ? transformed.w : 1;
+          final double w = transformed.w != 0 ? transformed.w : 1.0;
           final double sx = (transformed.x / w) * size.width / 2 + center.dx;
           final double sy = (-transformed.y / w) * size.height / 2 + center.dy;
 
           final vmath.Vector4 refView = viewModel.transform(
-            vmath.Vector4(voxelCenter.x + 1, voxelCenter.y, voxelCenter.z, 1),
+            vmath.Vector4(voxelCenter.x + 1.0, voxelCenter.y, voxelCenter.z, 1.0),
           );
           if (refView.z > -near) continue;
           final vmath.Vector4 ref = projection.transform(refView);
-          final double w2 = ref.w != 0 ? ref.w : 1;
+          final double w2 = ref.w != 0 ? ref.w : 1.0;
           final double sx2 = (ref.x / w2) * size.width / 2 + center.dx;
 
-          final double radius = max((sx2 - sx).abs(), 3);
+          final double radius = max((sx2 - sx).abs(), 3.0);
 
           final Paint paint = Paint()
             ..color = baseColor.withOpacity(.3)
@@ -230,13 +229,13 @@ class ViewPainter3D extends CustomPainter {
 
     final vmath.Matrix4 viewModel = view;
     final List<vmath.Vector4> viewCorners =
-        corners.map((vmath.Vector3 v) => viewModel.transform(vmath.Vector4(v.x, v.y, v.z, 1))).toList();
-    final List<vmath.Vector4> clipped = _clipFaceAgainstNearPlane(viewCorners, 10);
+        corners.map((vmath.Vector3 v) => viewModel.transform(vmath.Vector4(v.x, v.y, v.z, 1.0))).toList();
+    final List<vmath.Vector4> clipped = _clipFaceAgainstNearPlane(viewCorners, 10.0);
     if (clipped.length < 3) return;
 
     final List<Offset> projected = clipped.map((vmath.Vector4 v) {
       final vmath.Vector4 p = projection.transform(v);
-      final double w = p.w != 0 ? p.w : 1;
+      final double w = p.w != 0 ? p.w : 1.0;
       return Offset((p.x / w) * size.width / 2 + center.dx, (-p.y / w) * size.height / 2 + center.dy);
     }).toList();
 
