@@ -10,10 +10,13 @@ class Vector with _$Vector {
   final double x;
   @override
   final double y;
+  @override
+  final double z;
 
   Vector({
-    required this.x,
-    required this.y,
+    this.x = 0,
+    this.y = 0,
+    this.z = 0,
   });
 
   factory Vector.fromJson(Map<String, Object?> json) => _$VectorFromJson(json);
@@ -24,6 +27,7 @@ class Vector with _$Vector {
     return Vector(
       x: x + padding,
       y: y + padding,
+      z: z + padding,
     );
   }
 }

@@ -544,27 +544,63 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final ColorList colors = effectsColorsCubit.state.colors;
     final int width = colors.width;
     final int height = colors.height;
+    final int depth = colors.depth;
+
     final List<DeviceInterface> deviceInstances = state.deviceInstances
-        .expand(
-          (DeviceInterface device) =>
-              device is LightningControllerInterface ? device.subDevices : <DeviceInterface>[device],
-        )
+        .expand((DeviceInterface device) =>
+            device is LightningControllerInterface ? device.subDevices : <DeviceInterface>[device])
         .toList();
+
     for (final DeviceInterface device in deviceInstances) {
       final Vector3 offset = device.deviceData.offset;
+      final Vector3 scale = device.deviceData.scale;
+      final Vector3 rotation = device.deviceData.rotation;
       final Vector3 size = device.getSize();
+      final Set<int> deviceIndexes = <int>{};
 
-      final int xStart = (offset.x - 1).floor().clamp(0, width - 1);
-      final int yStart = (offset.z - 1).floor().clamp(0, height - 1);
-      final int xEnd = (offset.x + size.x + 1).ceil().clamp(0, width);
-      final int yEnd = (offset.z + size.z + 1).ceil().clamp(0, height);
+      final Vector3 centerOffset = Vector3(
+        size.x * scale.x / 2,
+        size.y * scale.y / 2,
+        size.z * scale.z / 2,
+      );
 
-      for (int y = yStart; y < yEnd; y++) {
-        for (int x = xStart; x < xEnd; x++) {
-          final int index = y * width + x;
-          indexes.add(index);
+      final Matrix4 model = Matrix4.identity()
+        ..translate(offset.x, offset.y, offset.z)
+        ..translate(centerOffset.x, centerOffset.y, centerOffset.z)
+        ..rotateX(radians(rotation.x))
+        ..rotateY(radians(rotation.y))
+        ..rotateZ(radians(rotation.z))
+        ..translate(-centerOffset.x, -centerOffset.y, -centerOffset.z)
+        ..scale(size.x * scale.x, size.y * scale.y, size.z * scale.z);
+
+      final int sx = size.x.ceil();
+      final int sy = size.y.ceil();
+      final int sz = size.z.ceil();
+
+      for (int z = -1; z <= sz + 1; z++) {
+        for (int y = -1; y <= sy + 1; y++) {
+          for (int x = -1; x <= sx + 1; x++) {
+            final double nx = x / sx;
+            final double ny = y / sy;
+            final double nz = z / sz;
+
+            final Vector3 local = Vector3(nx, ny, nz);
+            final Vector3 world = model.transform3(local);
+
+            final int wx = world.x.round();
+            final int wy = world.y.round();
+            final int wz = world.z.round();
+
+            if (wx >= 0 && wx < width && wy >= 0 && wy < height && wz >= 0 && wz < depth) {
+              final int index = wz * width * height + wy * width + wx;
+              deviceIndexes.add(index);
+            }
+          }
         }
       }
+
+      device.usedIndexes = deviceIndexes;
+      indexes.addAll(deviceIndexes);
     }
 
     effectsColorsCubit.updateUsedIndexes(indexes);

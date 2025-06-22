@@ -52,13 +52,17 @@ abstract class Effect {
   void dispose() {}
 
   @protected
-  void processUsedIndexes(void Function(int x, int y) process) {
+  void processUsedIndexes(void Function(int x, int y, int z) process) {
     final Set<int> usedIndexes = effectsColorsCubit.state.usedIndexes;
     final int width = colors.width;
+    final int height = colors.height;
+
     for (final int index in usedIndexes) {
-      final int y = index ~/ width;
-      final int x = index % width;
-      process(x, y);
+      final int z = index ~/ (width * height);
+      final int rem = index % (width * height);
+      final int y = rem ~/ width;
+      final int x = rem % width;
+      process(x, y, z);
     }
   }
 

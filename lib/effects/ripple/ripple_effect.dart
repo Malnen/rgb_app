@@ -9,6 +9,7 @@ import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:vector_math/vector_math.dart';
 
 class RippleEffect extends Effect with KeyStrokeEffectProperties {
   static const String className = 'RippleEffect';
@@ -54,7 +55,8 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
   @override
   void update() {
     for (Ripple ripple in _ripples) {
-      processUsedIndexes((int x, int y) => _processRipple(ripple, Point<int>(x, y)));
+      processUsedIndexes(
+          (int x, int y, int z) => _processRipple(ripple, Vector3(x.toDouble(), y.toDouble(), z.toDouble())));
       ripple.update(expansionSpeed: expansion.value, deathSpeed: fadeSpeed.value);
     }
 
@@ -68,7 +70,7 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
     Timer.periodic(Duration(milliseconds: milliseconds), (Timer timer) {
       _timer = timer;
       final Color color = _getColor();
-      final Point<int> center = _getCenter();
+      final Vector3 center = _getCenter();
       final Ripple ripple = Ripple(
         center: center,
         lifespan: duration.value,
@@ -78,12 +80,13 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
     });
   }
 
-  void _processRipple(Ripple ripple, Point<int> position) {
+  void _processRipple(Ripple ripple, Vector3 position) {
     final double opacity = ripple.getOpacity(position);
-    final Color currentColor = colors.getColor(position.x, position.y);
+    final Color currentColor = colors.getColor(position.x.toInt(), position.y.toInt(), position.z.toInt());
     colors.setColor(
-      position.x,
-      position.y,
+      position.x.toInt(),
+      position.y.toInt(),
+      position.z.toInt(),
       ripple.color.mix(
         currentColor,
         opacity,
@@ -91,12 +94,13 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
     );
   }
 
-  Point<int> _getCenter() {
+  Vector3 _getCenter() {
     final Random random = Random();
     final int x = random.nextInt(effectBloc.sizeX);
-    final int y = random.nextInt(effectBloc.sizeZ);
+    final int y = random.nextInt(effectBloc.sizeY);
+    final int z = random.nextInt(effectBloc.sizeZ);
 
-    return Point<int>(x, y);
+    return Vector3(x.toDouble(), y.toDouble(), z.toDouble());
   }
 
   Color _getColor() {

@@ -9,7 +9,7 @@ class EffectsColorsCubit extends Cubit<EffectsColorsState> {
   EffectsColorsCubit()
       : super(
           EffectsColorsState(
-            colors: ColorList(width: 0, height: 0),
+            colors: ColorList(width: 0, height: 0, depth: 0),
             key: UniqueKey(),
             usedIndexes: <int>{},
           ),
@@ -17,8 +17,8 @@ class EffectsColorsCubit extends Cubit<EffectsColorsState> {
 
   void updateColors(ColorList colors) => _emitColors(colors);
 
-  void updateColorsSize(int sizeX, int sizeZ) {
-    final ColorList colors = ColorList(width: sizeX, height: sizeZ);
+  void updateColorsSize(int sizeX, int sizeY, int sizeZ) {
+    final ColorList colors = ColorList(width: sizeX, height: sizeY, depth: sizeZ);
     _emitColors(colors);
   }
 

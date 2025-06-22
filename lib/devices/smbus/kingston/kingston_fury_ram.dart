@@ -42,7 +42,7 @@ class KingstonFuryRam extends SMBusDeviceInterface {
   Future<void> update() async {
     final List<Color> newColors = <Color>[];
     for (int i = 0; i < colors.length; i++) {
-      final Color newColor = getColorAt(x: 0, y: i);
+      final Color newColor = getColorAt(x: 0, y: i, z: 0);
       newColors.add(newColor);
     }
     colors = newColors;

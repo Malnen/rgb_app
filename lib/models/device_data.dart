@@ -41,12 +41,12 @@ class DeviceData with _$DeviceData {
 
   DeviceData({
     required this.key,
-    required vmath.Vector3 offset,
+    required this.offset,
     required this.scale,
     required this.rotation,
     this.connected = false,
     this.properties = const <Property<Object>>[],
-  }) : offset = offset..floor();
+  });
 
   factory DeviceData.fromJson(Map<String, Object?> json) {
     if (LightningControllerDeviceData.isAssignable(json)) {
@@ -111,15 +111,14 @@ class UsbDeviceData extends DeviceData with _$UsbDeviceData {
     vmath.Vector3? rotation,
     this.connected = false,
     this.properties = const <Property<Object>>[],
-  })  : offset = (offset ?? Vector3.zero())..floor(),
+  })  : offset = offset ?? Vector3.zero(),
         scale = scale ?? Vector3(1, 1, 1),
-        rotation = rotation ?? Vector3(0, 0, 0)
-          ..floor(),
+        rotation = rotation ?? Vector3(0, 0, 0),
         super(
           key: key,
-          offset: (offset ?? Vector3.zero())..floor(),
+          offset: offset ?? Vector3.zero(),
           scale: scale ?? Vector3(1, 1, 1),
-          rotation: (rotation ?? Vector3.zero())..floor(),
+          rotation: rotation ?? Vector3.zero(),
           properties: properties,
           connected: connected,
         );
@@ -191,15 +190,14 @@ class SMBusDeviceData extends DeviceData with _$SMBusDeviceData {
     vmath.Vector3? rotation,
     this.connected = false,
     this.properties = const <Property<Object>>[],
-  })  : offset = (offset ?? Vector3.zero())..floor(),
+  })  : offset = offset ?? Vector3.zero(),
         scale = scale ?? Vector3(1, 1, 1),
-        rotation = rotation ?? Vector3(0, 0, 0)
-          ..floor(),
+        rotation = rotation ?? Vector3(0, 0, 0),
         super(
           key: key,
-          offset: (offset ?? Vector3.zero())..floor(),
+          offset: offset ?? Vector3.zero(),
           scale: scale ?? Vector3(1, 1, 1),
-          rotation: (rotation ?? Vector3.zero())..floor(),
+          rotation: rotation ?? Vector3.zero(),
           properties: properties,
           connected: connected,
         );
@@ -271,15 +269,14 @@ class UdpNetworkDeviceData extends DeviceData with _$UdpNetworkDeviceData {
     vmath.Vector3? rotation,
     this.connected = false,
     this.properties = const <Property<Object>>[],
-  })  : offset = (offset ?? Vector3.zero())..floor(),
+  })  : offset = offset ?? Vector3.zero(),
         scale = scale ?? Vector3(1, 1, 1),
-        rotation = rotation ?? Vector3(0, 0, 0)
-          ..floor(),
+        rotation = rotation ?? Vector3(0, 0, 0),
         super(
           key: key,
-          offset: (offset ?? Vector3.zero())..floor(),
+          offset: offset ?? Vector3.zero(),
           scale: scale ?? Vector3(1, 1, 1),
-          rotation: (rotation ?? Vector3.zero())..floor(),
+          rotation: rotation ?? Vector3.zero(),
           properties: properties,
           connected: connected,
         );
@@ -351,15 +348,14 @@ class SubDeviceData extends DeviceData with _$SubDeviceData {
     vmath.Vector3? rotation,
     this.connected = false,
     this.properties = const <Property<Object>>[],
-  })  : offset = (offset ?? Vector3.zero())..floor(),
+  })  : offset = offset ?? Vector3.zero(),
         scale = scale ?? Vector3(1, 1, 1),
-        rotation = rotation ?? Vector3(0, 0, 0)
-          ..floor(),
+        rotation = rotation ?? Vector3(0, 0, 0),
         super(
           key: key,
-          offset: (offset ?? Vector3.zero())..floor(),
+          offset: offset ?? Vector3.zero(),
           scale: scale ?? Vector3(1, 1, 1),
-          rotation: (rotation ?? Vector3.zero())..floor(),
+          rotation: rotation ?? Vector3.zero(),
           properties: properties,
           connected: connected,
         );
@@ -434,16 +430,15 @@ class LightningControllerDeviceData extends UsbDeviceData with _$LightningContro
     this.connected = false,
     this.subDevicesData = const <SubDeviceData>[],
     this.properties = const <Property<Object>>[],
-  })  : offset = (offset ?? Vector3.zero())..floor(),
+  })  : offset = offset ?? Vector3.zero(),
         scale = scale ?? Vector3(1, 1, 1),
-        rotation = rotation ?? Vector3(0, 0, 0)
-          ..floor(),
+        rotation = rotation ?? Vector3(0, 0, 0),
         super(
           deviceProductVendor: deviceProductVendor,
           key: key,
-          offset: (offset ?? Vector3.zero())..floor(),
+          offset: offset ?? Vector3.zero(),
           scale: scale ?? Vector3(1, 1, 1),
-          rotation: (rotation ?? Vector3.zero())..floor(),
+          rotation: rotation ?? Vector3.zero(),
           properties: properties,
           connected: connected,
         );

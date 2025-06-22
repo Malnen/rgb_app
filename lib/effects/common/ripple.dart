@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
+import 'package:vector_math/vector_math.dart';
 
 class Ripple {
-  final Point<int> center;
+  final Vector3 center;
   final Color color;
 
   double lifespan;
@@ -59,7 +58,7 @@ class Ripple {
     }
   }
 
-  double getOpacity(Point<int> position) {
+  double getOpacity(Vector3 position) {
     final double distance = center.distanceTo(position);
     final double opacityValue = _getOpacityValue(distance);
     if (_isDisappearing) {

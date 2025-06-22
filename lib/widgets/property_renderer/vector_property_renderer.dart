@@ -28,7 +28,7 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
     super.initState();
     initialPosition = Vector(
       x: property.value.x * size - thumbSize / 2,
-      y: property.value.y * size - thumbSize / 2,
+      y: property.value.z * size - thumbSize / 2,
     );
   }
 
@@ -69,8 +69,8 @@ class _VectorPropertyRendererState extends State<VectorPropertyRenderer> {
 
   void updateOffset(double offsetX, double offsetY) {
     final double x = offsetX / size;
-    final double y = offsetY / size;
-    final Vector vector = Vector(x: x, y: y);
+    final double z = offsetY / size;
+    final Vector vector = Vector(x: x, z: z);
     onChanged(vector);
   }
 

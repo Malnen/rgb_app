@@ -21,7 +21,6 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
   bool customColorsMode = false;
 
   List<Color> get customColors => customColorsProperty.value;
-
   int get customColorsLength => customColors.length;
 
   SpiralEffect(super.effectData) : _colors = <List<Color>>[] {
@@ -43,10 +42,7 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
 
   @override
   void update() {
-    if (colors.isEmpty) {
-      return;
-    }
-
+    if (colors.isEmpty) return;
     processUsedIndexes(_setColors);
     _updateValue();
   }
@@ -76,34 +72,36 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
 
   void _prepareNewColors() {
     final List<List<Color>> newColors = <List<Color>>[];
-    for (int i = 0; i < effectBloc.sizeX; i++) {
-      final List<Color> rows = <Color>[];
-      for (int j = 0; j < effectBloc.sizeZ; j++) {
-        rows.add(Colors.black);
+    for (int x = 0; x < effectBloc.sizeX; x++) {
+      final List<Color> row = <Color>[];
+      for (int z = 0; z < effectBloc.sizeZ; z++) {
+        row.add(Colors.black);
       }
-      newColors.add(rows);
+      newColors.add(row);
     }
-
     _colors = newColors;
   }
 
   void _fillWithProperValues() {
-    _lastColors = _colors.map(List<Color>.from).toList();
-    final int height = colors.height;
+    _lastColors = _colors.map((row) => List<Color>.from(row)).toList();
+    final int depth = colors.depth;
     final int width = colors.width;
     final double centerX = center.value.x * width;
-    final double centerY = center.value.y * height;
+    final double centerZ = center.value.z * depth;
 
     for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        final double distanceFromCenter = sqrt(pow(x - centerX, 2) + pow(y - centerY, 2));
+      for (int z = 0; z < depth; z++) {
+        final double dx = x - centerX;
+        final double dz = z - centerZ;
+        final double distanceFromCenter = sqrt(dx * dx + dz * dz);
         final double twistFactor = distanceFromCenter * twist.value;
-        final double angle = atan2(x - centerX, y - centerY) + twistFactor * twistDirection + rotation;
+        final double angle = atan2(dx, dz) + twistFactor * twistDirection + rotation;
         final double hue = _getHue(angle);
+
         if (customColorsMode) {
-          _calculateCustomColor(hue, x, y);
+          _calculateCustomColor(hue, x, z);
         } else {
-          _colors[x][y] = HSVColor.fromAHSV(1, hue, 1, 1).toColor();
+          _colors[x][z] = HSVColor.fromAHSV(1, hue, 1, 1).toColor();
         }
       }
     }
@@ -112,7 +110,6 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
   double _getHue(double angle) {
     final double hue = (angle + pi) / (pi * 2);
     final double correctHue = customColorsMode ? hue * customColorsLength : hue * 360;
-
     return correctHue % 360;
   }
 
@@ -128,23 +125,22 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
   }
 
   void _onSpinDirectionChange(Set<Option> options) {
-    final Option selectedOption = options.firstWhere((Option option) => option.selected);
+    final Option selectedOption = options.firstWhere((o) => o.selected);
     spinDirection = selectedOption.value == 0 ? 1 : -1;
     leftDirection = selectedOption.value == 0;
   }
 
   void _onTwistDirectionChange(Set<Option> options) {
-    final Option selectedOption = options.firstWhere((Option option) => option.selected);
+    final Option selectedOption = options.firstWhere((o) => o.selected);
     twistDirection = selectedOption.value == 0 ? 1 : -1;
     _fillWithProperValues();
   }
 
   void _onColorModeChange(Set<Option> options) {
-    final Option selectedOption = options.firstWhere((Option option) => option.selected);
+    final Option selectedOption = options.firstWhere((o) => o.selected);
     customColorsMode = selectedOption.value == 0;
     valueMax = customColorsMode ? speed.max : 360;
     customColorsProperty.visible = customColorsMode;
-
     _fillWithProperValues();
   }
 
@@ -152,23 +148,17 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
     _fillWithProperValues();
   }
 
-  void _setColors(int x, int y) {
+  void _setColors(int x, int y, int z) {
     if (customColorsMode) {
-      final Color firstColor = leftDirection ? _lastColors[x][y] : _colors[x][y];
-      final Color secondColor = leftDirection ? _colors[x][y] : _lastColors[x][y];
-      colors.setColor(x, y, Color.lerp(firstColor, secondColor, value / valueMax)!);
+      final Color first = leftDirection ? _lastColors[x][z] : _colors[x][z];
+      final Color second = leftDirection ? _colors[x][z] : _lastColors[x][z];
+      colors.setColor(x, y, z, Color.lerp(first, second, value / valueMax)!);
     } else {
-      _setRainbowColor(x, y);
+      final Color color = _colors[x][z];
+      final HSVColor hsv = HSVColor.fromColor(color);
+      final double currentHue = hsv.hue + value;
+      final HSVColor newHsv = HSVColor.fromAHSV(1, currentHue % 360, 1, 1);
+      colors.setColor(x, y, z, newHsv.toColor());
     }
-  }
-
-  void _setRainbowColor(int x, int y) {
-    final Color color = _colors[x][y];
-    final HSVColor hsv = HSVColor.fromColor(color);
-    final double hue = hsv.hue;
-    final double currentValue = hue + value;
-    final double newHue = currentValue % 360;
-    final HSVColor newHsv = HSVColor.fromAHSV(1, newHue, 1, 1);
-    colors.setColor(x, y, newHsv.toColor());
   }
 }

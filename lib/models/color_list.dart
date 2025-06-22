@@ -1,41 +1,48 @@
 import 'package:flutter/material.dart';
 
 class ColorList {
-  final int height;
   final int width;
+  final int height;
+  final int depth;
   final List<int> _colors;
 
-  ColorList({required this.height, required this.width})
-      : _colors = List<int>.filled(width * height, const Color(0xFFFFFFFF).value);
+  ColorList({
+    required this.width,
+    required this.height,
+    required this.depth,
+  }) : _colors = List<int>.filled(width * height * depth, const Color(0xFFFFFFFF).value);
 
   ColorList copy() => ColorList(
-        height: height,
         width: width,
+        height: height,
+        depth: depth,
       ).._colors.setAll(0, _colors);
 
-  bool get isEmpty => width <= 0 && height <= 0;
+  bool get isEmpty => width <= 0 || height <= 0 || depth <= 0;
 
   bool get isNotEmpty => !isEmpty;
 
-  Color getColor(int x, int y) {
-    _checkBounds(x, y);
-    return Color(_colors[y * width + x]);
+  Color getColor(int x, int y, int z) {
+    _checkBounds(x, y, z);
+    return Color(_colors[_index(x, y, z)]);
   }
 
-  void setColorRGB(int x, int y, int r, int g, int b) {
-    _checkBounds(x, y);
+  void setColorRGB(int x, int y, int z, int r, int g, int b) {
+    _checkBounds(x, y, z);
     final int argb = (0xFF << 24) | (r << 16) | (g << 8) | b;
-    _colors[y * width + x] = argb;
+    _colors[_index(x, y, z)] = argb;
   }
 
-  void setColor(int x, int y, Color color) {
-    _checkBounds(x, y);
-    _colors[y * width + x] = color.value;
+  void setColor(int x, int y, int z, Color color) {
+    _checkBounds(x, y, z);
+    _colors[_index(x, y, z)] = color.value;
   }
 
-  void _checkBounds(int x, int y) {
-    if (x < 0 || x >= width || y < 0 || y >= height) {
-      throw RangeError('Coordinates out of bounds: ($x, $y)');
+  int _index(int x, int y, int z) => z * width * height + y * width + x;
+
+  void _checkBounds(int x, int y, int z) {
+    if (x < 0 || x >= width || y < 0 || y >= height || z < 0 || z >= depth) {
+      throw RangeError('Coordinates out of bounds: ($x, $y, $z)');
     }
   }
 }

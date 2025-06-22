@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:rgb_app/text_input_formatters/min_max_text_input_formatter.dart';
 
 class NumericField<T extends num> extends StatefulWidget {
-  final String label;
+  final String? label;
   final TextEditingController controller;
   final double width;
   final double margin;
@@ -15,9 +15,9 @@ class NumericField<T extends num> extends StatefulWidget {
   final void Function(T)? onSubmit;
 
   const NumericField({
-    required this.label,
     required this.controller,
-    this.width = 50,
+    this.label,
+    double? width,
     this.margin = 0,
     this.height,
     this.fontSize,
@@ -25,7 +25,7 @@ class NumericField<T extends num> extends StatefulWidget {
     this.maxValue,
     this.focusNode,
     this.onSubmit,
-  });
+  }) : width = width ?? 50;
 
   @override
   State<NumericField<T>> createState() => _NumericFieldState<T>();
@@ -86,7 +86,7 @@ class _NumericFieldState<T extends num> extends State<NumericField<T>> {
           hintStyle: TextStyle(
             color: Colors.white,
           ),
-          label: Text(widget.label),
+          label: widget.label != null ? Text(widget.label!) : null,
           labelStyle: TextStyle(
             color: Colors.white,
           ),

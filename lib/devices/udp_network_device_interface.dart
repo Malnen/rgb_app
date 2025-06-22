@@ -60,7 +60,7 @@ class UdpNetworkDeviceInterface extends DeviceInterface with FrameThrottler {
   void update() {
     try {
       for (int i = 0; i < colors.length; i++) {
-        _colors[i] = getColorAt(x: i, y: 0);
+        _colors[i] = getColorAt(x: i, y: 0, z: 0);
       }
     } catch (_) {
       print('$offsetX, $offsetZ out of range: ${deviceData.name}');

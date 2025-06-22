@@ -42,7 +42,7 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
   late List<List<int>> packets;
   late CorsairK70PacketManager packetManager;
 
-  late final Map<Point<int>, List<KeyboardKey>> keys;
+  late final Map<Vector3, List<KeyboardKey>> keys;
 
   @override
   int get endpoint => 0x02;
@@ -62,7 +62,7 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
   @override
   Future<void> init() async {
     await super.init();
-    keys = KeyDictionary.keys[deviceData.deviceProductVendor.productVendor] ?? <Point<int>, List<KeyboardKey>>{};
+    keys = KeyDictionary.keys[deviceData.deviceProductVendor.productVendor] ?? <Vector3, List<KeyboardKey>>{};
     _setMinMax();
     tester = CorsairKeyboardTester(
       corsairKeyboard: this,
@@ -375,8 +375,8 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
   }
 
   void _updateKeys() {
-    for (MapEntry<Point<int>, List<KeyboardKey>> entry in keys.entries) {
-      final Point<int> point = entry.key;
+    for (MapEntry<Vector3, List<KeyboardKey>> entry in keys.entries) {
+      final Vector3 point = entry.key;
       final List<KeyboardKey> keyList = entry.value;
 
       for (KeyboardKey key in keyList) {
@@ -384,7 +384,7 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
           final int packetIndex = key.packetIndex;
           final int index = key.index;
 
-          final Color color = getColorAt(x: point.x, y: point.y);
+          final Color color = getColorAt(x: point.x.toInt(), y: point.y.toInt(), z: point.z.toInt());
           final int r = color.redInt;
           final int g = color.greenInt;
           final int b = color.blueInt;
@@ -423,19 +423,23 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
       };
 
   void _setMinMax() {
-    final Iterable<Point<int>> keyPositions = keys.keys;
-    final int maximumGridY = _getMaximumGridY(keyPositions) + 1;
+    final Iterable<Vector3> keyPositions = keys.keys;
     final int maximumGridX = _getMaximumGridX(keyPositions) + 1;
+    final int maximumGridY = _getMaximumGridY(keyPositions) + 1;
+    final int maximumGridZ = _getMaximumGridZ(keyPositions) + 1;
     final EffectState currentEffectState = effectBloc.state;
     final EffectGridData currentGridData = currentEffectState.effectGridData;
     final int currentMinimumGridX = currentGridData.minSizeX;
+    final int currentMinimumGridY = currentGridData.minSizeY;
     final int currentMinimumGridZ = currentGridData.minSizeZ;
     final int adjustedMinimumGridX = currentMinimumGridX < maximumGridX ? maximumGridX : currentMinimumGridX;
-    final int adjustedMinimumGridZ = currentMinimumGridZ < maximumGridY ? maximumGridY : currentMinimumGridZ;
+    final int adjustedMinimumGridY = currentMinimumGridY < maximumGridY ? maximumGridY : currentMinimumGridY;
+    final int adjustedMinimumGridZ = currentMinimumGridZ < maximumGridZ ? maximumGridZ : currentMinimumGridZ;
     final SetGridSizeEvent setGridSizeEvent = SetGridSizeEvent(
       effectGridData: currentGridData.copyWith(
         minSize: currentGridData.minSize.copyWith(
           x: adjustedMinimumGridX.toDouble(),
+          y: adjustedMinimumGridY.toDouble(),
           z: adjustedMinimumGridZ.toDouble(),
         ),
       ),
@@ -444,9 +448,12 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
     effectBloc.add(setGridSizeEvent);
   }
 
-  int _getMaximumGridY(Iterable<Point<int>> keyPositions) =>
-      keyPositions.isEmpty ? 0 : keyPositions.map((Point<int> position) => position.y).reduce(max);
+  int _getMaximumGridX(Iterable<Vector3> keyPositions) =>
+      keyPositions.isEmpty ? 0 : keyPositions.map((Vector3 position) => position.x.toInt()).reduce(max);
 
-  int _getMaximumGridX(Iterable<Point<int>> keyPositions) =>
-      keyPositions.isEmpty ? 0 : keyPositions.map((Point<int> position) => position.x).reduce(max);
+  int _getMaximumGridY(Iterable<Vector3> keyPositions) =>
+      keyPositions.isEmpty ? 0 : keyPositions.map((Vector3 position) => position.y.toInt()).reduce(max);
+
+  int _getMaximumGridZ(Iterable<Vector3> keyPositions) =>
+      keyPositions.isEmpty ? 0 : keyPositions.map((Vector3 position) => position.z.toInt()).reduce(max);
 }

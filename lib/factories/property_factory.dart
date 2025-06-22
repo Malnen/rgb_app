@@ -18,8 +18,6 @@ class PropertyFactory {
           idn: idn,
           initialValue: json['value'] as double,
           name: json['name'] as String,
-          min: json['min'] as double,
-          max: json['max'] as double,
           propertyType: NumericPropertyType.values.byName(json['propertyType'] as String),
         ) as T;
       case 'VectorProperty':

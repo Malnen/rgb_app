@@ -222,14 +222,14 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
     final int sizeX = effectBloc.sizeX;
     final int spectrumOffset = spectrumShiftValue > _currentValues.length - sizeX ? 0 : spectrumShiftValue;
     processUsedIndexes(
-      (int x, int yIndex) {
+      (int x, int yIndex, int z) {
         final int value = _currentValues[x + spectrumOffset];
         final int y = sizeZ - 1 - yIndex;
-        final Color currentColor = colors.getColor(x, yIndex);
+        final Color currentColor = colors.getColor(x, yIndex, 0);
         _setColor(step, yIndex, x, value, sizeZ, y, currentColor);
         if (_duringTransition) {
-          final Color currentNewColor = colors.getColor(x, y);
-          colors.setColor(x, y, currentNewColor.mix(currentColor, _transitionOpacity));
+          final Color currentNewColor = colors.getColor(x, y, 0);
+          colors.setColor(x, y, 0, currentNewColor.mix(currentColor, _transitionOpacity));
         }
       },
     );
@@ -248,7 +248,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
     final double opacity = _calculateOpacity(step, j, value);
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors.setColor(i, j, barsColorValue.mix(backgroundColorValue, opacity));
+    colors.setColor(i, j, 0, barsColorValue.mix(backgroundColorValue, opacity));
   }
 
   void _onMirroredDisplay(int step, int j, int value, Color currentColor, int y, int i) {
@@ -262,7 +262,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
 
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors.setColor(i, j, barsColorValue.mix(backgroundColorValue, opacity));
+    colors.setColor(i, j, 0, barsColorValue.mix(backgroundColorValue, opacity));
   }
 
   double _calculateOpacity(int step, int j, int value) {

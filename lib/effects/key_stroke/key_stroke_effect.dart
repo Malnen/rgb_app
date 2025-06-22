@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
@@ -12,6 +10,7 @@ import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_effect_properties.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
+import 'package:vector_math/vector_math.dart';
 
 class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
   static const String className = 'KeyStrokeEffect';
@@ -33,19 +32,21 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
   @override
   void update() {
     for (Ripple ripple in _ripples) {
-      processUsedIndexes((int x, int y) => _processRipple(ripple, Point<int>(x, y)));
+      processUsedIndexes(
+          (int x, int y, int z) => _processRipple(ripple, Vector3(x.toDouble(), y.toDouble(), z.toDouble())));
       ripple.update(expansionSpeed: expansion.value, deathSpeed: fadeSpeed.value);
     }
 
     _ripples.removeWhere((Ripple ripple) => ripple.canBeDeleted);
   }
 
-  void _processRipple(Ripple ripple, Point<int> position) {
+  void _processRipple(Ripple ripple, Vector3 position) {
     final double opacity = ripple.getOpacity(position);
-    final Color currentColor = colors.getColor(position.x, position.y);
+    final Color currentColor = colors.getColor(position.x.toInt(), position.y.toInt(), position.z.toInt());
     colors.setColor(
-      position.x,
-      position.y,
+      position.x.toInt(),
+      position.y.toInt(),
+      position.z.toInt(),
       ripple.color.mix(
         currentColor,
         opacity,
@@ -61,7 +62,7 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
 
   void _onKeyPressed(KeyState state) {
     final Color color = _getColor();
-    final Point<int> center = _getCenter(state);
+    final Vector3 center = _getCenter(state);
     final Ripple ripple = Ripple(
       center: center,
       lifespan: duration.value,
@@ -70,22 +71,23 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
     _ripples.add(ripple);
   }
 
-  Point<int> _getCenter(KeyState state) {
+  Vector3 _getCenter(KeyState state) {
     final KeyboardInterface? keyboardInterface = state.keyboardInterface;
     if (keyboardInterface != null) {
       final KeyCode keycode = KeyCodeExtension.fromKeyCode(state.keyCode);
-      final Map<KeyCode, Point<int>> reverseKeys =
+      final Map<KeyCode, Vector3> reverseKeys =
           KeyDictionary.reverseKeyCodes(keyboardInterface.deviceData.deviceProductVendor.productVendor);
-      final Point<int>? position = reverseKeys[keycode];
+      final Vector3? position = reverseKeys[keycode];
       if (position != null) {
-        return Point<int>(
+        return Vector3(
           position.x + keyboardInterface.offsetX,
-          position.y + keyboardInterface.offsetZ,
+          position.y + keyboardInterface.offsetY,
+          position.z + keyboardInterface.offsetZ,
         );
       }
     }
 
-    return Point<int>(-1, -1);
+    return Vector3(-1, -1, -1);
   }
 
   Color _getColor() {

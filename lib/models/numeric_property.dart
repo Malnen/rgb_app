@@ -1,46 +1,72 @@
+import 'dart:async';
+
 import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/extensions/double_extension.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
 
 class NumericProperty extends Property<double> {
+  final int _precision;
+
   double min;
   double max;
-  int _precision;
   NumericPropertyType propertyType;
 
-  double get invertedValue {
-    return (max + 1) - value;
-  }
+  double _rawValue;
+  Timer? _debounce;
+  bool _debounceEnabled = false;
+
+  static const Duration _debounceDuration = Duration(milliseconds: 4);
+
+  double get invertedValue => (max + 1) - value;
+
+  int get precision => _precision;
 
   double get adjustedValue => value * TickProvider.fpsMultiplier;
 
   @override
-  set value(double value) {
-    final double roundToPrecision = value.roundToPrecision(_precision);
-    if (roundToPrecision > max) {
-      super.value = max;
-    } else if (roundToPrecision < min) {
-      super.value = min;
+  double get value => _rawValue;
+
+  @override
+  set value(double newValue) {
+    final double rounded = newValue.roundToPrecision(_precision).clamp(min, max);
+    _rawValue = rounded;
+
+    if (_debounceEnabled) {
+      _debounce?.cancel();
+      _debounce = Timer(_debounceDuration, _applyDebouncedValue);
     } else {
-      super.value = roundToPrecision;
+      _applyDebouncedValue();
     }
+  }
+
+  void _applyDebouncedValue() {
+    if (super.value != _rawValue) {
+      super.value = _rawValue;
+    }
+  }
+
+  void enableDebounce() {
+    _debounceEnabled = true;
+  }
+
+  void disableDebounce() {
+    _debounceEnabled = false;
   }
 
   NumericProperty({
     required super.initialValue,
     required super.name,
     required super.idn,
-    required this.min,
-    required this.max,
+    this.min = 0,
+    this.max = 1,
     int precision = 20,
     this.propertyType = NumericPropertyType.slider,
-  }) : _precision = precision;
+  })  : _precision = precision,
+        _rawValue = initialValue;
 
   @override
   Map<String, Object> getData() => <String, Object>{
-        'min': min,
-        'max': max,
         'value': value,
         'propertyType': propertyType.name,
       };
@@ -48,10 +74,12 @@ class NumericProperty extends Property<double> {
   @override
   void updateProperty(NumericProperty property) {
     super.updateProperty(property);
-    min = property.min;
-    max = property.max;
-    value = property.value;
     propertyType = property.propertyType;
-    _precision = property._precision;
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 }

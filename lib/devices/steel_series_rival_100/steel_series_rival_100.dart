@@ -63,7 +63,7 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
   @override
   void update() {
     try {
-      color = getColorAt(x: 0, y: 0);
+      color = getColorAt(x: 0, y: 0, z: 0);
     } catch (e) {
       print('$offsetX, $offsetZ out of range ${deviceData.name}');
     }

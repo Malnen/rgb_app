@@ -39,7 +39,7 @@ class CorsairVirtuoso extends UsbDeviceInterface with InterruptTransferDevice {
 
   @override
   void update() {
-    color = getColorAt(x: 0, y: 0);
+    color = getColorAt(x: 0, y: 0, z: 0);
     super.update();
   }
 

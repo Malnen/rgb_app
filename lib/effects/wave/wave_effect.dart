@@ -61,17 +61,17 @@ class WaveEffect extends Effect with WaveEffectProperties {
     _setCustomColors();
   }
 
-  void _setColors(int x, int y) {
+  void _setColors(int x, int y, int z) {
     final double shiftValue = value / colorsIncrementMax;
-    customColorsMode ? _setCustomColor(x, y, shiftValue) : _setRainbowColor(x, y);
+    customColorsMode ? _setCustomColor(x, y, z, shiftValue) : _setRainbowColor(x, y, z);
   }
 
-  void _setCustomColor(int x, int y, double shiftValue) {
+  void _setCustomColor(int x, int y, int z, double shiftValue) {
     final int index = (x + customColorIndex * direction) % (shiftedColors.length - 1);
     final Color firstColor = leftDirection ? shiftedColors[index] : _getNextColor(index);
     final Color secondColor = leftDirection ? _getPreviousColor(index) : shiftedColors[index];
     final Color color = Color.lerp(secondColor, firstColor, shiftValue)!;
-    colors.setColor(x, y, color);
+    colors.setColor(x, y, z, color);
   }
 
   Color _getNextColor(int i) {
@@ -90,10 +90,10 @@ class WaveEffect extends Effect with WaveEffectProperties {
     return shiftedColors.last;
   }
 
-  void _setRainbowColor(int x, int y) {
+  void _setRainbowColor(int x, int y, int z) {
     final double hue = (x * size.value + value) % colorsIncrementMax;
     final HSVColor hsv = HSVColor.fromAHSV(1, hue, 1, 1);
-    colors.setColor(x, y, hsv.toColor());
+    colors.setColor(x, y, z, hsv.toColor());
   }
 
   void _setCustomColors() {

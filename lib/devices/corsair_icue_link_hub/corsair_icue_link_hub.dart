@@ -91,7 +91,8 @@ class CorsairICueLinkHub extends LightningControllerInterface with InterruptTran
         final Vector3 ledPosition = subComponent.ledPositions[i];
         final Color color = getColorAt(
           x: ledPosition.x.toInt(),
-          y: ledPosition.z.toInt(),
+          z: ledPosition.z.toInt(),
+          y: ledPosition.y.toInt(),
           scale: subDevice.scale,
           offset: subDevice.deviceData.offset,
           rotation: subDevice.deviceData.rotation,

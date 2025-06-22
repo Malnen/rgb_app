@@ -137,7 +137,7 @@ class AuraLEDController extends UsbDeviceInterface with ControlTransferDevice {
     try {
       final List<Color> newColors = <Color>[];
       for (int i = 0; i < colors.length; i++) {
-        final Color newColor = getColorAt(x: 0, y: i);
+        final Color newColor = getColorAt(x: 0, y: 0, z: i);
         newColors.add(newColor);
       }
       colors = newColors;

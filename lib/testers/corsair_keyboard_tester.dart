@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
@@ -11,6 +10,7 @@ import 'package:rgb_app/devices/corsair_keyboard/corsair_keyboard_packets.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/testers/device_tester.dart';
+import 'package:vector_math/vector_math.dart';
 
 class CorsairKeyboardTester extends DeviceTester {
   final List<Timer> timers = <Timer>[];
@@ -45,7 +45,7 @@ class CorsairKeyboardTester extends DeviceTester {
 
   @override
   Future<void> blink() async {
-    final Iterable<MapEntry<Point<int>, List<KeyboardKey>>> keyEntries = corsairKeyboard.keys.entries;
+    final Iterable<MapEntry<Vector3, List<KeyboardKey>>> keyEntries = corsairKeyboard.keys.entries;
     _updateColor(Duration(milliseconds: 4), 0.75);
     final Timer periodicBlinkTimer = Timer.periodic(
       const Duration(milliseconds: 100),
@@ -65,8 +65,8 @@ class CorsairKeyboardTester extends DeviceTester {
     }
   }
 
-  void _blink(Iterable<MapEntry<Point<int>, List<KeyboardKey>>> keyEntries) {
-    for (MapEntry<Point<int>, List<KeyboardKey>> entry in keyEntries) {
+  void _blink(Iterable<MapEntry<Vector3, List<KeyboardKey>>> keyEntries) {
+    for (MapEntry<Vector3, List<KeyboardKey>> entry in keyEntries) {
       final List<KeyboardKey> keysAtPoint = entry.value;
       for (KeyboardKey key in keysAtPoint) {
         final int packetIndex = key.packetIndex;
