@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/effects/audio_visualizer_effect/audio_visualizer_effect_properties.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
+import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/audio_sample_recorder.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
@@ -216,57 +217,58 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
   }
 
   void _processUpdatedValues() {
-    final int sizeZ = effectBloc.sizeZ;
-    final int step = 100 ~/ sizeZ;
+    final ColorList colors = effectsColorsCubit.colors;
+    final int sizeY = effectBloc.sizeY;
+    final int step = 100 ~/ sizeY;
     final int spectrumShiftValue = spectrumShift.value.toInt();
     final int sizeX = effectBloc.sizeX;
     final int spectrumOffset = spectrumShiftValue > _currentValues.length - sizeX ? 0 : spectrumShiftValue;
+
     processUsedIndexes(
-      (int x, int yIndex, int z) {
+      (int x, int y, int z) {
         final int value = _currentValues[x + spectrumOffset];
-        final int y = sizeZ - 1 - yIndex;
-        final Color currentColor = colors.getColor(x, yIndex, 0);
-        _setColor(step, yIndex, x, value, sizeZ, y, currentColor);
+        final Color currentColor = colors.getColor(x, y, z);
+        _setColor(step, x, y, z, value, currentColor);
         if (_duringTransition) {
-          final Color currentNewColor = colors.getColor(x, y, 0);
-          colors.setColor(x, y, 0, currentNewColor.mix(currentColor, _transitionOpacity));
+          final Color currentNewColor = colors.getColor(x, y, z);
+          colors.setColor(x, y, z, currentNewColor.mix(currentColor, _transitionOpacity));
         }
       },
     );
   }
 
-  void _setColor(int step, int j, int i, int value, int sizeZ, int y, Color currentColor) {
+  void _setColor(int step, int x, int y, int z, int value, Color currentColor) {
     final int selectedId = displayMode.selectedOption.value;
     if (selectedId == 0) {
-      _onNormalDisplay(step, j, value, currentColor, y, i);
+      _onNormalDisplay(step, x, y, z, value, currentColor);
     } else if (selectedId == 1) {
-      _onMirroredDisplay(step, j, value ~/ 2, currentColor, y, i);
+      _onMirroredDisplay(step, x, y, z, value ~/ 2, currentColor);
     }
   }
 
-  void _onNormalDisplay(int step, int j, int value, Color currentColor, int y, int i) {
-    final double opacity = _calculateOpacity(step, j, value);
+  void _onNormalDisplay(int step, int x, int y, int z, int value, Color currentColor) {
+    final double opacity = _calculateOpacity(step, y, value);
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors.setColor(i, j, 0, barsColorValue.mix(backgroundColorValue, opacity));
+    colors.setColor(x, y, z, barsColorValue.mix(backgroundColorValue, opacity));
   }
 
-  void _onMirroredDisplay(int step, int j, int value, Color currentColor, int y, int i) {
-    final int halfOfHeight = effectBloc.sizeZ ~/ 2;
+  void _onMirroredDisplay(int step, int x, int y, int z, int value, Color currentColor) {
+    final int halfOfHeight = effectBloc.sizeY ~/ 2;
     late double opacity;
     if (y < halfOfHeight) {
-      opacity = _calculateOpacity(step, j - halfOfHeight, value);
+      opacity = _calculateOpacity(step, y - halfOfHeight, value - halfOfHeight);
     } else {
-      opacity = 1 - _calculateOpacity(step, j + halfOfHeight, 100 - value);
+      opacity = 1.0 - _calculateOpacity(step, y + halfOfHeight, 100 - value + halfOfHeight);
     }
 
     final Color barsColorValue = _areBarsTransparent ? currentColor : barsColor.value;
     final Color backgroundColorValue = _isBackgroundTransparent ? currentColor : backgroundColor.value;
-    colors.setColor(i, j, 0, barsColorValue.mix(backgroundColorValue, opacity));
+    colors.setColor(x, y, z, barsColorValue.mix(backgroundColorValue, opacity));
   }
 
-  double _calculateOpacity(int step, int j, int value) {
-    final int currentStep = step * (j + 1);
+  double _calculateOpacity(int step, int y, int value) {
+    final int currentStep = step * (y + 1);
     if (value > currentStep) {
       return 1;
     } else {
