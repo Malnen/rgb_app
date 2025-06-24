@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:rgb_app/classes/fixed_size_list.dart';
 import 'package:rgb_app/effects/common/ripple.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/effects/key_stroke/key_stroke_effect_properties.dart';
@@ -27,7 +28,7 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
   final StreamController<double> _periodStream;
 
   late NumericProperty ripplePeriod;
-  late List<Ripple> _ripples;
+  late FixedSizeList<Ripple> _ripples;
 
   Timer? _timer;
 
@@ -35,7 +36,7 @@ class RippleEffect extends Effect with KeyStrokeEffectProperties {
 
   RippleEffect(super.effectData) : _periodStream = StreamController<double>() {
     initProperties();
-    _ripples = <Ripple>[];
+    _ripples = FixedSizeList<Ripple>(maxSize: 25);
     ripplePeriod = NumericProperty(
       min: 0.1,
       max: 10,

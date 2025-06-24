@@ -72,7 +72,7 @@ class _CurrentColorEditorState extends State<CurrentColorEditor> {
       return 0;
     }
 
-    return int.parse(controller.text);
+    return int.tryParse(controller.text) ?? 0;
   }
 
   @override

@@ -15,6 +15,7 @@ class WaveEffect extends Effect with WaveEffectProperties {
   bool leftDirection = false;
   bool customColorsMode = false;
   int customColorIndex = 0;
+  int waveAxis = 0;
 
   WaveEffect(super.effectData) {
     initProperties();
@@ -26,6 +27,7 @@ class WaveEffect extends Effect with WaveEffectProperties {
     colorModeProperty.addValueChangeListener(_onColorModeChange);
     customColorsProperty.addValueChangeListener(_onCustomColorChange);
     size.addValueChangeListener(_onSizeChange);
+    waveAxisProperty.addValueChangeListener(_onAxisChange);
     super.init();
   }
 
@@ -34,7 +36,6 @@ class WaveEffect extends Effect with WaveEffectProperties {
     if (colors.isNotEmpty) {
       processUsedIndexes(_setColors);
     }
-
     _updateValue();
   }
 
@@ -42,6 +43,11 @@ class WaveEffect extends Effect with WaveEffectProperties {
     final Option selectedOption = options.firstWhere((Option option) => option.selected);
     leftDirection = selectedOption.value == 0;
     direction = leftDirection ? 1 : -1;
+  }
+
+  void _onAxisChange(Set<Option> options) {
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
+    waveAxis = selectedOption.value;
   }
 
   void _onColorModeChange(Set<Option> options) {
@@ -67,15 +73,33 @@ class WaveEffect extends Effect with WaveEffectProperties {
   }
 
   void _setCustomColor(int x, int y, int z, double shiftValue) {
-    final int index = (x + customColorIndex * direction) % (shiftedColors.length - 1);
+    final int axisValue = _getAxisValue(x, y, z);
+    final int index = (axisValue + customColorIndex * direction) % (shiftedColors.length - 1);
     final Color firstColor = leftDirection ? shiftedColors[index] : _getNextColor(index);
     final Color secondColor = leftDirection ? _getPreviousColor(index) : shiftedColors[index];
     final Color color = Color.lerp(secondColor, firstColor, shiftValue)!;
     colors.setColor(x, y, z, color);
   }
 
+  void _setRainbowColor(int x, int y, int z) {
+    final int axisValue = _getAxisValue(x, y, z);
+    final double hue = (axisValue * size.value + value) % colorsIncrementMax;
+    final HSVColor hsv = HSVColor.fromAHSV(1, hue, 1, 1);
+    colors.setColor(x, y, z, hsv.toColor());
+  }
+
+  int _getAxisValue(int x, int y, int z) {
+    if (waveAxis == 0) {
+      return x;
+    } else if (waveAxis == 1) {
+      return y;
+    }
+
+    return z;
+  }
+
   Color _getNextColor(int i) {
-    if (i < shiftedColors.length) {
+    if (i < shiftedColors.length - 1) {
       return shiftedColors[i + 1];
     }
 
@@ -90,15 +114,12 @@ class WaveEffect extends Effect with WaveEffectProperties {
     return shiftedColors.last;
   }
 
-  void _setRainbowColor(int x, int y, int z) {
-    final double hue = (x * size.value + value) % colorsIncrementMax;
-    final HSVColor hsv = HSVColor.fromAHSV(1, hue, 1, 1);
-    colors.setColor(x, y, z, hsv.toColor());
-  }
-
   void _setCustomColors() {
     final List<Color> originalColors = customColorsProperty.value;
-    if (originalColors.isEmpty) return;
+    if (originalColors.isEmpty) {
+      return;
+    }
+
     final List<Color> gradientColors = <Color>[];
     final List<Color> colors = List<Color>.from(originalColors);
     colors.add(colors.first);
@@ -112,12 +133,10 @@ class WaveEffect extends Effect with WaveEffectProperties {
       final List<Color> gradient = _getGradient(i, remainingGradientColorCount, gradientColorCountPerSegment, colors);
       gradientColors.addAll(gradient);
     }
-
     while (gradientColors.length < sizeX) {
       final List<Color> copy = List<Color>.from(gradientColors);
       gradientColors.addAll(copy);
     }
-
     this.gradientColors = gradientColors;
     shiftedColors = List<Color>.from(gradientColors);
   }
@@ -132,12 +151,8 @@ class WaveEffect extends Effect with WaveEffectProperties {
         i < remainingGradientColorCount ? gradientColorCountPerSegment : gradientColorCountPerSegment - 1;
     final Color startColor = colors[i];
     final Color endColor = colors[i + 1];
-    final List<Color> gradient = _createGradient(
-      startColor,
-      endColor,
-      gradientColorCount,
-    );
-    return gradient;
+
+    return _createGradient(startColor, endColor, gradientColorCount);
   }
 
   List<Color> _createGradient(Color startColor, Color endColor, int count) {

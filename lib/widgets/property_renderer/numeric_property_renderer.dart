@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/widgets/numeric_field/numeric_field.dart';
@@ -32,7 +33,7 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
         }
       }
       return null;
-    }, [property.value]);
+    }, <Object?>[property.value]);
     useValueListenable(property);
 
     return switch (property.propertyType) {
@@ -79,7 +80,9 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
       });
 
   String formatValue(double value) {
-    final int precision = property.precision;
-    return precision > 0 ? value.toStringAsFixed(precision) : value.toInt().toString();
+    final NumberFormat formatter = NumberFormat()
+      ..minimumFractionDigits = 0
+      ..maximumFractionDigits = property.precision;
+    return formatter.format(value);
   }
 }

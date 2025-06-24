@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:rgb_app/blocs/key_bloc/key_bloc.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/blocs/key_bloc/key_state_type.dart';
+import 'package:rgb_app/classes/fixed_size_list.dart';
 import 'package:rgb_app/devices/key_dictionary.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/effects/common/ripple.dart';
@@ -18,13 +19,13 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
 
   final KeyBloc keyBloc;
 
-  late final List<Ripple> _ripples;
+  late final FixedSizeList<Ripple> _ripples;
 
   int colorIndex = 0;
 
   KeyStrokeEffect(super.effectData)
       : keyBloc = GetIt.instance.get(),
-        _ripples = <Ripple>[] {
+        _ripples = FixedSizeList<Ripple>(maxSize: 25) {
     initProperties();
     keyBloc.stream.listen(_onKeyEvent);
   }

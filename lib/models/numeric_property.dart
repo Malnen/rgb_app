@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:rgb_app/enums/numeric_property_type.dart';
 import 'package:rgb_app/extensions/double_extension.dart';
 import 'package:rgb_app/models/property.dart';
@@ -12,12 +10,6 @@ class NumericProperty extends Property<double> {
   double max;
   NumericPropertyType propertyType;
 
-  double _rawValue;
-  Timer? _debounce;
-  bool _debounceEnabled = false;
-
-  static const Duration _debounceDuration = Duration(milliseconds: 4);
-
   double get invertedValue => (max + 1) - value;
 
   int get precision => _precision;
@@ -25,33 +17,9 @@ class NumericProperty extends Property<double> {
   double get adjustedValue => value * TickProvider.fpsMultiplier;
 
   @override
-  double get value => _rawValue;
-
-  @override
   set value(double newValue) {
     final double rounded = newValue.roundToPrecision(_precision).clamp(min, max);
-    _rawValue = rounded;
-
-    if (_debounceEnabled) {
-      _debounce?.cancel();
-      _debounce = Timer(_debounceDuration, _applyDebouncedValue);
-    } else {
-      _applyDebouncedValue();
-    }
-  }
-
-  void _applyDebouncedValue() {
-    if (super.value != _rawValue) {
-      super.value = _rawValue;
-    }
-  }
-
-  void enableDebounce() {
-    _debounceEnabled = true;
-  }
-
-  void disableDebounce() {
-    _debounceEnabled = false;
+    super.value = rounded;
   }
 
   NumericProperty({
@@ -62,8 +30,7 @@ class NumericProperty extends Property<double> {
     this.max = 1,
     int precision = 20,
     this.propertyType = NumericPropertyType.slider,
-  })  : _precision = precision,
-        _rawValue = initialValue;
+  }) : _precision = precision;
 
   @override
   Map<String, Object> getData() => <String, Object>{
@@ -75,11 +42,5 @@ class NumericProperty extends Property<double> {
   void updateProperty(NumericProperty property) {
     super.updateProperty(property);
     propertyType = property.propertyType;
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
   }
 }

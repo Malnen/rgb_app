@@ -58,11 +58,7 @@ class _NumericFieldState<T extends num> extends State<NumericField<T>> {
         focusNode: focusNode,
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[
-          if (widget.minValue != null && widget.maxValue != null)
-            MinMaxTextInputFormatter<T>(
-              min: widget.minValue!,
-              max: widget.maxValue!,
-            ),
+          if (widget.minValue != null && widget.maxValue != null) MinMaxTextInputFormatter<T>(),
         ],
         // Only nu
         style: TextStyle(
@@ -96,20 +92,15 @@ class _NumericFieldState<T extends num> extends State<NumericField<T>> {
   }
 
   void onSubmit(String value) {
-    final T? parsedValue = parseValue(value);
-    if (parsedValue == null) {
-      controller.text = '0';
-      widget.onSubmit?.call(0 as T);
-    } else {
-      widget.onSubmit?.call(parsedValue);
-    }
+    final T parsedValue = parseValue(value);
+    widget.onSubmit?.call(parsedValue);
   }
 
-  T? parseValue(String value) {
+  T parseValue(String value) {
     if (T == double) {
-      return double.tryParse(value) as T;
+      return double.tryParse(value) as T? ?? 0 as T;
     }
 
-    return int.tryParse(value) as T;
+    return int.tryParse(value) as T? ?? 0 as T;
   }
 }

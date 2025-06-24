@@ -37,6 +37,7 @@ abstract class Effect {
     for (Property<Object> property in properties) {
       property.addListener(onPropertyChanged);
       property.notify();
+      property.enableDebounce();
     }
   }
 

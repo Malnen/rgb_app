@@ -4,8 +4,8 @@ import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/property.dart';
-import 'package:rgb_app/models/vector.dart';
-import 'package:rgb_app/models/vector_property.dart';
+import 'package:rgb_app/models/vector3_property.dart';
+import 'package:vector_math/vector_math.dart' as vmath;
 
 mixin SpiralEffectProperties {
   List<Property<Object>> get properties => <Property<Object>>[
@@ -16,11 +16,13 @@ mixin SpiralEffectProperties {
         colorModeProperty,
         customColorsProperty,
         center,
+        axisInfluence,
       ];
 
   late NumericProperty speed;
   late NumericProperty twist;
-  late VectorProperty center;
+  late Vector3Property center;
+  late Vector3Property axisInfluence;
   late OptionProperty spinDirectionProperty;
   late OptionProperty twistDirectionProperty;
   late OptionProperty colorModeProperty;
@@ -42,10 +44,22 @@ mixin SpiralEffectProperties {
       min: 0,
       max: 1,
     );
-    center = VectorProperty(
-      initialValue: Vector(x: 0.5, y: 0.5),
+    center = Vector3Property(
+      initialValue: vmath.Vector3(0.5, 0.5, 0.5),
+      min: vmath.Vector3(0, 0, 0),
+      max: vmath.Vector3(1, 1, 1),
+      precision: vmath.Vector3(5, 5, 5),
       name: 'Center',
       idn: 'center',
+      debounceDuration: 30,
+    );
+    axisInfluence = Vector3Property(
+      initialValue: vmath.Vector3(1, 1, 1),
+      min: vmath.Vector3(0, 0, 0),
+      max: vmath.Vector3(1, 1, 1),
+      precision: vmath.Vector3(5, 5, 5),
+      name: 'Axis Influence',
+      idn: 'axisInfluence',
     );
     spinDirectionProperty = OptionProperty(
       initialValue: <Option>{

@@ -10,6 +10,7 @@ mixin WaveEffectProperties {
         size,
         speed,
         waveDirection,
+        waveAxisProperty,
         colorModeProperty,
         customColorsProperty,
       ];
@@ -17,6 +18,7 @@ mixin WaveEffectProperties {
   late NumericProperty size;
   late NumericProperty speed;
   late Property<Set<Option>> waveDirection;
+  late Property<Set<Option>> waveAxisProperty;
   late Property<Set<Option>> colorModeProperty;
   late ColorListProperty customColorsProperty;
 
@@ -51,6 +53,15 @@ mixin WaveEffectProperties {
       },
       idn: 'waveDirection',
       name: 'Wave Direction',
+    );
+    waveAxisProperty = OptionProperty(
+      initialValue: <Option>{
+        Option(value: 0, name: 'X', selected: true),
+        Option(value: 1, name: 'Y', selected: false),
+        Option(value: 2, name: 'Z', selected: false),
+      },
+      idn: 'waveAxis',
+      name: 'Wave Axis',
     );
     colorModeProperty = OptionProperty(
       initialValue: <Option>{

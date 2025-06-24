@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/enums/numeric_property_type.dart';
+import 'package:rgb_app/json_converters/vector_3_converter.dart';
 import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/models/color_property.dart' as color;
 import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/models/options_property.dart';
 import 'package:rgb_app/models/vector.dart';
+import 'package:rgb_app/models/vector3_property.dart';
 import 'package:rgb_app/models/vector_property.dart';
 
 class PropertyFactory {
@@ -46,6 +48,13 @@ class PropertyFactory {
         return color.ColorProperty(
           idn: idn,
           initialValue: Color(value),
+          name: json['name'] as String,
+        ) as T;
+      case 'Vector3Property':
+        final Map<String, Object> value = Map<String, Object>.from(json['value'] as Map<String, Object?>);
+        return Vector3Property(
+          idn: idn,
+          initialValue: Vector3Converter().fromJson(value),
           name: json['name'] as String,
         ) as T;
       default:

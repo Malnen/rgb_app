@@ -23,8 +23,8 @@ import 'package:rgb_app/mixins/subscriber.dart';
 import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
-import 'package:rgb_app/models/numeric_property.dart';
 import 'package:rgb_app/models/property.dart';
+import 'package:rgb_app/models/vector3_property.dart';
 import 'package:rgb_app/utils/smbus/smbus.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/usb_device_data_sender.dart';
 import 'package:rxdart/rxdart.dart';
@@ -42,23 +42,12 @@ abstract class DeviceInterface with Subscriber {
   @protected
   late BehaviorSubject<bool> isOpen;
   @protected
-  late NumericProperty offsetXProperty;
+  late Vector3Property offsetProperty;
   @protected
-  late NumericProperty offsetYProperty;
+  late Vector3Property scaleProperty;
   @protected
-  late NumericProperty offsetZProperty;
-  @protected
-  late NumericProperty scaleXProperty;
-  @protected
-  late NumericProperty scaleYProperty;
-  @protected
-  late NumericProperty scaleZProperty;
-  @protected
-  late NumericProperty rotationXProperty;
-  @protected
-  late NumericProperty rotationYProperty;
-  @protected
-  late NumericProperty rotationZProperty;
+  late Vector3Property rotationProperty;
+
   Timer? _debounceRecalculatePropertiesTimer;
 
   DeviceData get deviceData => deviceDataNotifier.value;
@@ -78,91 +67,33 @@ abstract class DeviceInterface with Subscriber {
 
   vmath.Vector3 get rotation => deviceData.rotation;
 
-  List<Property<Object>> get properties => <Property<Object>>[
-        offsetXProperty,
-        offsetYProperty,
-        offsetZProperty,
-        scaleXProperty,
-        scaleYProperty,
-        scaleZProperty,
-        rotationXProperty,
-        rotationYProperty,
-        rotationZProperty,
-      ];
+  List<Property<Object>> get properties => <Property<Object>>[offsetProperty, scaleProperty, rotationProperty];
 
   DeviceInterface({required DeviceData deviceData})
       : deviceDataNotifier = ValueNotifier<DeviceData>(deviceData),
-        offsetXProperty = NumericProperty(
-          initialValue: 0,
-          name: 'Offset X',
-          idn: 'offsetX',
-          min: 0,
-          max: 1000,
-          precision: 2,
+        offsetProperty = Vector3Property(
+          initialValue: vmath.Vector3(0, 0, 0),
+          name: 'Offset',
+          idn: 'offset',
+          min: vmath.Vector3(0, 0, 0),
+          max: vmath.Vector3(1000, 1000, 1000),
+          precision: vmath.Vector3(2, 2, 2),
         ),
-        offsetYProperty = NumericProperty(
-          initialValue: 0,
-          name: 'Offset Y',
-          idn: 'offsetY',
-          min: 0,
-          max: 1000,
-          precision: 2,
+        scaleProperty = Vector3Property(
+          initialValue: vmath.Vector3(1, 1, 1),
+          name: 'Scale',
+          idn: 'scale',
+          min: vmath.Vector3(0.01, 0.01, 0.01),
+          max: vmath.Vector3(1, 1, 1),
+          precision: vmath.Vector3(3, 3, 3),
         ),
-        offsetZProperty = NumericProperty(
-          initialValue: 0,
-          name: 'Offset Z',
-          idn: 'offsetZ',
-          min: 0,
-          max: 1000,
-          precision: 2,
-        ),
-        scaleXProperty = NumericProperty(
-          initialValue: 1,
-          name: 'Scale X',
-          idn: 'scaleX',
-          min: 0.01,
-          max: 1,
-          precision: 3,
-        ),
-        scaleYProperty = NumericProperty(
-          initialValue: 1,
-          name: 'Scale Y',
-          idn: 'scaleY',
-          min: 0.01,
-          max: 1,
-          precision: 3,
-        ),
-        scaleZProperty = NumericProperty(
-          initialValue: 1,
-          name: 'Scale Z',
-          idn: 'scaleZ',
-          min: 0.01,
-          max: 1,
-          precision: 3,
-        ),
-        rotationXProperty = NumericProperty(
-          initialValue: 0,
-          name: 'Rotation X',
-          idn: 'rotationX',
-          min: 0,
-          max: 360,
-          precision: 0,
-        ),
-        rotationYProperty = NumericProperty(
-          initialValue: 0,
-          name: 'Rotation Y',
-          idn: 'rotationY',
-          min: 0,
-          max: 360,
-          precision: 0,
-        ),
-        rotationZProperty = NumericProperty(
-          initialValue: 0,
-          name: 'Rotation Z',
-          idn: 'rotationZ',
-          min: 0,
-          max: 360,
-          precision: 3,
+        rotationProperty = Vector3Property(
+          initialValue: vmath.Vector3(0, 0, 0),
+          name: 'Rotation',
+          idn: 'rotation',
+          min: vmath.Vector3(0, 0, 0),
+          max: vmath.Vector3(360, 360, 360),
+          precision: vmath.Vector3(0, 0, 0),
         ),
         usedIndexes = <int>{} {
     effectBloc = GetIt.instance.get();
@@ -217,18 +148,14 @@ abstract class DeviceInterface with Subscriber {
       property.notify();
     }
 
-    offsetXProperty.addValueChangeListener((double x) => _updateOffset(x: x));
-    offsetYProperty.addValueChangeListener((double y) => _updateOffset(y: y));
-    offsetZProperty.addValueChangeListener((double z) => _updateOffset(z: z));
-    scaleXProperty.addValueChangeListener((double x) => _updateScale(x: x));
-    scaleYProperty.addValueChangeListener((double y) => _updateScale(y: y));
-    scaleZProperty.addValueChangeListener((double z) => _updateScale(z: z));
-    rotationXProperty.addValueChangeListener((double x) => _updateRotation(x: x));
-    rotationYProperty.addValueChangeListener((double y) => _updateRotation(y: y));
-    rotationZProperty.addValueChangeListener((double z) => _updateRotation(z: z));
+    offsetProperty.addValueChangeListener(_updateOffset);
+    scaleProperty.addValueChangeListener(_updateScale);
+    rotationProperty.addValueChangeListener(_updateRotation);
     subscribe(effectBloc.stream.listen(_recalculateProperties));
     _recalculateProperties(effectBloc.state);
-    properties.whereType<NumericProperty>().forEach((NumericProperty property) => property.enableDebounce());
+    for (Property<Object?> property in properties) {
+      property.enableDebounce();
+    }
   }
 
   Future<void> dispose() async {
@@ -295,24 +222,24 @@ abstract class DeviceInterface with Subscriber {
 
   void _updateOffsetProperties() {
     final vmath.Vector3 offset = deviceData.offset;
-    if (offset.x != offsetXProperty.value) {
-      offsetXProperty.value = offset.x;
+    if (offset.x != offsetProperty.x.value) {
+      offsetProperty.x.value = offset.x;
     }
 
-    if (offset.y != offsetYProperty.value) {
-      offsetYProperty.value = offset.y;
+    if (offset.y != offsetProperty.y.value) {
+      offsetProperty.y.value = offset.y;
     }
 
-    if (offset.z != offsetZProperty.value) {
-      offsetZProperty.value = offset.z;
+    if (offset.z != offsetProperty.z.value) {
+      offsetProperty.z.value = offset.z;
     }
   }
 
-  void _updateOffset({double? x, double? y, double? z}) {
+  void _updateOffset(vmath.Vector3 value) {
     final vmath.Vector3 offset = deviceData.offset;
-    if (offset.x != x || offset.y != y || offset.z != z) {
+    if (offset.x != value.x || offset.y != value.y || offset.z != value.y) {
       final UpdateDeviceProperties updateDeviceProperties = UpdateDeviceProperties(
-        offset: offset.copyWith(x: x, y: y, z: z),
+        offset: offset.copyWith(x: value.x, y: value.y, z: value.z),
         deviceInterface: this,
       );
       devicesBloc.add(updateDeviceProperties);
@@ -321,50 +248,50 @@ abstract class DeviceInterface with Subscriber {
 
   void _updateScaleProperties() {
     final vmath.Vector3 scale = deviceData.scale;
-    if (scale.x != scaleXProperty.value) {
-      scaleXProperty.value = scale.x;
+    if (scale.x != scaleProperty.x.value) {
+      scaleProperty.x.value = scale.x;
     }
 
-    if (scale.y != scaleYProperty.value) {
-      scaleYProperty.value = scale.y;
+    if (scale.y != scaleProperty.y.value) {
+      scaleProperty.y.value = scale.y;
     }
 
-    if (scale.z != scaleZProperty.value) {
-      scaleZProperty.value = scale.z;
+    if (scale.z != scaleProperty.z.value) {
+      scaleProperty.z.value = scale.z;
     }
   }
 
   void _updateRotationProperties() {
     final vmath.Vector3 rotation = deviceData.rotation;
-    if (rotation.x != rotationXProperty.value) {
-      rotationXProperty.value = rotation.x;
+    if (rotation.x != rotationProperty.x.value) {
+      rotationProperty.x.value = rotation.x;
     }
 
-    if (rotation.y != rotationYProperty.value) {
-      rotationYProperty.value = rotation.y;
+    if (rotation.y != rotationProperty.y.value) {
+      rotationProperty.y.value = rotation.y;
     }
 
-    if (rotation.z != rotationZProperty.value) {
-      rotationZProperty.value = rotation.z;
+    if (rotation.z != rotationProperty.z.value) {
+      rotationProperty.z.value = rotation.z;
     }
   }
 
-  void _updateScale({double? x, double? y, double? z}) {
+  void _updateScale(vmath.Vector3 value) {
     final vmath.Vector3 scale = deviceData.scale;
-    if (scale.x != x || scale.y != y || scale.z != z) {
+    if (scale.x != value.x || scale.y != value.y || scale.z != value.y) {
       final UpdateDeviceProperties updateDeviceProperties = UpdateDeviceProperties(
-        scale: scale.copyWith(x: x, y: y, z: z),
+        scale: scale.copyWith(x: value.x, y: value.y, z: value.z),
         deviceInterface: this,
       );
       devicesBloc.add(updateDeviceProperties);
     }
   }
 
-  void _updateRotation({double? x, double? y, double? z}) {
+  void _updateRotation(vmath.Vector3 value) {
     final vmath.Vector3 rotation = deviceData.rotation;
-    if (rotation.x != x || rotation.y != y || rotation.z != z) {
+    if (rotation.x != value.x || rotation.y != value.y || rotation.z != value.y) {
       final UpdateDeviceProperties updateDeviceProperties = UpdateDeviceProperties(
-        rotation: rotation.copyWith(x: x, y: y, z: z),
+        rotation: rotation.copyWith(x: value.x, y: value.y, z: value.z),
         deviceInterface: this,
       );
       devicesBloc.add(updateDeviceProperties);
@@ -410,13 +337,12 @@ abstract class DeviceInterface with Subscriber {
       vmath.Vector3(scaledDeviceSize.x, scaledDeviceSize.y, scaledDeviceSize.z),
     ];
 
-    final List<vmath.Vector3> transformedCorners =
-        localCorners.map((corner) => rotationMatrix.transform3(corner)).toList();
+    final List<vmath.Vector3> transformedCorners = localCorners.map(rotationMatrix.transform3).toList();
 
     vmath.Vector3 minCorner = vmath.Vector3.copy(transformedCorners.first);
     vmath.Vector3 maxCorner = vmath.Vector3.copy(transformedCorners.first);
 
-    for (final corner in transformedCorners) {
+    for (final vmath.Vector3 corner in transformedCorners) {
       minCorner = vmath.Vector3(
         corner.x < minCorner.x ? corner.x : minCorner.x,
         corner.y < minCorner.y ? corner.y : minCorner.y,
@@ -438,16 +364,14 @@ abstract class DeviceInterface with Subscriber {
     final double maxOffsetY = effectState.effectGridData.size.y - maxCorner.y;
     final double maxOffsetZ = effectState.effectGridData.size.z - maxCorner.z;
 
-    offsetXProperty.min = minOffsetX;
-    offsetYProperty.min = minOffsetY;
-    offsetZProperty.min = minOffsetZ;
+    offsetProperty.x.min = minOffsetX;
+    offsetProperty.y.min = minOffsetY;
+    offsetProperty.z.min = minOffsetZ;
 
-    offsetXProperty.max = maxOffsetX;
-    offsetYProperty.max = maxOffsetY;
-    offsetZProperty.max = maxOffsetZ;
+    offsetProperty.x.max = maxOffsetX;
+    offsetProperty.y.max = maxOffsetY;
+    offsetProperty.z.max = maxOffsetZ;
 
-    offsetXProperty.value = offsetXProperty.value;
-    offsetYProperty.value = offsetYProperty.value;
-    offsetZProperty.value = offsetZProperty.value;
+    offsetProperty.value = offsetProperty.value;
   }
 }

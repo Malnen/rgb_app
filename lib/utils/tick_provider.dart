@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/utils/type_defs.dart';
 
 class TickProvider {
-  static const int fps = 60;
+  static const int fps = 120;
   static const int frameTime = 1000 ~/ fps;
   static const double fpsMultiplier = 60 / fps;
 

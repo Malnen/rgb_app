@@ -15,6 +15,7 @@ class _EffectConfiguratorState extends State<EffectConfigurator> {
   Widget build(BuildContext context) {
     final Effect? currentEffect = context.select<EffectBloc, Effect?>((EffectBloc bloc) => bloc.state.selectedEffect);
     return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 16,
       children: _getProperties(currentEffect),
     );

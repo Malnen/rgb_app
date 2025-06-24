@@ -39,8 +39,8 @@ class RightPanel extends HookWidget {
                   child: Stack(
                     children: <Widget>[
                       View3D(
-                        width: 700,
-                        height: 400,
+                        width: 1200,
+                        height: 600,
                         backgroundColor: Colors.white10,
                         showEffects: showEffects,
                       ),
