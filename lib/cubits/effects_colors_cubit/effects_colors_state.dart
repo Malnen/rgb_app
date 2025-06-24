@@ -10,6 +10,7 @@ class EffectsColorsState with _$EffectsColorsState {
   final ColorList colors;
   @override
   final Key key;
+  @override
   final Set<int> usedIndexes;
 
   EffectsColorsState({

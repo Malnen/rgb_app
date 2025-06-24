@@ -23,6 +23,7 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
   bool customColorsMode = false;
 
   List<Color> get customColors => customColorsProperty.value;
+
   int get customColorsLength => customColors.length;
 
   SpiralEffect(super.effectData) {
@@ -41,6 +42,7 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
     colorModeProperty.addValueChangeListener(_onColorModeChange);
     customColorsProperty.addValueChangeListener(_onCustomColorChange);
     super.init();
+    subscribe(effectsColorsCubit.stream.listen((_) => _fillWithProperValues()));
   }
 
   @override

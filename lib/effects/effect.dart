@@ -6,10 +6,11 @@ import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/effects/effect_data.dart';
 import 'package:rgb_app/factories/effect_factory.dart';
 import 'package:rgb_app/factories/property_factory.dart';
+import 'package:rgb_app/mixins/subscriber.dart';
 import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/property.dart';
 
-abstract class Effect {
+abstract class Effect with Subscriber {
   final EffectData effectData;
   EffectBloc? _effectBloc;
   EffectsColorsCubit? _effectsColorsCubit;
@@ -50,7 +51,10 @@ abstract class Effect {
     }
   }
 
-  void dispose() {}
+  @mustCallSuper
+  void dispose() {
+    unsubscribe();
+  }
 
   @protected
   void processUsedIndexes(void Function(int x, int y, int z) process) {

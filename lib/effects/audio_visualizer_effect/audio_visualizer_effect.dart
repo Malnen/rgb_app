@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:rgb_app/effects/audio_visualizer_effect/audio_visualizer_effect_properties.dart';
 import 'package:rgb_app/effects/effect.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
-import 'package:rgb_app/models/color_list.dart';
 import 'package:rgb_app/models/option.dart';
 import 'package:rgb_app/utils/audio_sample_recorder/audio_sample_recorder.dart';
 import 'package:rgb_app/utils/tick_provider.dart';
@@ -69,6 +68,7 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
 
   @override
   void dispose() {
+    super.dispose();
     recorder.dispose();
   }
 
@@ -217,7 +217,6 @@ class AudioVisualizerEffect extends Effect with AudioVisualizerEffectProperties 
   }
 
   void _processUpdatedValues() {
-    final ColorList colors = effectsColorsCubit.colors;
     final int sizeY = effectBloc.sizeY;
     final int step = 100 ~/ sizeY;
     final int spectrumShiftValue = spectrumShift.value.toInt();
