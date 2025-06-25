@@ -6,8 +6,7 @@ import 'package:rgb_app/models/property.dart';
 abstract class LightningControllerInterface extends UsbDeviceInterface {
   final List<SubDeviceInterface> subDevices;
 
-  LightningControllerInterface({required super.deviceData, required super.usbDeviceDataSender})
-      : subDevices = <SubDeviceInterface>[];
+  LightningControllerInterface({required super.deviceData, required super.usbDeviceDataSender}) : subDevices = <SubDeviceInterface>[];
 
   @override
   LightningControllerDeviceData get deviceData => super.deviceData as LightningControllerDeviceData;

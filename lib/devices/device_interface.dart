@@ -108,22 +108,14 @@ abstract class DeviceInterface with Subscriber {
   }) {
     if (deviceData is UsbDeviceData) {
       return switch (deviceData.deviceProductVendor.productVendor) {
-        DeviceProductVendor.corsairK70Lux =>
-          CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairK70MKIILowProfile =>
-          CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairK95Platinum =>
-          CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairICueLinkHub =>
-          CorsairICueLinkHub(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairVirtuoso =>
-          CorsairVirtuoso(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.steelSeriesRival100 =>
-          SteelSeriesRival100(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.steelSeriesRival3 =>
-          SteelSeriesRival3(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.auraLEDController =>
-          AuraLEDController(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.corsairK70Lux => CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.corsairK70MKIILowProfile => CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.corsairK95Platinum => CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.corsairICueLinkHub => CorsairICueLinkHub(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.corsairVirtuoso => CorsairVirtuoso(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.steelSeriesRival100 => SteelSeriesRival100(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.steelSeriesRival3 => SteelSeriesRival3(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.auraLEDController => AuraLEDController(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
         _ => UnknownDevice(deviceData: deviceData),
       };
     } else if (deviceData is SMBusDeviceData) {
@@ -299,8 +291,7 @@ abstract class DeviceInterface with Subscriber {
 
   void _debounceRecalculateProperties() {
     _debounceRecalculatePropertiesTimer?.cancel();
-    _debounceRecalculatePropertiesTimer =
-        Timer(const Duration(milliseconds: 4), () => _recalculateProperties(effectBloc.state));
+    _debounceRecalculatePropertiesTimer = Timer(const Duration(milliseconds: 4), () => _recalculateProperties(effectBloc.state));
   }
 
   void _recalculateProperties(EffectState effectState) {

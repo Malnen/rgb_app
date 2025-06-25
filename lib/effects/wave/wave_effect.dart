@@ -127,8 +127,7 @@ class WaveEffect extends Effect with WaveEffectProperties {
     final int totalGradientColorCount = (sizeX * size.invertedValue / 4).floor();
     final int segmentCount = colors.length - 1;
     final int gradientColorCountPerSegment = (totalGradientColorCount / segmentCount).ceil();
-    final int remainingGradientColorCount =
-        totalGradientColorCount - ((gradientColorCountPerSegment - 1) * segmentCount);
+    final int remainingGradientColorCount = totalGradientColorCount - ((gradientColorCountPerSegment - 1) * segmentCount);
     for (int i = 0; i < colors.length - 1; i++) {
       final List<Color> gradient = _getGradient(i, remainingGradientColorCount, gradientColorCountPerSegment, colors);
       gradientColors.addAll(gradient);
@@ -147,8 +146,7 @@ class WaveEffect extends Effect with WaveEffectProperties {
     int gradientColorCountPerSegment,
     List<Color> colors,
   ) {
-    final int gradientColorCount =
-        i < remainingGradientColorCount ? gradientColorCountPerSegment : gradientColorCountPerSegment - 1;
+    final int gradientColorCount = i < remainingGradientColorCount ? gradientColorCountPerSegment : gradientColorCountPerSegment - 1;
     final Color startColor = colors[i];
     final Color endColor = colors[i + 1];
 

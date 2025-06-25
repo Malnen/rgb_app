@@ -14,12 +14,12 @@
 #include <windows_single_instance/windows_single_instance_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-    FlutterNsdPluginRegisterWithRegistrar(
-            registry->GetRegistrarForPlugin("FlutterNsdPlugin"));
+  FlutterNsdPluginRegisterWithRegistrar(
+          registry->GetRegistrarForPlugin("FlutterNsdPlugin"));
   KeyboardEventPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("KeyboardEventPlugin"));
-    ScreenRetrieverWindowsPluginCApiRegisterWithRegistrar(
-            registry->GetRegistrarForPlugin("ScreenRetrieverWindowsPluginCApi"));
+  ScreenRetrieverWindowsPluginCApiRegisterWithRegistrar(
+          registry->GetRegistrarForPlugin("ScreenRetrieverWindowsPluginCApi"));
   SystemTrayPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("SystemTrayPlugin"));
   WindowManagerPluginRegisterWithRegistrar(

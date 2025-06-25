@@ -774,8 +774,7 @@ class KeyDictionary {
     List<(Vector3, KeyboardKey)> additionalKeyPairs,
   ) {
     final Map<Vector3, List<KeyboardKey>> merged = <Vector3, List<KeyboardKey>>{
-      for (final MapEntry<Vector3, List<KeyboardKey>> entry in base.entries)
-        entry.key: List<KeyboardKey>.from(entry.value),
+      for (final MapEntry<Vector3, List<KeyboardKey>> entry in base.entries) entry.key: List<KeyboardKey>.from(entry.value),
     };
 
     for (final (Vector3 position, KeyboardKey key) in additionalKeyPairs) {

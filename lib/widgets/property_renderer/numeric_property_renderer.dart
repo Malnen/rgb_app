@@ -24,15 +24,16 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
   Widget build(BuildContext context) {
     focusNode = useFocusNode();
     controller = useTextEditingController(text: formatValue(property.value));
-    useEffect(() {
-      if (!focusNode.hasFocus) {
-        final String formatted = formatValue(property.value);
-        if (controller.text != formatted) {
-          controller.text = formatted;
-          controller.selection = TextSelection.collapsed(offset: controller.text.length);
+    useEffect(
+      () {
+        if (!focusNode.hasFocus) {
+          final String formatted = formatValue(property.value);
+          if (controller.text != formatted) {
+            controller.text = formatted;
+            controller.selection = TextSelection.collapsed(offset: controller.text.length);
+          }
         }
-      }
-      return null;
+        return null;
       },
       <Object?>[property.value],
     );

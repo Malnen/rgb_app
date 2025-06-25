@@ -62,11 +62,15 @@ class ViewPainter3D extends CustomPainter {
     final double f = 1.0 / tan(fovY / 2);
 
     final vmath.Matrix4 projection = vmath.Matrix4.zero()
-      ..setEntry(0, 0, f / aspect)..setEntry(1, 1, f)..setEntry(2, 2, (far + near) / (near - far))..setEntry(
+      ..setEntry(0, 0, f / aspect)
+      ..setEntry(1, 1, f)
+      ..setEntry(2, 2, (far + near) / (near - far))
+      ..setEntry(
         2,
         3,
         (2 * far * near) / (near - far),
-      )..setEntry(3, 2, -1.0);
+      )
+      ..setEntry(3, 2, -1.0);
 
     final double effectiveZoom = zoomFactor.clamp(0.2, 5.0);
     final vmath.Matrix4 view = vmath.Matrix4.identity()
@@ -241,9 +245,9 @@ class ViewPainter3D extends CustomPainter {
     }).toList();
 
     canvas.drawPath(
-        Path()..addPolygon(projected, true),
-        Paint()
-          ..color = color
+      Path()..addPolygon(projected, true),
+      Paint()
+        ..color = color
         ..style = PaintingStyle.fill,
     );
   }

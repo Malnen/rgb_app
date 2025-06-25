@@ -9,8 +9,7 @@ import 'package:rgb_app/widgets/effect_configurator/effect_configurator.dart';
 class RightPanelDetails extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<Object?> rightPanelSelectionNotifier =
-        GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
+    final ValueNotifier<Object?> rightPanelSelectionNotifier = GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
     final Object? selectedValue = useValueListenable(rightPanelSelectionNotifier);
 
     return Column(

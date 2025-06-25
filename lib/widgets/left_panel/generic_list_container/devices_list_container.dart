@@ -64,8 +64,8 @@ class DevicesListContainer extends HookWidget {
     required DevicesBloc devicesBloc,
   }) {
     final List<DeviceInterface> deviceInstances = devicesBloc.deviceInstances;
-    final KeyboardInterface? firstKeyboard = deviceInstances
-        .firstWhereOrNull((DeviceInterface element) => element is KeyboardInterface) as KeyboardInterface?;
+    final KeyboardInterface? firstKeyboard =
+        deviceInstances.firstWhereOrNull((DeviceInterface element) => element is KeyboardInterface) as KeyboardInterface?;
     final SetKeyboardDeviceEvent event = SetKeyboardDeviceEvent(
       keyboardInterface: firstKeyboard,
       key: UniqueKey(),
@@ -103,8 +103,7 @@ class DevicesListContainer extends HookWidget {
   void _onSelect(DevicesBloc bloc, DeviceData deviceData) {
     final DevicesState state = bloc.state;
     final List<DeviceInterface> devices = state.deviceInstances;
-    final DeviceInterface? device =
-        devices.firstWhereOrNull((DeviceInterface element) => element.deviceData.isSameDevice(deviceData));
+    final DeviceInterface? device = devices.firstWhereOrNull((DeviceInterface element) => element.deviceData.isSameDevice(deviceData));
     if (device != null) {
       final DevicesEvent event = DevicesEvent.selectDevice(device: device);
       bloc.add(event);

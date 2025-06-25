@@ -48,10 +48,10 @@ class MainScaffold extends HookWidget {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                          color: Colors.white12,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(color: Color.fromRGBO(0, 0, 0, .24), blurRadius: 8, spreadRadius: 0),
+                        color: Colors.white12,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(color: Color.fromRGBO(0, 0, 0, .24), blurRadius: 8, spreadRadius: 0),
                         ],
                       ),
                       child: Text(

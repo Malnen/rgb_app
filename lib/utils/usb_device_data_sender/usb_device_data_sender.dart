@@ -9,8 +9,7 @@ import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/enums/usb_device_data_sender_command.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/enums/usb_device_data_sender_response_type.dart';
 
-class UsbDeviceDataSender
-    with RgbAppServiceListener<UsbDeviceDataSenderCommand, UsbDeviceDataSenderResponseType>, FrameThrottler {
+class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand, UsbDeviceDataSenderResponseType>, FrameThrottler {
   final Map<String, DeviceInterface> pendingDevices;
 
   UsbDeviceDataSender() : pendingDevices = <String, DeviceInterface>{};

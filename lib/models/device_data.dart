@@ -448,8 +448,7 @@ class LightningControllerDeviceData extends UsbDeviceData with _$LightningContro
         key: UniqueKey(),
       );
 
-  factory LightningControllerDeviceData.fromJson(Map<String, Object?> json) =>
-      _$LightningControllerDeviceDataFromJson(json);
+  factory LightningControllerDeviceData.fromJson(Map<String, Object?> json) => _$LightningControllerDeviceDataFromJson(json);
 
   static bool isAssignable(Map<String, Object?> json) => json.containsKey('subDevicesData');
 

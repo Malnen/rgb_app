@@ -114,8 +114,7 @@ class EffectBloc extends HydratedBloc<EffectEvent, EffectState> {
       key: UniqueKey(),
     );
     emit(newState);
-    final ValueNotifier<Object?> rightPanelSelectionNotifier =
-        GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
+    final ValueNotifier<Object?> rightPanelSelectionNotifier = GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
     rightPanelSelectionNotifier.value = event.effect;
   }
 

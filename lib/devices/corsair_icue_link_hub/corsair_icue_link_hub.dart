@@ -134,8 +134,7 @@ class CorsairICueLinkHub extends LightningControllerInterface with InterruptTran
     cursor += firstPayload.length;
     while (cursor < rgbData.length) {
       final int remaining = rgbData.length - cursor;
-      final int chunkSize =
-          remaining < (dataLength - middleHeader.length) ? remaining : (dataLength - middleHeader.length);
+      final int chunkSize = remaining < (dataLength - middleHeader.length) ? remaining : (dataLength - middleHeader.length);
       final List<int> chunk = rgbData.sublist(cursor, cursor + chunkSize);
 
       final List<int> packet = <int>[

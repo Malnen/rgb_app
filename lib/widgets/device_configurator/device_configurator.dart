@@ -16,8 +16,7 @@ class DeviceConfigurator extends StatefulWidget {
 class _DeviceConfiguratorState extends State<DeviceConfigurator> {
   @override
   Widget build(BuildContext context) {
-    final DeviceInterface? currentDevice =
-        context.select<DevicesBloc, DeviceInterface?>((DevicesBloc bloc) => bloc.state.selectedDevice);
+    final DeviceInterface? currentDevice = context.select<DevicesBloc, DeviceInterface?>((DevicesBloc bloc) => bloc.state.selectedDevice);
     return Wrap(
       spacing: 16,
       children: <Widget>[

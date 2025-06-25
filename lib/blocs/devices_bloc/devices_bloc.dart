@@ -70,8 +70,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     udpNetworkService.startDiscovery();
 
     Future<void>.delayed(const Duration(seconds: 5), () {
-      final CheckUSBDevicesConnectionStateEvent checkDevicesConnectionStateEvent =
-          CheckUSBDevicesConnectionStateEvent();
+      final CheckUSBDevicesConnectionStateEvent checkDevicesConnectionStateEvent = CheckUSBDevicesConnectionStateEvent();
       add(checkDevicesConnectionStateEvent);
     });
     _tickProvider.onTick(
@@ -83,10 +82,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
           }
         }
 
-        final List<SMBusTransactionData> smbusData = deviceInstances
-            .whereType<SMBusDeviceInterface>()
-            .map((SMBusDeviceInterface device) => device.colorData)
-            .toList();
+        final List<SMBusTransactionData> smbusData =
+            deviceInstances.whereType<SMBusDeviceInterface>().map((SMBusDeviceInterface device) => device.colorData).toList();
         smbusBatchSender.send(smbusData);
 
         final List<Map<String, Object?>> usbData = deviceInstances
@@ -188,11 +185,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     required List<DeviceInterface> deviceInstances,
   }) async {
     final List<DeviceData> devicesData = state.devicesData;
-    final bool contained =
-        devicesData.any((DeviceData existingDeviceData) => existingDeviceData.isSameDevice(deviceData));
+    final bool contained = devicesData.any((DeviceData existingDeviceData) => existingDeviceData.isSameDevice(deviceData));
     if (!contained) {
-      final DeviceData? persistedData =
-          state.persistDeviceData.firstWhereOrNull((DeviceData element) => element.isSameDevice(deviceData));
+      final DeviceData? persistedData = state.persistDeviceData.firstWhereOrNull((DeviceData element) => element.isSameDevice(deviceData));
       if (persistedData != null) {
         deviceData = deviceData.copyWith(
           rotation: persistedData.rotation,
@@ -250,8 +245,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final List<DeviceData> devicesData,
     final List<DeviceInterface> deviceInstances,
   ) {
-    final DeviceInterface? deviceInterface = state.deviceInstances
-        .firstWhereOrNull((DeviceInterface deviceInterface) => deviceData.isSameDevice(deviceInterface.deviceData));
+    final DeviceInterface? deviceInterface =
+        state.deviceInstances.firstWhereOrNull((DeviceInterface deviceInterface) => deviceData.isSameDevice(deviceInterface.deviceData));
     if (deviceInterface != null) {
       if (deviceInterface is UsbDeviceInterface) {
         usbDeviceDataSender.closeDevice(deviceInterface);
@@ -306,8 +301,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final List<Future<List<DeviceData>>> futures = <Future<List<DeviceData>>>[
       usbDeviceInfoGetter.getDeviceProductInfo(),
     ];
-    final List<DeviceData> deviceProductInfo = await Future.wait(futures)
-        .then((List<List<DeviceData>> results) => results.expand((List<DeviceData> list) => list).toList());
+    final List<DeviceData> deviceProductInfo =
+        await Future.wait(futures).then((List<List<DeviceData>> results) => results.expand((List<DeviceData> list) => list).toList());
     deviceProductInfo.addAll(smbusDevices);
     final DevicesState newState = state.copyWith(
       availableDevices: deviceProductInfo,
@@ -477,8 +472,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       devicesData[index] = updatedDeviceData;
     }
 
-    state.persistDeviceData
-        .replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
+    state.persistDeviceData.replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
     final DevicesState newState = state.copyWith(
       deviceInstances: deviceInstances,
       devicesData: devicesData,
@@ -504,8 +498,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       key: UniqueKey(),
     );
     emit(newState);
-    final ValueNotifier<Object?> rightPanelSelectionNotifier =
-        GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
+    final ValueNotifier<Object?> rightPanelSelectionNotifier = GetIt.instance.get(instanceName: 'rightPanelSelectionNotifier');
     rightPanelSelectionNotifier.value = event.device;
   }
 
@@ -529,8 +522,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
       return instance;
     }).toList();
-    state.persistDeviceData
-        .replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
+    state.persistDeviceData.replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
     final DevicesState newState = state.copyWith(
       devicesData: updatedInstances.map((DeviceInterface device) => device.deviceData).toList(),
       deviceInstances: updatedInstances,
