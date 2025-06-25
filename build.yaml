@@ -11,6 +11,7 @@ targets:
             - require_trailing_commas
             - always_specify_types
             - unused_element
+            - unnecessary_non_null_assertion
       freezed|freezed:
         enabled: true
         options:

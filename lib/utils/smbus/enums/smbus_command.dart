@@ -1,4 +1,5 @@
 enum SMBusCommand {
+  initialize,
   readByte,
   writeByte,
   readWord,
