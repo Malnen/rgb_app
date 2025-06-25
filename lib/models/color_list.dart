@@ -10,7 +10,7 @@ class ColorList {
     required this.width,
     required this.height,
     required this.depth,
-  }) : _colors = List<int>.filled(width * height * depth, const Color(0xFFFFFFFF).value);
+  }) : _colors = List<int>.filled(width * height * depth, const Color(0xFFFFFFFF).toARGB32());
 
   ColorList copy() => ColorList(
         width: width,
@@ -35,7 +35,7 @@ class ColorList {
 
   void setColor(int x, int y, int z, Color color) {
     _checkBounds(x, y, z);
-    _colors[_index(x, y, z)] = color.value;
+    _colors[_index(x, y, z)] = color.toARGB32();
   }
 
   int _index(int x, int y, int z) => z * width * height + y * width + x;

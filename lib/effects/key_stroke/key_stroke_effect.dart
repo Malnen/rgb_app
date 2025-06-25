@@ -34,7 +34,8 @@ class KeyStrokeEffect extends Effect with KeyStrokeEffectProperties {
   void update() {
     for (Ripple ripple in _ripples) {
       processUsedIndexes(
-          (int x, int y, int z) => _processRipple(ripple, Vector3(x.toDouble(), y.toDouble(), z.toDouble())));
+        (int x, int y, int z) => _processRipple(ripple, Vector3(x.toDouble(), y.toDouble(), z.toDouble())),
+      );
       ripple.update(expansionSpeed: expansion.value, deathSpeed: fadeSpeed.value);
     }
 

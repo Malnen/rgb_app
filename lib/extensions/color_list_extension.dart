@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:rgb_app/models/color_list.dart';
 import 'package:vector_math/vector_math.dart' as vmath;
 
@@ -72,10 +73,10 @@ extension ColorListExtension on ColorList {
 
   Color _lerp(Color a, Color b, double t) {
     return Color.fromARGB(
-      _lerpChannel(a.alpha, b.alpha, t),
-      _lerpChannel(a.red, b.red, t),
-      _lerpChannel(a.green, b.green, t),
-      _lerpChannel(a.blue, b.blue, t),
+      _lerpChannel(a.alphaInt, b.alphaInt, t),
+      _lerpChannel(a.redInt, b.redInt, t),
+      _lerpChannel(a.greenInt, b.greenInt, t),
+      _lerpChannel(a.blueInt, b.blueInt, t),
     );
   }
 

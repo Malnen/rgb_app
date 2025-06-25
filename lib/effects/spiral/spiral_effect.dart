@@ -142,19 +142,19 @@ class SpiralEffect extends Effect with SpiralEffectProperties {
   }
 
   void _onSpinDirectionChange(Set<Option> options) {
-    final Option selectedOption = options.firstWhere((o) => o.selected);
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
     spinDirection = selectedOption.value == 0 ? 1 : -1;
     leftDirection = selectedOption.value == 0;
   }
 
   void _onTwistDirectionChange(Set<Option> options) {
-    final Option selectedOption = options.firstWhere((o) => o.selected);
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
     twistDirection = selectedOption.value == 0 ? 1 : -1;
     _fillWithProperValues();
   }
 
   void _onColorModeChange(Set<Option> options) {
-    final Option selectedOption = options.firstWhere((o) => o.selected);
+    final Option selectedOption = options.firstWhere((Option option) => option.selected);
     customColorsMode = selectedOption.value == 0;
     valueMax = customColorsMode ? speed.max : 360;
     customColorsProperty.visible = customColorsMode;

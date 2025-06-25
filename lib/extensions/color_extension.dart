@@ -30,6 +30,8 @@ extension ColorExtension on Color {
     return random.nextInt(256);
   }
 
+  int get alphaInt => _doubleToInt8(a);
+
   int get redInt => _doubleToInt8(r);
 
   int get greenInt => _doubleToInt8(g);

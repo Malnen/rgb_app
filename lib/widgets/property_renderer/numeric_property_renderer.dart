@@ -33,7 +33,9 @@ class _NumericPropertyRendererState extends State<NumericPropertyRenderer> {
         }
       }
       return null;
-    }, <Object?>[property.value]);
+      },
+      <Object?>[property.value],
+    );
     useValueListenable(property);
 
     return switch (property.propertyType) {

@@ -62,9 +62,11 @@ class ViewPainter3D extends CustomPainter {
     final double f = 1.0 / tan(fovY / 2);
 
     final vmath.Matrix4 projection = vmath.Matrix4.zero()
-      ..setEntry(0, 0, f / aspect)
-      ..setEntry(1, 1, f)..setEntry(2, 2, (far + near) / (near - far))..setEntry(
-          2, 3, (2 * far * near) / (near - far))..setEntry(3, 2, -1.0);
+      ..setEntry(0, 0, f / aspect)..setEntry(1, 1, f)..setEntry(2, 2, (far + near) / (near - far))..setEntry(
+        2,
+        3,
+        (2 * far * near) / (near - far),
+      )..setEntry(3, 2, -1.0);
 
     final double effectiveZoom = zoomFactor.clamp(0.2, 5.0);
     final vmath.Matrix4 view = vmath.Matrix4.identity()
@@ -126,8 +128,7 @@ class ViewPainter3D extends CustomPainter {
       ];
 
       final Paint paint = Paint()
-        ..color =
-            devicesBloc.state.selectedDevice == device ? Colors.orange.withOpacity(.5) : Colors.white60.withOpacity(.3)
+        ..color = devicesBloc.state.selectedDevice == device ? Colors.orange.withAlpha(128) : Colors.white60.withAlpha(76)
         ..style = PaintingStyle.fill;
 
       for (final List<int> face in faces) {
@@ -158,7 +159,7 @@ class ViewPainter3D extends CustomPainter {
 
           final Color baseColor = colorList.getColor(x, y, z);
 
-          if (baseColor.alpha == 0) continue;
+          if (baseColor.a == 0) continue;
 
           final vmath.Vector3 voxelCenter = vmath.Vector3(x.toDouble(), y.toDouble(), z.toDouble());
 
@@ -184,7 +185,7 @@ class ViewPainter3D extends CustomPainter {
           final double radius = max((sx2 - sx).abs(), 3.0);
 
           final Paint paint = Paint()
-            ..color = baseColor.withOpacity(.3)
+            ..color = baseColor.withAlpha(76)
             ..style = PaintingStyle.fill;
 
           canvas.drawCircle(Offset(sx, sy), radius, paint);
@@ -210,19 +211,19 @@ class ViewPainter3D extends CustomPainter {
           vmath.Vector3(0, 0, 0),
           vmath.Vector3(effectsSize.x, 0, 0),
           vmath.Vector3(effectsSize.x, effectsSize.y, 0),
-          vmath.Vector3(0, effectsSize.y, 0)
+          vmath.Vector3(0, effectsSize.y, 0),
         ],
       'yz' => <vmath.Vector3>[
           vmath.Vector3(0, 0, effectsSize.z),
           vmath.Vector3(0, effectsSize.y, effectsSize.z),
           vmath.Vector3(0, effectsSize.y, 0),
-          vmath.Vector3(0, 0, 0)
+          vmath.Vector3(0, 0, 0),
         ],
       'xz' => <vmath.Vector3>[
           vmath.Vector3(0, 0, effectsSize.z),
           vmath.Vector3(effectsSize.x, 0, effectsSize.z),
           vmath.Vector3(effectsSize.x, 0, 0),
-          vmath.Vector3(0, 0, 0)
+          vmath.Vector3(0, 0, 0),
         ],
       _ => <vmath.Vector3>[],
     };
@@ -243,7 +244,8 @@ class ViewPainter3D extends CustomPainter {
         Path()..addPolygon(projected, true),
         Paint()
           ..color = color
-          ..style = PaintingStyle.fill);
+        ..style = PaintingStyle.fill,
+    );
   }
 
   @override

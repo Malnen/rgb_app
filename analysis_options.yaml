@@ -60,3 +60,6 @@ linter:
     - unnecessary_this
     - unrelated_type_equality_checks
     - use_full_hex_values_for_flutter_colors
+formatter:
+  page_width: 140
+  trailing_commas: preserve

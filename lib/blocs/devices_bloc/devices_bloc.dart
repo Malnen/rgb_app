@@ -109,6 +109,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   @override
   void emit(DevicesState state) {
     _updateUsedIndexes();
+    // ignore: invalid_use_of_visible_for_testing_member
     super.emit(state);
   }
 
@@ -547,8 +548,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final int depth = colors.depth;
 
     final List<DeviceInterface> deviceInstances = state.deviceInstances
-        .expand((DeviceInterface device) =>
-            device is LightningControllerInterface ? device.subDevices : <DeviceInterface>[device])
+        .expand(
+          (DeviceInterface device) => device is LightningControllerInterface ? device.subDevices : <DeviceInterface>[device],
+        )
         .toList();
 
     for (final DeviceInterface device in deviceInstances) {

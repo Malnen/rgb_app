@@ -39,7 +39,6 @@ abstract class DeviceInterface with Subscriber {
   late EffectBloc effectBloc;
   @protected
   late DevicesBloc devicesBloc;
-  @protected
   late BehaviorSubject<bool> isOpen;
   @protected
   late Vector3Property offsetProperty;
