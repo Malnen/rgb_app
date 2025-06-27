@@ -15,11 +15,11 @@ class OptionTile extends StatelessWidget {
     return InkWell(
       child: Container(
         padding: EdgeInsets.all(5),
-        color: option.selected ? Colors.orange : Colors.transparent,
+        color: option.selected ? Theme.of(context).colorScheme.primary : Colors.transparent,
         child: Text(
           option.name,
           style: TextStyle(
-            color: option.selected ? Colors.white : Colors.orange,
+            color: option.selected ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.outline,
           ),
         ),
       ),

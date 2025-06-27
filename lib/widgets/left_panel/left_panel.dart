@@ -20,10 +20,8 @@ class LeftPanel extends StatelessWidget {
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: AppBar(
               flexibleSpace: const TabBar(
-                indicatorColor: Colors.orange,
                 tabs: <Tab>[
                   Tab(icon: Icon(Icons.devices), text: 'Devices'),
                   Tab(icon: Icon(Icons.blur_linear), text: 'Effects'),
@@ -46,7 +44,6 @@ class LeftPanel extends StatelessWidget {
     return BoxDecoration(
       boxShadow: <BoxShadow>[
         BoxShadow(
-          color: Colors.black12,
           spreadRadius: 1,
           blurRadius: 3,
           offset: Offset(0, 3),

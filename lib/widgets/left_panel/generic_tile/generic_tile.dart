@@ -27,7 +27,7 @@ class GenericTile<T> extends StatelessWidget {
 
   Widget _content(BuildContext context) {
     return Material(
-      color: disabled ? Color.fromARGB(255, 31, 31, 31) : Color.fromARGB(255, 70, 70, 70),
+      color: disabled ? Theme.of(context).colorScheme.surfaceContainerLow : Theme.of(context).colorScheme.surfaceContainerHigh,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: () => onTap(value),
@@ -47,10 +47,7 @@ class GenericTile<T> extends StatelessWidget {
   Widget _icon() {
     return Container(
       margin: EdgeInsets.only(left: 10),
-      child: Icon(
-        iconData,
-        color: Colors.white,
-      ),
+      child: Icon(iconData),
     );
   }
 
@@ -61,7 +58,6 @@ class GenericTile<T> extends StatelessWidget {
       child: Text(
         name,
         style: TextStyle(
-          color: Colors.white,
           fontSize: 20,
         ),
       ),

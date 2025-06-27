@@ -62,30 +62,23 @@ class _NumericFieldState<T extends num> extends State<NumericField<T>> {
         ],
         // Only nu
         style: TextStyle(
-          color: Colors.white,
           fontSize: widget.fontSize,
         ),
-        cursorColor: Colors.white,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.white,
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.outline,
               width: 2.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.orange,
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
               width: 2.5,
             ),
           ),
-          hintStyle: TextStyle(
-            color: Colors.white,
-          ),
+          hintStyle: TextStyle(),
           label: widget.label != null ? Text(widget.label!) : null,
-          labelStyle: TextStyle(
-            color: Colors.white,
-          ),
         ),
       ),
     );

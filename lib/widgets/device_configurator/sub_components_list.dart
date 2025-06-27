@@ -7,39 +7,54 @@ import 'package:rgb_app/devices/sub_device_interface.dart';
 class SubComponentList extends StatelessWidget {
   final List<SubDeviceInterface> subComponents;
 
-  const SubComponentList({required this.subComponents});
+  const SubComponentList({super.key, required this.subComponents});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: <Widget>[
-              Text(
-                'Sub components',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              SizedBox(height: 8),
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: subComponents
-                    .map(
-                      (SubDeviceInterface subDevice) => InkWell(
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: subComponents.map(
+                    (SubDeviceInterface subDevice) {
+                      return InkWell(
                         onTap: () => GetIt.instance.get<DevicesBloc>().add(SelectDevicesEvent(device: subDevice)),
                         child: Container(
-                          padding: EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            color: Colors.white10,
+                            borderRadius: BorderRadius.circular(8),
+                            color: Theme.of(context).colorScheme.surfaceBright,
                           ),
-                          child: Text(subDevice.subComponent.name),
+                          child: Text(
+                            subDevice.subComponent.name,
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              Positioned(
+                left: 12,
+                top: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  color: Theme.of(context).colorScheme.surface,
+                  child: const Text(
+                    'Sub components',
+                  ),
+                ),
               ),
             ],
           ),

@@ -19,7 +19,7 @@ class Vector3PropertyRenderer extends HookWidget {
           padding: EdgeInsets.all(12),
           margin: EdgeInsets.only(top: 8),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2),
+            border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
@@ -37,10 +37,7 @@ class Vector3PropertyRenderer extends HookWidget {
           child: Container(
             color: Theme.of(context).colorScheme.surface,
             padding: EdgeInsets.symmetric(horizontal: 6),
-            child: Text(
-              property.name,
-              style: TextStyle(color: Colors.white),
-            ),
+            child: Text(property.name),
           ),
         ),
       ],

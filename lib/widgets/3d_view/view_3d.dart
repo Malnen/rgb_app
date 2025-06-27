@@ -84,27 +84,30 @@ class _View3DState extends State<View3D> {
         }
       },
       behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        padding: widget.padding,
-        color: widget.backgroundColor,
-        child: CustomPaint(
-          painter: ViewPainter3D(
-            showEffects: widget.showEffects.value,
-            devices: devicesBloc.deviceInstances.expand(
-              (DeviceInterface deviceInterface) {
-                final bool isLightningController = deviceInterface is LightningControllerInterface;
-                return <DeviceInterface>[
-                  if (!isLightningController) deviceInterface,
-                  if (isLightningController) ...deviceInterface.subDevices,
-                ];
-              },
-            ).toList(),
-            rotationX: rotationX,
-            rotationY: rotationY,
-            zoomFactor: zoomFactor,
-            translationOffset: translationOffset,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          width: widget.width,
+          height: widget.height,
+          padding: widget.padding,
+          color: widget.backgroundColor,
+          child: CustomPaint(
+            painter: ViewPainter3D(
+              showEffects: widget.showEffects.value,
+              devices: devicesBloc.deviceInstances.expand(
+                (DeviceInterface deviceInterface) {
+                  final bool isLightningController = deviceInterface is LightningControllerInterface;
+                  return <DeviceInterface>[
+                    if (!isLightningController) deviceInterface,
+                    if (isLightningController) ...deviceInterface.subDevices,
+                  ];
+                },
+              ).toList(),
+              rotationX: rotationX,
+              rotationY: rotationY,
+              zoomFactor: zoomFactor,
+              translationOffset: translationOffset,
+            ),
           ),
         ),
       ),

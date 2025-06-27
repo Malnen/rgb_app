@@ -23,7 +23,7 @@ class RgbAppServiceLogger extends HookWidget {
             height: isOpen ? 200 : 0,
             bottom: 0,
             child: Container(
-              color: Color.fromARGB(255, 35, 35, 35),
+              color: Theme.of(context).colorScheme.surfaceDim,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(8.0),
                 child: Wrap(

@@ -36,17 +36,13 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: child(),
-      color: Color.fromARGB(255, 26, 26, 26),
-    );
-  }
-
-  Column child() {
-    return Column(
-      children: <Widget>[
-        top(),
-        list(),
-      ],
+      color: Theme.of(context).colorScheme.surface,
+      child: Column(
+        children: <Widget>[
+          top(),
+          list(),
+        ],
+      ),
     );
   }
 

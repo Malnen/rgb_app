@@ -48,7 +48,6 @@ class MainScaffold extends HookWidget {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white12,
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                         boxShadow: <BoxShadow>[
                           BoxShadow(color: Color.fromRGBO(0, 0, 0, .24), blurRadius: 8, spreadRadius: 0),
@@ -56,10 +55,7 @@ class MainScaffold extends HookWidget {
                       ),
                       child: Text(
                         '$averageFps',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 12),
                       ),
                     ),
                   );

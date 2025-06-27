@@ -14,7 +14,7 @@ class DialogManager {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        backgroundColor: Color.fromARGB(255, 50, 50, 50),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
         child: SizedBox(
           width: width,
           height: height,
@@ -31,7 +31,6 @@ class DialogManager {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
-                        color: Colors.white,
                       ),
                     ),
                   ],

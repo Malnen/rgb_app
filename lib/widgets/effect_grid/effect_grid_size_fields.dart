@@ -40,36 +40,23 @@ class _EffectGridState extends State<EffectGrid> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Row(
+        spacing: 8,
         children: <Widget>[
           NumericField<int>(
             label: 'X',
             controller: controllerX,
           ),
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: Text(
-              'x',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+          Text(
+            'x',
+            textAlign: TextAlign.center,
           ),
           NumericField<int>(
             label: 'Y',
             controller: controllerY,
           ),
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: Text(
-              'x',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+          Text(
+            'x',
+            textAlign: TextAlign.center,
           ),
           NumericField<int>(
             label: 'Z',

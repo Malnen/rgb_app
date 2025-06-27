@@ -31,13 +31,10 @@ class _MainFrameState extends State<MainFrame> with WindowListener {
     return MaterialApp(
       title: 'RGB App',
       theme: ThemeData(
-        useMaterial3: false,
-        canvasColor: Colors.transparent,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 25, 25, 25),
-        ),
-        colorScheme: ColorScheme.dark(
-          surface: Color.fromARGB(255, 30, 30, 30),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.orange,
+          dynamicSchemeVariant: DynamicSchemeVariant.rainbow,
+          brightness: Brightness.dark,
         ),
       ),
       home: MainScaffold(),

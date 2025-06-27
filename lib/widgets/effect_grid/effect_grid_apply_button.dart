@@ -17,7 +17,7 @@ class _EffectGridApplyButtonState extends State<EffectGridApplyButton> {
         height: 36,
         width: 50,
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 16, 16, 16),
+          color: Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.all(
             Radius.circular(4),
           ),
@@ -26,9 +26,6 @@ class _EffectGridApplyButtonState extends State<EffectGridApplyButton> {
           alignment: Alignment.center,
           child: Text(
             'Apply',
-            style: TextStyle(
-              color: Colors.white,
-            ),
           ),
         ),
       ),

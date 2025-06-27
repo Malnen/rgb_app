@@ -25,7 +25,7 @@ class _OptionPropertyRendererState extends State<OptionPropertyRenderer> {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.orange,
+          color: Theme.of(context).colorScheme.outline,
           width: 2,
         ),
         borderRadius: BorderRadius.all(

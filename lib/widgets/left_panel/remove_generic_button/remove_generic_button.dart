@@ -28,15 +28,12 @@ class _RemoveGenericButtonState<T> extends State<RemoveGenericButton<T>> {
         height: 36,
         width: 36,
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 16, 16, 16),
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.all(
             Radius.circular(4),
           ),
         ),
-        child: Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
+        child: Icon(Icons.delete),
       ),
       onTap: () => widget.onTap(widget.value),
     );

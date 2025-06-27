@@ -10,7 +10,6 @@ class LoadingBarrier extends StatelessWidget {
         color: Colors.black.withAlpha(102),
         child: Center(
           child: CircularProgressIndicator(
-            color: Colors.orange,
             strokeWidth: 5,
           ),
         ),

@@ -22,7 +22,7 @@ class DraggablePositionedBorder extends StatelessWidget {
             Radius.circular(4),
           ),
           border: Border.all(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.outline,
             width: 2,
           ),
         ),

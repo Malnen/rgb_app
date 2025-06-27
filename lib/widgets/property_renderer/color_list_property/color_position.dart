@@ -54,7 +54,7 @@ class _ColorPositionState extends State<ColorPosition> {
           ),
           border: Border.all(
             width: 2,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.outline,
           ),
         ),
       ),
@@ -69,7 +69,7 @@ class _ColorPositionState extends State<ColorPosition> {
         child: Container(
           width: deleteButtonSize,
           height: deleteButtonSize,
-          color: Colors.orange,
+          color: Theme.of(context).colorScheme.primary,
           child: Icon(
             Icons.close,
             size: deleteButtonSize,

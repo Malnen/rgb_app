@@ -18,7 +18,7 @@ class DraggableThumb extends StatelessWidget {
         color: color,
         shape: BoxShape.circle,
         border: Border.all(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.outline,
           width: 2,
         ),
       ),

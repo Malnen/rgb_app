@@ -17,7 +17,6 @@ class RgbAppServiceLoggerButton extends HookWidget {
           opened.value ? controller.forward() : controller.reverse();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 35, 35, 35),
           alignment: Alignment.center,
           minimumSize: Size.zero,
           padding: EdgeInsets.zero,
@@ -27,10 +26,7 @@ class RgbAppServiceLoggerButton extends HookWidget {
         ),
         child: RotationTransition(
           turns: Tween<double>(begin: 0, end: .5).animate(controller),
-          child: Icon(
-            Icons.keyboard_arrow_up,
-            color: Colors.white,
-          ),
+          child: Icon(Icons.keyboard_arrow_up),
         ),
       ),
     );

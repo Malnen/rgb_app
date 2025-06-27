@@ -23,54 +23,56 @@ class RightPanel extends HookWidget {
         BlocProvider<DevicesBloc>.value(value: GetIt.instance.get()),
       ],
       child: Flexible(
-        child: ListView(
-          controller: ScrollController(),
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                EffectGrid(),
-                Container(
-                  margin: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      View3D(
-                        width: 1200,
-                        height: 600,
-                        backgroundColor: Colors.white10,
-                        showEffects: showEffects,
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              'Show Effects ',
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                            ValueListenableBuilder<bool>(
-                              valueListenable: showEffects,
-                              builder: (BuildContext context, bool value, Widget? child) => Switch(
-                                value: value,
-                                onChanged: (bool value) => showEffects.value = value,
-                                activeColor: Colors.orange,
-                              ),
-                            ),
-                          ],
+        child: Container(
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+          child: ListView(
+            controller: ScrollController(),
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  EffectGrid(),
+                  Container(
+                    margin: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Theme.of(context).colorScheme.outline),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        View3D(
+                          width: 1200,
+                          height: 600,
+                          backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+                          showEffects: showEffects,
                         ),
-                      ),
-                    ],
+                        Positioned(
+                          right: 0,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'Show Effects ',
+                                style: Theme.of(context).textTheme.labelMedium,
+                              ),
+                              ValueListenableBuilder<bool>(
+                                valueListenable: showEffects,
+                                builder: (BuildContext context, bool value, Widget? child) => Switch(
+                                  value: value,
+                                  onChanged: (bool value) => showEffects.value = value,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                RightPanelDetails(),
-                SizedBox(height: 100),
-              ],
-            ),
-          ],
+                  RightPanelDetails(),
+                  SizedBox(height: 100),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

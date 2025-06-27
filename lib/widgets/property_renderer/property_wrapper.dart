@@ -27,8 +27,8 @@ class PropertyWrapper extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
               property.name,
-              style: const TextStyle(
-                color: Colors.orange,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),
