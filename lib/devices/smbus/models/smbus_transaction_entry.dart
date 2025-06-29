@@ -15,5 +15,9 @@ class SMBusTransactionEntry with _$SMBusTransactionEntry {
 
   factory SMBusTransactionEntry.fromJson(Map<String, Object?> json) => _$SMBusTransactionEntryFromJson(json);
 
+  factory SMBusTransactionEntry.empty() {
+    return SMBusTransactionEntry(-1, -1);
+  }
+
   Map<String, Object?> toJson() => _$SMBusTransactionEntryToJson(this);
 }

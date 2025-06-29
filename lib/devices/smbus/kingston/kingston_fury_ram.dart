@@ -65,12 +65,18 @@ class KingstonFuryRam extends SMBusDeviceInterface {
     final int address = deviceData.smBusDeviceDetails.address;
     final List<SMBusTransactionEntry> entries = <SMBusTransactionEntry>[
       SMBusTransactionEntry(0x08, 0x53),
+      SMBusTransactionEntry.empty(),
       SMBusTransactionEntry(0x0B, 0x00),
+      SMBusTransactionEntry.empty(),
       SMBusTransactionEntry(0x09, 0x10),
+      SMBusTransactionEntry.empty(),
       SMBusTransactionEntry(0x0C, 0x01),
+      SMBusTransactionEntry.empty(),
       SMBusTransactionEntry(0x20, 0x50),
+      SMBusTransactionEntry.empty(),
       SMBusTransactionEntry(0x08, 0x44),
     ];
+
     await smbus.writeTransactionBatch(
       transactions: <SMBusTransactionData>[
         SMBusTransactionData(address, entries),
@@ -81,12 +87,15 @@ class KingstonFuryRam extends SMBusDeviceInterface {
   SMBusTransactionData _getColorData() {
     return SMBusTransactionData(deviceData.smBusDeviceDetails.address, <SMBusTransactionEntry>[
       SMBusTransactionEntry(0x08, 0x53),
+      SMBusTransactionEntry.empty(),
       for (int i = 0; i < colors.length; i++) ...<SMBusTransactionEntry>[
         SMBusTransactionEntry(0x50 + i * 3, colors[colors.length - 1 - i].redInt),
         SMBusTransactionEntry(0x50 + i * 3 + 1, colors[colors.length - 1 - i].greenInt),
         SMBusTransactionEntry(0x50 + i * 3 + 2, colors[colors.length - 1 - i].blueInt),
+        SMBusTransactionEntry.empty(),
       ],
       SMBusTransactionEntry(0x08, 0x44),
+      SMBusTransactionEntry.empty(),
     ]);
   }
 }

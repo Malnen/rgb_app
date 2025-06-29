@@ -280,7 +280,7 @@ abstract class DeviceInterface with Subscriber {
 
   void _updateRotation(vmath.Vector3 value) {
     final vmath.Vector3 rotation = deviceData.rotation;
-    if (rotation.x != value.x || rotation.y != value.y || rotation.z != value.y) {
+    if (rotation.x != value.x || rotation.y != value.y || rotation.z != value.z) {
       final UpdateDeviceProperties updateDeviceProperties = UpdateDeviceProperties(
         rotation: rotation.copyWith(x: value.x, y: value.y, z: value.z),
         deviceInterface: this,
