@@ -269,7 +269,7 @@ abstract class DeviceInterface with Subscriber {
 
   void _updateScale(vmath.Vector3 value) {
     final vmath.Vector3 scale = deviceData.scale;
-    if (scale.x != value.x || scale.y != value.y || scale.z != value.y) {
+    if (scale.x != value.x || scale.y != value.y || scale.z != value.z) {
       final UpdateDeviceProperties updateDeviceProperties = UpdateDeviceProperties(
         scale: scale.copyWith(x: value.x, y: value.y, z: value.z),
         deviceInterface: this,
