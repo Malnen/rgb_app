@@ -42,6 +42,7 @@ flutter:
   assets:
     - assets/app_icon.ico
     - assets/rgbAppService/
+    - assets/rgbAppService/Driver/
     - assets/rgbAppService/runtimes/
     - assets/rgbAppService/runtimes/win/
     - assets/rgbAppService/runtimes/win/lib/
