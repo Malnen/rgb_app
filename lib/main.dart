@@ -3,8 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_bloc.dart';
+import 'package:rgb_app/blocs/devices_bloc/devices_event.dart';
 import 'package:rgb_app/utils/assets_loader.dart';
 import 'package:rgb_app/utils/dependency_initializer.dart';
 import 'package:rgb_app/widgets/main_frame/main_frame.dart';
@@ -65,6 +68,13 @@ Future<void> _initSystemTray() async {
       MenuItemLabel(
         label: 'Hide',
         onClicked: (MenuItemBase menuItem) => windowManager.hide(),
+      ),
+      MenuItemLabel(
+        label: 'Refresh devices',
+        onClicked: (MenuItemBase menuItem) {
+          final DevicesBloc devicesBloc = GetIt.instance.get();
+          devicesBloc.add(RefreshDevicesEvent());
+        },
       ),
       MenuItemLabel(
         label: 'Exit',

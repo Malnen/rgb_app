@@ -12,6 +12,7 @@ import 'package:rgb_app/blocs/key_bloc/key_state.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
+import 'package:rgb_app/widgets/left_panel/add_generic_button/simple_button.dart';
 import 'package:rgb_app/widgets/left_panel/generic_list_container/generic_list_container.dart';
 
 class DevicesListContainer extends HookWidget {
@@ -40,6 +41,12 @@ class DevicesListContainer extends HookWidget {
         deviceData: deviceData,
       ),
       availableValues: availableDevices,
+      topHeaderChildren: <Widget>[
+        SimpleButton(
+          icon: Icons.refresh,
+          onTap: () => devicesBloc.add(RefreshDevicesEvent()),
+        ),
+      ],
     );
   }
 

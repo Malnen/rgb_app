@@ -152,6 +152,9 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       case const (UpdateDeviceDataEvent):
         await _onUpdateDeviceDataEvent(event as UpdateDeviceDataEvent, emit);
         break;
+      case const (RefreshDevicesEvent):
+        await _onRefreshDevicesEvent(event as RefreshDevicesEvent, emit);
+        break;
       default:
         throw UnimplementedError('Event not implemented: $event');
     }
@@ -598,5 +601,15 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     }
 
     effectsColorsCubit.updateUsedIndexes(indexes);
+  }
+
+  Future<void> _onRefreshDevicesEvent(RefreshDevicesEvent event, Emitter<DevicesState> emit) async {
+    for (DeviceInterface device in deviceInstances) {
+      await device.dispose();
+    }
+
+    deviceInstances.clear();
+    emit(state.copyWith(deviceInstances: <DeviceInterface>[]));
+    add(RestoreDevicesEvent());
   }
 }

@@ -18,6 +18,8 @@ abstract class DevicesEvent with _$DevicesEvent {
 
   const factory DevicesEvent.addAvailableDevice(DeviceData deviceData) = AddAvailableDeviceEvent;
 
+  const factory DevicesEvent.refreshDevices() = RefreshDevicesEvent;
+
   const factory DevicesEvent.updateDevices({
     required List<DeviceData> devicesData,
     required List<DeviceData> availableDevices,

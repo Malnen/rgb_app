@@ -7,7 +7,7 @@ import 'package:rgb_app/devices/sub_device_interface.dart';
 class SubComponentList extends StatelessWidget {
   final List<SubDeviceInterface> subComponents;
 
-  const SubComponentList({super.key, required this.subComponents});
+  const SubComponentList({required this.subComponents, super.key});
 
   @override
   Widget build(BuildContext context) {

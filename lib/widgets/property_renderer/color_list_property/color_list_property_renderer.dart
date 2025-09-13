@@ -4,7 +4,7 @@ import 'package:rgb_app/cubits/popup_cubit/popup_cubit.dart';
 import 'package:rgb_app/cubits/popup_cubit/popup_state.dart';
 import 'package:rgb_app/models/color_list_property.dart';
 import 'package:rgb_app/widgets/color_picker/color_picker_renderer.dart';
-import 'package:rgb_app/widgets/left_panel/add_generic_button/add_button.dart';
+import 'package:rgb_app/widgets/left_panel/add_generic_button/simple_button.dart';
 import 'package:rgb_app/widgets/property_renderer/color_list_property/color_position.dart';
 
 class ColorListPropertyRenderer extends StatefulWidget {
@@ -43,7 +43,7 @@ class _ColorListPropertyRendererState extends State<ColorListPropertyRenderer> {
         child: Wrap(
           children: <Widget>[
             ...colorPositions,
-            AddButton(onTap: addColor),
+            SimpleButton(onTap: addColor),
           ],
         ),
       ),

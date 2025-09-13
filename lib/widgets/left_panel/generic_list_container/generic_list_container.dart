@@ -14,6 +14,7 @@ class GenericListContainer<T> extends StatefulWidget {
   final bool Function(T value) isDisabled;
   final void Function(T value) onTap;
   final void Function(int oldIndex, int newIndex) onReorder;
+  final List<Widget> topHeaderChildren;
 
   const GenericListContainer({
     required this.values,
@@ -26,6 +27,7 @@ class GenericListContainer<T> extends StatefulWidget {
     required this.onReorder,
     required this.availableValues,
     required this.dialogLabel,
+    this.topHeaderChildren = const <Widget>[],
   });
 
   @override
@@ -55,7 +57,9 @@ class _DevicesListContainer<T> extends State<GenericListContainer<T>> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
+        spacing: 8,
         children: <Widget>[
+          ...widget.topHeaderChildren,
           AddGenericButton<T>(
             onTap: widget.onAdd,
             dialogLabel: widget.dialogLabel,

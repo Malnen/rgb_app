@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rgb_app/widgets/dialogs/dialog_manager.dart';
-import 'package:rgb_app/widgets/left_panel/add_generic_button/add_button.dart';
+import 'package:rgb_app/widgets/left_panel/add_generic_button/simple_button.dart';
 import 'package:rgb_app/widgets/left_panel/generic_tile/generic_tile.dart';
 
 class AddGenericButton<T> extends StatelessWidget {
@@ -20,7 +20,7 @@ class AddGenericButton<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AddButton(onTap: () => _onTap(context));
+    return SimpleButton(onTap: () => _onTap(context));
   }
 
   void _onTap(BuildContext context) {
