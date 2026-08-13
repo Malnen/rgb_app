@@ -9,9 +9,11 @@ import 'package:rgb_app/utils/rgb_app_service/rgb_app_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 mixin RgbAppServiceListener<Command extends Enum, ResponseType extends Enum> {
+  final Map<String, Completer<Map<String, Object>>> _pendingRequests = <String, Completer<Map<String, Object>>>{};
+
   late final RgbAppService _service;
 
-  final Map<String, Completer<Map<String, Object>>> _pendingRequests = <String, Completer<Map<String, Object>>>{};
+  late final WebSocketChannel _channel;
 
   @protected
   String get channelName;
@@ -22,9 +24,11 @@ mixin RgbAppServiceListener<Command extends Enum, ResponseType extends Enum> {
   @protected
   void Function(ResponseType, Map<String, Object>) get processResponse;
 
-  late final WebSocketChannel _channel;
-
   Future<void> init() async {
+    await initService();
+  }
+
+  Future<void> initService() async {
     _service = GetIt.instance.get();
     await _createWebSocketConnection();
   }

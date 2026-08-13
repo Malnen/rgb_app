@@ -42,7 +42,7 @@ class SteelSeriesRival3 extends MouseInterface with ControlTransferDevice {
     Color.fromARGB(1, 0, 0, 0),
   ];
 
-  SteelSeriesRival3({required super.deviceData, required super.usbDeviceDataSender});
+  SteelSeriesRival3({required super.deviceData, required super.deviceDataSender});
 
   @override
   Future<void> init() async {

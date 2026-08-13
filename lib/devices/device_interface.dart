@@ -9,6 +9,7 @@ import 'package:rgb_app/blocs/effects_bloc/effect_bloc.dart';
 import 'package:rgb_app/blocs/effects_bloc/effect_state.dart';
 import 'package:rgb_app/cubits/effects_colors_cubit/effects_colors_cubit.dart';
 import 'package:rgb_app/devices/aura_led_controller/aura_led_controller.dart';
+import 'package:rgb_app/devices/corsair_galleon_keyboard/corsair_galleon_keyboard.dart';
 import 'package:rgb_app/devices/corsair_icue_link_hub/corsair_icue_link_hub.dart';
 import 'package:rgb_app/devices/corsair_keyboard/corsair_keyboard.dart';
 import 'package:rgb_app/devices/corsair_virtuoso/corsair_virtuoso.dart';
@@ -25,8 +26,8 @@ import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
 import 'package:rgb_app/models/property.dart';
 import 'package:rgb_app/models/vector3_property.dart';
+import 'package:rgb_app/utils/device_data_sender.dart';
 import 'package:rgb_app/utils/smbus/smbus.dart';
-import 'package:rgb_app/utils/usb_device_data_sender/usb_device_data_sender.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vector_math/vector_math.dart' as vmath;
 
@@ -34,12 +35,12 @@ abstract class DeviceInterface with Subscriber {
   late EffectsColorsCubit effectsColorsCubit;
   late ValueNotifier<DeviceData> deviceDataNotifier;
   late Set<int> usedIndexes;
+  late BehaviorSubject<bool> isOpen;
 
   @protected
   late EffectBloc effectBloc;
   @protected
   late DevicesBloc devicesBloc;
-  late BehaviorSubject<bool> isOpen;
   @protected
   late Vector3Property offsetProperty;
   @protected
@@ -48,25 +49,6 @@ abstract class DeviceInterface with Subscriber {
   late Vector3Property rotationProperty;
 
   Timer? _debounceRecalculatePropertiesTimer;
-
-  DeviceData get deviceData => deviceDataNotifier.value;
-
-  set deviceData(DeviceData deviceData) {
-    deviceDataNotifier.value = deviceData;
-    _debounceRecalculateProperties();
-  }
-
-  int get offsetX => deviceData.offset.x.toInt();
-
-  int get offsetY => deviceData.offset.y.toInt();
-
-  int get offsetZ => deviceData.offset.z.toInt();
-
-  vmath.Vector3 get scale => deviceData.scale;
-
-  vmath.Vector3 get rotation => deviceData.rotation;
-
-  List<Property<Object>> get properties => <Property<Object>>[offsetProperty, scaleProperty, rotationProperty];
 
   DeviceInterface({required DeviceData deviceData})
       : deviceDataNotifier = ValueNotifier<DeviceData>(deviceData),
@@ -103,19 +85,20 @@ abstract class DeviceInterface with Subscriber {
 
   static DeviceInterface fromDeviceData({
     required DeviceData deviceData,
-    required UsbDeviceDataSender usbDeviceDataSender,
+    required DeviceDataSender deviceDataSender,
     required Smbus smbus,
   }) {
     if (deviceData is UsbDeviceData) {
       return switch (deviceData.deviceProductVendor.productVendor) {
-        DeviceProductVendor.corsairK70Lux => CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairK70MKIILowProfile => CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairK95Platinum => CorsairKeyboard(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairICueLinkHub => CorsairICueLinkHub(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.corsairVirtuoso => CorsairVirtuoso(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.steelSeriesRival100 => SteelSeriesRival100(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.steelSeriesRival3 => SteelSeriesRival3(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
-        DeviceProductVendor.auraLEDController => AuraLEDController(deviceData: deviceData, usbDeviceDataSender: usbDeviceDataSender),
+        DeviceProductVendor.corsairK70Lux => CorsairKeyboard(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.corsairK70MKIILowProfile => CorsairKeyboard(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.corsairK95Platinum => CorsairKeyboard(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.corsairGalleon100Sd => CorsairGalleonKeyboard(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.corsairICueLinkHub => CorsairICueLinkHub(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.corsairVirtuoso => CorsairVirtuoso(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.steelSeriesRival100 => SteelSeriesRival100(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.steelSeriesRival3 => SteelSeriesRival3(deviceData: deviceData, deviceDataSender: deviceDataSender),
+        DeviceProductVendor.auraLEDController => AuraLEDController(deviceData: deviceData, deviceDataSender: deviceDataSender),
         _ => UnknownDevice(deviceData: deviceData),
       };
     } else if (deviceData is SMBusDeviceData) {
@@ -128,6 +111,31 @@ abstract class DeviceInterface with Subscriber {
 
     throw Error();
   }
+
+  DeviceData get deviceData => deviceDataNotifier.value;
+
+  set deviceData(DeviceData deviceData) {
+    deviceDataNotifier.value = deviceData;
+    _debounceRecalculateProperties();
+  }
+
+  int get offsetX => deviceData.offset.x.toInt();
+
+  int get offsetY => deviceData.offset.y.toInt();
+
+  int get offsetZ => deviceData.offset.z.toInt();
+
+  vmath.Vector3 get scale => deviceData.scale;
+
+  vmath.Vector3 get rotation => deviceData.rotation;
+
+  List<Property<Object>> get properties => <Property<Object>>[offsetProperty, scaleProperty, rotationProperty];
+
+  void test();
+
+  void blink();
+
+  vmath.Vector3 getSize();
 
   @mustCallSuper
   Future<void> init() async {
@@ -154,13 +162,7 @@ abstract class DeviceInterface with Subscriber {
     unsubscribe();
   }
 
-  void test();
-
   void update() {}
-
-  void blink();
-
-  vmath.Vector3 getSize();
 
   void updatePropertiesDeviceData() {
     for (Property<Object> property in properties) {
@@ -228,7 +230,7 @@ abstract class DeviceInterface with Subscriber {
 
   void _updateOffset(vmath.Vector3 value) {
     final vmath.Vector3 offset = deviceData.offset;
-    if (offset.x != value.x || offset.y != value.y || offset.z != value.y) {
+    if (offset.x != value.x || offset.y != value.y || offset.z != value.z) {
       final UpdateDeviceProperties updateDeviceProperties = UpdateDeviceProperties(
         offset: offset.copyWith(x: value.x, y: value.y, z: value.z),
         deviceInterface: this,

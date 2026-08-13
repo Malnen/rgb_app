@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
-import 'package:rgb_app/utils/usb_device_data_sender/usb_device_data_sender.dart';
+import 'package:rgb_app/utils/device_data_sender.dart';
 
 abstract class UsbDeviceInterface extends DeviceInterface {
+  final DeviceDataSender deviceDataSender;
   late String guid;
-  final UsbDeviceDataSender usbDeviceDataSender;
+
+  UsbDeviceInterface({required this.deviceDataSender, required super.deviceData});
+
+  @override
+  UsbDeviceData get deviceData => super.deviceData as UsbDeviceData;
 
   int get interface;
 
@@ -17,16 +22,17 @@ abstract class UsbDeviceInterface extends DeviceInterface {
   @protected
   List<List<int>> get initializePackets;
 
-  UsbDeviceInterface({required this.usbDeviceDataSender, required super.deviceData});
-
-  @override
-  UsbDeviceData get deviceData => super.deviceData as UsbDeviceData;
+  @protected
+  bool get requiresWriteReadback => false;
 
   @protected
-  Map<String, Object> getDataToSend();
+  int get readEndpoint => 0x02;
 
   @protected
-  List<List<int>> getPackets();
+  int get readLength => dataLength;
+
+  @protected
+  int get readTimeout => 1000;
 
   Map<String, Object?> getPayload() => <String, Object?>{
         'packets': getPackets(),
@@ -49,17 +55,31 @@ abstract class UsbDeviceInterface extends DeviceInterface {
   }
 
   @protected
+  Map<String, Object> getDataToSend();
+
+  @protected
+  List<List<int>> getPackets();
+
+  @protected
   Future<void> sendPacket(List<int> bytes, int length, {Duration delay = const Duration(milliseconds: 100)}) async {
     final List<int> packet = List<int>.filled(length, 0x00);
     for (int i = 0; i < bytes.length && i < length; i++) {
       packet[i] = bytes[i];
     }
-    await usbDeviceDataSender.sendData(
+    await deviceDataSender.sendData(
       <Map<String, Object?>>[
         getCustomPayload(<List<int>>[packet]),
       ],
       throttled: false,
     );
+    if (requiresWriteReadback) {
+      await deviceDataSender.readData(
+        guid: guid,
+        endpoint: readEndpoint,
+        length: readLength,
+        timeout: readTimeout,
+      );
+    }
     await Future<void>.delayed(delay);
   }
 

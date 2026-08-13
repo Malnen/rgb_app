@@ -11,7 +11,7 @@ class SteelSeriesRival100 extends MouseInterface with ControlTransferDevice {
 
   Color color = Color.fromARGB(1, 0, 0, 0);
 
-  SteelSeriesRival100({required super.deviceData, required super.usbDeviceDataSender});
+  SteelSeriesRival100({required super.deviceData, required super.deviceDataSender});
 
   @override
   int get requestType => 0x21;

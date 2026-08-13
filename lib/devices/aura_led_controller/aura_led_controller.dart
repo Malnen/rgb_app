@@ -6,7 +6,7 @@ import 'package:rgb_app/extensions/color_extension.dart';
 import 'package:vector_math/vector_math.dart';
 
 class AuraLEDController extends UsbDeviceInterface with ControlTransferDevice {
-  AuraLEDController({required super.deviceData, required super.usbDeviceDataSender});
+  AuraLEDController({required super.deviceData, required super.deviceDataSender});
 
   List<Color> colors = <Color>[
     Color.fromARGB(1, 0, 0, 0),

@@ -23,7 +23,7 @@ class CorsairKeyboard extends KeyboardInterface with InterruptTransferDevice {
 
   late CorsairKeyboardTester tester;
 
-  CorsairKeyboard({required super.usbDeviceDataSender, required super.deviceData}) : keyBloc = GetIt.instance.get();
+  CorsairKeyboard({required super.deviceDataSender, required super.deviceData}) : keyBloc = GetIt.instance.get();
 
   late List<int> dataPkt1;
   late List<int> rPkt1;

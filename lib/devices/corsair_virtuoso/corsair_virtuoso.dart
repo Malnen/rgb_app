@@ -9,7 +9,7 @@ class CorsairVirtuoso extends UsbDeviceInterface with InterruptTransferDevice {
 
   late CorsairVirtuosoTester tester;
 
-  CorsairVirtuoso({required super.deviceData, required super.usbDeviceDataSender});
+  CorsairVirtuoso({required super.deviceData, required super.deviceDataSender});
 
   @override
   int get endpoint => 0x02;

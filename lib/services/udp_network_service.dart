@@ -13,12 +13,16 @@ import 'package:rgb_app/models/udp_network_device_details.dart';
 class UdpNetworkService {
   final FlutterNsd _nsd;
   final StreamController<UdpNetworkDeviceData> _controller;
+  final Map<String, UdpNetworkDeviceData> _discoveredById;
 
   UdpNetworkService()
       : _nsd = FlutterNsd(),
-        _controller = StreamController<UdpNetworkDeviceData>.broadcast();
+        _controller = StreamController<UdpNetworkDeviceData>.broadcast(),
+        _discoveredById = <String, UdpNetworkDeviceData>{};
 
   Stream<UdpNetworkDeviceData> get discoveredDevices => _controller.stream;
+
+  UdpNetworkDeviceData? getDiscoveredDevice(String id) => _discoveredById[id];
 
   void startDiscovery() async {
     _nsd.stream.listen((NsdServiceInfo service) async {
@@ -37,6 +41,7 @@ class UdpNetworkService {
             ),
             key: UniqueKey(),
           );
+          _discoveredById[id] = deviceData;
           _controller.add(deviceData);
           final DevicesBloc devicesBloc = GetIt.instance.get();
           devicesBloc.add(AddAvailableDeviceEvent(deviceData));
@@ -47,6 +52,10 @@ class UdpNetworkService {
     await _nsd.discoverServices('_rgbapp._udp.');
   }
 
+  void dispose() {
+    _controller.close();
+  }
+
   Future<InternetAddress?> _resolveHost(String hostname) async {
     try {
       final List<InternetAddress> result = await InternetAddress.lookup(hostname);
@@ -54,9 +63,5 @@ class UdpNetworkService {
     } catch (_) {
       return null;
     }
-  }
-
-  void dispose() {
-    _controller.close();
   }
 }

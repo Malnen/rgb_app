@@ -13,7 +13,7 @@ import 'package:rgb_app/utils/corsair/corsair_device_decoder.dart';
 import 'package:vector_math/vector_math.dart';
 
 class CorsairICueLinkHub extends LightningControllerInterface with InterruptTransferDevice {
-  CorsairICueLinkHub({required super.deviceData, required super.usbDeviceDataSender});
+  CorsairICueLinkHub({required super.deviceData, required super.deviceDataSender});
 
   @override
   int get configuration => 1;
@@ -172,7 +172,7 @@ class CorsairICueLinkHub extends LightningControllerInterface with InterruptTran
       }).toList();
 
   Future<void> _detectSubComponents() async {
-    final List<int> data = await usbDeviceDataSender.readData(
+    final List<int> data = await deviceDataSender.readData(
       endpoint: 0x84,
       guid: guid,
       length: 513,

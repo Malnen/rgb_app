@@ -1,3 +1,4 @@
+import 'package:rgb_app/devices/corsair_galleon_keyboard/corsair_galleon_key_dictionary.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/enums/key_code.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
@@ -767,6 +768,7 @@ class KeyDictionary {
       (Vector3(0, 0, 5), g5),
       (Vector3(0, 0, 6), g6),
     ]),
+    DeviceProductVendor.corsairGalleon100Sd: CorsairGalleonKeyDictionary.keys,
   };
 
   static Map<Vector3, List<KeyboardKey>> _mergeKeysWith(

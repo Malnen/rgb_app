@@ -4,12 +4,15 @@ import 'package:rgb_app/devices/device_interface.dart';
 import 'package:rgb_app/devices/usb_device_interface.dart';
 import 'package:rgb_app/models/device_data.dart';
 import 'package:rgb_app/models/device_product_vendor.dart';
+import 'package:rgb_app/utils/device_data_sender.dart';
 import 'package:rgb_app/utils/frame_throttler.dart';
 import 'package:rgb_app/utils/rgb_app_service/rgb_app_service_listener.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/enums/usb_device_data_sender_command.dart';
 import 'package:rgb_app/utils/usb_device_data_sender/enums/usb_device_data_sender_response_type.dart';
 
-class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand, UsbDeviceDataSenderResponseType>, FrameThrottler {
+class UsbDeviceDataSender
+    with RgbAppServiceListener<UsbDeviceDataSenderCommand, UsbDeviceDataSenderResponseType>, FrameThrottler
+    implements DeviceDataSender {
   final Map<String, DeviceInterface> pendingDevices;
 
   UsbDeviceDataSender() : pendingDevices = <String, DeviceInterface>{};
@@ -23,21 +26,29 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
   @override
   void Function(UsbDeviceDataSenderResponseType, Map<String, Object>) get processResponse => _responseListener;
 
-  Future<Map<String, Object>> openDevice(UsbDeviceInterface deviceInterface) {
-    final UsbDeviceData deviceData = deviceInterface.deviceData;
+  @override
+  Future<void> init() async {
+    await initService();
+  }
+
+  @override
+  Future<Map<String, Object>> openDevice(DeviceInterface deviceInterface) {
+    final UsbDeviceInterface usbDeviceInterface = deviceInterface as UsbDeviceInterface;
+    final UsbDeviceData deviceData = usbDeviceInterface.deviceData;
     final DeviceProductVendor deviceProductVendor = deviceData.deviceProductVendor;
     return _sendDeviceCommand(
-      deviceInterface,
+      usbDeviceInterface,
       UsbDeviceDataSenderCommand.openDevice,
       data: <String, Object>{
-        'interface': deviceInterface.interface,
-        'configuration': deviceInterface.configuration,
+        'interface': usbDeviceInterface.interface,
+        'configuration': usbDeviceInterface.configuration,
         'productId': deviceProductVendor.productId,
         'vendorId': deviceProductVendor.vendorId,
       },
     );
   }
 
+  @override
   Future<void> sendData(List<Map<String, Object?>> data, {bool throttled = true}) => throttled
       ? runThrottled(
           () => sendCommand(
@@ -54,6 +65,7 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
           },
         );
 
+  @override
   Future<List<int>> readData({
     required String guid,
     required int endpoint,
@@ -75,18 +87,19 @@ class UsbDeviceDataSender with RgbAppServiceListener<UsbDeviceDataSenderCommand,
     final Object? rawData = response['data'];
     if (rawData is List<dynamic>) {
       return rawData.map((Object? value) => value as int).toList();
-    } else {
-      throw Exception('Invalid data format from USB interrupt read');
     }
+
+    throw Exception('Invalid data format from USB interrupt read');
   }
 
-  void closeDevice(UsbDeviceInterface deviceInterface) {
+  @override
+  void closeDevice(DeviceInterface deviceInterface) {
     deviceInterface.isOpen.sink.add(false);
     _sendDeviceCommand(
       deviceInterface,
       UsbDeviceDataSenderCommand.closeDevice,
       data: <String, Object>{
-        'guid': deviceInterface.guid,
+        'guid': (deviceInterface as dynamic).guid as String,
       },
     );
   }
