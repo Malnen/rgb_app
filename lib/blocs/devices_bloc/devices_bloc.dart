@@ -252,11 +252,11 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   }
 
   Future<void> _onRemoveDeviceEvent(RemoveDeviceEvent event, Emitter<DevicesState> emit) async {
-    final DevicesState newState = _removeDeviceIfExist(event);
+    final DevicesState newState = await _removeDeviceIfExist(event);
     emit(newState);
   }
 
-  DevicesState _removeDeviceIfExist(RemoveDeviceEvent event) {
+  Future<DevicesState> _removeDeviceIfExist(RemoveDeviceEvent event) async {
     final List<DeviceData> devicesData = <DeviceData>[...state.devicesData];
     final DeviceData deviceData = event.deviceData;
     final List<DeviceInterface> deviceInstances = <DeviceInterface>[...state.deviceInstances];
@@ -272,19 +272,14 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     );
   }
 
-  DevicesState _removeDevice(
+  Future<DevicesState> _removeDevice(
     final DeviceData deviceData,
     final List<DeviceData> devicesData,
-    final List<DeviceInterface> deviceInstances,
-  ) {
+    final List<DeviceInterface> deviceInstances,) async {
     final DeviceInterface? deviceInterface =
         state.deviceInstances.firstWhereOrNull((DeviceInterface deviceInterface) => deviceData.isSameDevice(deviceInterface.deviceData));
     if (deviceInterface != null) {
-      if (deviceInterface is UsbDeviceInterface) {
-        deviceInterface.deviceDataSender.closeDevice(deviceInterface);
-      }
-
-      deviceInterface.dispose();
+      await _disposeDevice(deviceInterface);
     }
 
     deviceInstances.remove(deviceInterface);
@@ -642,11 +637,21 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
 
   Future<void> _onRefreshDevicesEvent(RefreshDevicesEvent event, Emitter<DevicesState> emit) async {
     for (DeviceInterface device in deviceInstances) {
-      await device.dispose();
+      await _disposeDevice(device);
     }
 
     deviceInstances.clear();
     emit(state.copyWith(deviceInstances: <DeviceInterface>[]));
     add(RestoreDevicesEvent());
+  }
+
+  Future<void> _disposeDevice(DeviceInterface device) async {
+    try {
+      await device.dispose();
+    } finally {
+      if (device is UsbDeviceInterface) {
+        device.deviceDataSender.closeDevice(device);
+      }
+    }
   }
 }

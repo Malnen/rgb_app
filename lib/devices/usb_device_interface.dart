@@ -50,7 +50,7 @@ abstract class UsbDeviceInterface extends DeviceInterface {
   Future<void> init() async {
     await super.init();
     if (isOpen.valueOrNull ?? false) {
-      await _initializeDevice();
+      await initializeDevice();
     }
   }
 
@@ -83,7 +83,8 @@ abstract class UsbDeviceInterface extends DeviceInterface {
     await Future<void>.delayed(delay);
   }
 
-  Future<void> _initializeDevice() async {
+  @protected
+  Future<void> initializeDevice() async {
     for (final List<int> packet in initializePackets) {
       await sendPacket(packet, dataLength);
     }

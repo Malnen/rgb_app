@@ -2,48 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rgb_app/devices/corsair_galleon_keyboard/corsair_galleon_key_dictionary.dart';
+import 'package:rgb_app/devices/corsair_galleon_keyboard/corsair_galleon_lighting.dart';
 import 'package:rgb_app/devices/enums/transfer_type.dart';
 import 'package:rgb_app/devices/keyboard_interface.dart';
 import 'package:rgb_app/devices/keyboard_key.dart';
 import 'package:rgb_app/devices/mixins/interrupt_transfer_device.dart';
 import 'package:rgb_app/extensions/color_extension.dart';
+import 'package:rgb_app/utils/corsair/bragi/corsair_bragi_protocol.dart';
+import 'package:rgb_app/utils/frame_throttler.dart';
 import 'package:vector_math/vector_math.dart';
 
 class CorsairGalleonKeyboard extends KeyboardInterface with InterruptTransferDevice {
   static const int _defaultReportLength = 64;
-  static const int _deviceId = 0x00;
-  static const int _lightingHandle = 0x00;
-  static const int _lightingControllerEndpoint = 0x22;
-  static const int _lightingControllerDataType = 0x12;
-  static const int _ledSpacing = 146;
-  static const int _getPropertyCommand = 0x02;
-  static const int _setPropertyCommand = 0x01;
-  static const int _writeCommand = 0x06;
-  static const int _streamCommand = 0x07;
-  static const int _openHandleCommand = 0x0D;
-  static const int _modeProperty = 0x03;
-  static const int _brightnessProperty = 0x02;
-  static const int _vidProperty = 0x11;
-  static const int _pidProperty = 0x12;
-  static const int _pollingRateProperty = 0x01;
-  static const int _maxPollingRateProperty = 0x96;
-  static const int _firmwareProperty = 0x13;
-  static const int _softwareMode = 0x02;
-  static const int _fullBrightness = 1000;
+  static const int _ledSpacing = CorsairGalleonLighting.ledCount;
 
   late Map<Vector3, List<KeyboardKey>> keys;
   late List<int> rgbData;
   late List<int> lightingControllerRgbData;
   int _writeLength = _defaultReportLength;
   int _readLength = _defaultReportLength;
+  CorsairGalleonLighting? _lighting;
 
   CorsairGalleonKeyboard({required super.deviceData, required super.deviceDataSender});
 
   @override
   int get endpoint => 0x01;
-
-  @override
-  int get dataLength => _ledSpacing * 3;
 
   @override
   int get configuration => 1;
@@ -54,45 +37,55 @@ class CorsairGalleonKeyboard extends KeyboardInterface with InterruptTransferDev
   @override
   TransferType get transferType => TransferType.interrupt;
 
+  @protected
+  @override
+  int get dataLength => _ledSpacing * 3;
+
+  @protected
   @override
   bool get requiresWriteReadback => false;
 
+  @protected
   @override
-  List<List<int>> get initializePackets => <List<int>>[
-        _getPropertyPacket(_modeProperty),
-        _setPropertyPacket(_modeProperty, _softwareMode),
-        _getPropertyPacket(_modeProperty),
-        _getPropertyPacket(_vidProperty),
-        _getPropertyPacket(_pidProperty),
-        _getPropertyPacket(_pollingRateProperty),
-        _getPropertyPacket(_maxPollingRateProperty),
-        _getPropertyPacket(_firmwareProperty),
-        _getPropertyPacket(_brightnessProperty),
-        _setPropertyPacket(_brightnessProperty, _fullBrightness),
-        _getPropertyPacket(_brightnessProperty),
-        _openHandlePacket(_lightingHandle, _lightingControllerEndpoint),
-      ];
+  List<List<int>> get initializePackets => _activeLighting.initializationPackets;
+
+  CorsairGalleonLighting get _activeLighting {
+    final CorsairGalleonLighting? lighting = _lighting;
+    if (lighting != null) {
+      return lighting;
+    }
+
+    throw StateError('Galleon protocol has not been initialized');
+  }
 
   @override
   Future<void> init() async {
-    await super.init();
     keys = CorsairGalleonKeyDictionary.keys;
     rgbData = List<int>.filled(dataLength, 0);
     lightingControllerRgbData = List<int>.filled(dataLength, 0);
-  }
-
-  void configureHidReportLengths({required int writeLength, required int readLength}) {
-    if (writeLength > 0) {
-      _writeLength = writeLength;
-    }
-    if (readLength > 0) {
-      _readLength = readLength;
-    }
+    final CorsairBragiProtocol protocol = CorsairBragiProtocol(reportLength: _writeLength, write: _writePacket, read: _readPacket);
+    _lighting = CorsairGalleonLighting(protocol: protocol);
+    await super.init();
   }
 
   @override
   Future<void> dispose() async {
-    await super.dispose();
+    if (!isOpen.isClosed) {
+      isOpen.add(false);
+    }
+
+    try {
+      if (deviceDataSender case final FrameThrottler sender) {
+        await sender.waitForIdle();
+      }
+
+      final CorsairGalleonLighting? lighting = _lighting;
+      if (lighting != null) {
+        await lighting.close();
+      }
+    } finally {
+      await super.dispose();
+    }
   }
 
   @override
@@ -106,11 +99,13 @@ class CorsairGalleonKeyboard extends KeyboardInterface with InterruptTransferDev
 
   @override
   Map<String, Object?> getPayload() {
-    final List<List<int>> packets = _buildLightingPackets();
+    final List<List<int>> packets = getPackets();
+    final Map<String, Object> transport = getDataToSend();
+
     return <String, Object?>{
       'packets': packets,
       'guid': guid,
-      ...getDataToSend(),
+      ...transport,
       'readAfterPacketIndexes': <int>[],
       'clearBeforePacketIndexes': <int>[],
     };
@@ -127,34 +122,57 @@ class CorsairGalleonKeyboard extends KeyboardInterface with InterruptTransferDev
     super.update();
   }
 
+  void configureHidReportLengths({required int writeLength, required int readLength}) {
+    if (writeLength > 0) {
+      _writeLength = writeLength;
+    }
+
+    if (readLength > 0) {
+      _readLength = readLength;
+    }
+  }
+
+  @protected
   @override
   Map<String, Object> getDataToSend() => <String, Object>{
         'endpoint': endpoint,
         'length': _writeLength,
         'timeout': 1000,
         'transferType': transferType.name,
-        'readAfterPacketIndexes': <int>[0],
-        'clearBeforePacketIndexes': <int>[0],
+        'readAfterPacketIndexes': <int>[],
+        'clearBeforePacketIndexes': <int>[],
         'readEndpoint': endpoint,
         'readLength': _readLength,
         'readTimeout': 1000,
-        'readDelayMs': 10,
+        'readDelayMs': 0,
       };
 
+  @protected
   @override
-  List<List<int>> getPackets() => _buildLightingPackets();
+  List<List<int>> getPackets() => _activeLighting.lightingPackets(lightingControllerRgbData);
 
+  @protected
+  @override
+  Future<void> initializeDevice() => _activeLighting.initialize();
+
+  @protected
   @override
   Future<void> sendPacket(List<int> bytes, int length, {Duration delay = const Duration(milliseconds: 10)}) async {
-    final List<int> packet = _padPacket(bytes);
-    await deviceDataSender.sendData(
-      <Map<String, Object?>>[
-        getCustomPayload(<List<int>>[packet]),
-      ],
-      throttled: false,
-    );
+    await _activeLighting.execute(bytes);
     await Future<void>.delayed(delay);
   }
+
+  Future<void> _writePacket(List<int> packet) async {
+    final Map<String, Object?> payload = getCustomPayload(<List<int>>[packet]);
+    await deviceDataSender.sendData(<Map<String, Object?>>[payload], throttled: false);
+  }
+
+  Future<List<int>> _readPacket(int timeout) => deviceDataSender.readData(
+        guid: guid,
+        endpoint: endpoint,
+        length: _readLength,
+        timeout: timeout,
+      );
 
   void _updateKeys() {
     rgbData = List<int>.filled(dataLength, 0);
@@ -182,91 +200,4 @@ class CorsairGalleonKeyboard extends KeyboardInterface with InterruptTransferDev
       }
     }
   }
-
-  List<List<int>> _buildLightingPackets() {
-    final List<List<int>> packets = <List<int>>[];
-    final List<int> rgbPayload = <int>[
-      _lightingControllerDataType,
-      0x00,
-      ...lightingControllerRgbData,
-    ];
-    final int initialPayloadSize = _writeLength - 8;
-    final int streamPayloadSize = _writeLength - 4;
-
-    final List<int> writePacket = _padPacket(
-      <int>[
-        0x00,
-        _deviceId | 0x08,
-        _writeCommand,
-        _lightingHandle,
-        ..._int32LittleEndian(rgbPayload.length),
-        ...rgbPayload.take(initialPayloadSize),
-      ],
-    );
-    packets.add(writePacket);
-
-    int cursor = initialPayloadSize;
-    while (cursor < rgbPayload.length) {
-      final int chunkSize = (rgbPayload.length - cursor) < streamPayloadSize ? (rgbPayload.length - cursor) : streamPayloadSize;
-      final List<int> streamPacket = _padPacket(
-        <int>[
-          0x00,
-          _deviceId,
-          _streamCommand,
-          _lightingHandle,
-          ...rgbPayload.sublist(cursor, cursor + chunkSize),
-        ],
-      );
-      packets.add(streamPacket);
-      cursor += chunkSize;
-    }
-
-    return packets;
-  }
-
-  List<int> _getPropertyPacket(int propertyId) => _padPacket(<int>[
-        0x00,
-        _deviceId | 0x08,
-        _getPropertyCommand,
-        ..._int16LittleEndian(propertyId),
-      ]);
-
-  List<int> _setPropertyPacket(int propertyId, int value) => _padPacket(<int>[
-        0x00,
-        _deviceId | 0x08,
-        _setPropertyCommand,
-        propertyId,
-        0x00,
-        value & 0xFF,
-        (value >> 8) & 0xFF,
-        (value >> 16) & 0xFF,
-      ]);
-
-  List<int> _openHandlePacket(int handle, int endpoint) => _padPacket(<int>[
-        0x00,
-        _deviceId | 0x08,
-        _openHandleCommand,
-        handle,
-        endpoint,
-      ]);
-
-  List<int> _padPacket(List<int> bytes) {
-    final List<int> packet = List<int>.filled(_writeLength, 0x00);
-    for (int i = 0; i < bytes.length && i < _writeLength; i++) {
-      packet[i] = bytes[i];
-    }
-    return packet;
-  }
-
-  List<int> _int16LittleEndian(int value) => <int>[
-        value & 0xFF,
-        (value >> 8) & 0xFF,
-      ];
-
-  List<int> _int32LittleEndian(int value) => <int>[
-        value & 0xFF,
-        (value >> 8) & 0xFF,
-        (value >> 16) & 0xFF,
-        (value >> 24) & 0xFF,
-      ];
 }

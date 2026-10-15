@@ -7,12 +7,21 @@ import 'package:rgb_app/utils/type_defs.dart';
 mixin FrameThrottler {
   int _lastExecution = 0;
   bool _running = false;
+  Completer<void>? _completion;
+
+  Future<void> waitForIdle() async {
+    final Completer<void>? completion = _completion;
+    if (completion != null) {
+      await completion.future;
+    }
+  }
 
   @protected
   Future<void> runThrottled(FutureVoidCallback action) async {
     try {
       if (!_running) {
         _running = true;
+        _completion = Completer<void>();
         final int now = DateTime.now().millisecondsSinceEpoch;
         final int elapsed = now - _lastExecution;
         if (elapsed < TickProvider.frameTime) {
@@ -25,6 +34,8 @@ mixin FrameThrottler {
           await action();
         } finally {
           _running = false;
+          _completion!.complete();
+          _completion = null;
         }
       }
     } catch (error) {

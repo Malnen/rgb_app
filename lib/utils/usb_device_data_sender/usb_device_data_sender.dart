@@ -94,7 +94,10 @@ class UsbDeviceDataSender
 
   @override
   void closeDevice(DeviceInterface deviceInterface) {
-    deviceInterface.isOpen.sink.add(false);
+    if (!deviceInterface.isOpen.isClosed) {
+      deviceInterface.isOpen.add(false);
+    }
+
     _sendDeviceCommand(
       deviceInterface,
       UsbDeviceDataSenderCommand.closeDevice,
