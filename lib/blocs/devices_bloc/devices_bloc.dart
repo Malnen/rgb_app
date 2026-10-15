@@ -275,7 +275,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
   Future<DevicesState> _removeDevice(
     final DeviceData deviceData,
     final List<DeviceData> devicesData,
-    final List<DeviceInterface> deviceInstances,) async {
+    final List<DeviceInterface> deviceInstances,
+  ) async {
     final DeviceInterface? deviceInterface =
         state.deviceInstances.firstWhereOrNull((DeviceInterface deviceInterface) => deviceData.isSameDevice(deviceInterface.deviceData));
     if (deviceInterface != null) {
@@ -338,6 +339,8 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     final List<DeviceData> deviceProductInfo =
         await Future.wait(futures).then((List<List<DeviceData>> results) => results.expand((List<DeviceData> list) => list).toList());
     deviceProductInfo.addAll(smbusDevices);
+    final Iterable<UdpNetworkDeviceData> networkDevices = state.availableDevices.whereType<UdpNetworkDeviceData>();
+    deviceProductInfo.addAll(networkDevices);
     final DevicesState newState = state.copyWith(
       availableDevices: deviceProductInfo,
       key: UniqueKey(),
@@ -407,11 +410,15 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     availableDevices.addAll(nonUsbDevices);
     final List<DeviceData> devicesData = <DeviceData>[];
     for (DeviceData deviceData in state.devicesData) {
-      await _processDeviceConnectivity(
-        isDeviceConnected: () => availableDevices.any((DeviceData device) => device.isSameDevice(deviceData)),
-        devicesData: devicesData,
-        deviceData: deviceData,
-      );
+      if (deviceData is UsbDeviceData) {
+        await _processDeviceConnectivity(
+          isDeviceConnected: () => availableDevices.any((DeviceData device) => device.isSameDevice(deviceData)),
+          devicesData: devicesData,
+          deviceData: deviceData,
+        );
+      } else {
+        devicesData.add(deviceData);
+      }
     }
 
     final UpdateDevices updateDevices = UpdateDevices(
@@ -502,8 +509,10 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       final int index = parent.subDevices.indexOf(subDevice);
       parent.deviceData.subDevicesData[index] = updatedDeviceData as SubDeviceData;
     } else {
-      final int index = deviceInstances.indexOf(deviceInterface);
-      devicesData[index] = updatedDeviceData;
+      final int index = devicesData.indexWhere((DeviceData device) => device.isSameDevice(deviceData));
+      if (index >= 0) {
+        devicesData[index] = updatedDeviceData;
+      }
     }
 
     state.persistDeviceData.replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
@@ -542,7 +551,7 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
     Emitter<DevicesState> emit,
   ) async {
     final DeviceData updatedDeviceData = event.deviceData;
-    final List<DeviceInterface> updatedInstances = state.deviceInstances.map((DeviceInterface instance) {
+    final Iterable<DeviceInterface> updatedInstanceValues = state.deviceInstances.map((DeviceInterface instance) {
       if (instance.deviceData.isSameDevice(updatedDeviceData)) {
         instance.deviceData = updatedDeviceData;
       } else if (instance is LightningControllerInterface) {
@@ -556,10 +565,23 @@ class DevicesBloc extends HydratedBloc<DevicesEvent, DevicesState> {
       }
 
       return instance;
-    }).toList();
+    });
+    final List<DeviceInterface> updatedInstances = updatedInstanceValues.toList();
+    final Iterable<DeviceData> updatedDeviceValues = state.devicesData.map((DeviceData device) {
+      if (device.isSameDevice(updatedDeviceData)) {
+        return updatedDeviceData;
+      }
+
+      final DeviceInterface? instance = updatedInstances.firstWhereOrNull(
+        (DeviceInterface instance) => instance.deviceData.isSameDevice(device),
+      );
+
+      return instance?.deviceData ?? device;
+    });
+    final List<DeviceData> updatedDevices = updatedDeviceValues.toList();
     state.persistDeviceData.replaceOrAdd((DeviceData element) => element.isSameDevice(updatedDeviceData), updatedDeviceData);
     final DevicesState newState = state.copyWith(
-      devicesData: updatedInstances.map((DeviceInterface device) => device.deviceData).toList(),
+      devicesData: updatedDevices,
       deviceInstances: updatedInstances,
       key: UniqueKey(),
     );
